@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReStaff · Avatar Studio</title>
+<meta name="description" content="Корпоративный сервис создания аватарок для команды ReStaff" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" rel="stylesheet" />
+<style>
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: #ffffff;
+  --bg-secondary: #f5f3fc;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --brand-violet: #7C3AED;
+  --brand-blue: #2563EB;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === LANDING === */
+.landing {
+  background: var(--bg-dark);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.landing::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  right: -10%;
+  width: 60%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(124,58,237,0.25) 0%, rgba(124,58,237,0) 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+.landing::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0) 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 40px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  position: relative;
+  z-index: 2;
+}
+.landing-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.landing-logo .lc {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.landing-logo .lc img { width: 22px; height: 22px; }
+
+.lang-switch {
+  display: flex;
+  background: rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 3px;
+  gap: 2px;
+}
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: inherit;
+}
+.lang-btn.active { background: rgba(255,255,255,0.12); color: #fff; }
+
+.landing-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  padding: 64px 40px;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+.landing-left { padding-right: 24px; }
+.eyebrow {
+  font-size: 12px;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+.landing-h1 {
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  margin-bottom: 18px;
+}
+.landing-h1 .accent { color: #a78bfa; }
+.landing-sub {
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 28px;
+  max-width: 420px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.feat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+}
+.feat i { color: #a78bfa; font-size: 16px; }
+
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 22px;
+  background: #fff;
+  color: #1f1f1f;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 16px rgba(124,58,237,0.2);
+}
+.google-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(124,58,237,0.3);
+}
+.google-btn .g-icon { width: 20px; height: 20px; flex-shrink: 0; }
+
+.access-line {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 14px;
+  line-height: 1.5;
+}
+
+.landing-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.preview-stack {
+  position: relative;
+  width: 360px;
+  height: 360px;
+}
+.preview-stack canvas { position: absolute; border-radius: 50%; }
+.preview-stack canvas:nth-child(1) {
+  width: 280px;
+  height: 280px;
+  top: 40px;
+  left: 40px;
+  z-index: 3;
+  box-shadow: 0 16px 64px rgba(124,58,237,0.4);
+}
+.preview-stack canvas:nth-child(2) {
+  width: 140px;
+  height: 140px;
+  top: -10px;
+  right: -10px;
+  z-index: 2;
+  opacity: 0.92;
+}
+.preview-stack canvas:nth-child(3) {
+  width: 110px;
+  height: 110px;
+  bottom: 20px;
+  left: -20px;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+.landing-foot {
+  padding: 18px 40px;
+  border-top: 0.5px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  position: relative;
+  z-index: 2;
+}
+
+/* === APP === */
+.app { display: none; padding: 32px 24px; max-width: 720px; margin: 0 auto; }
+.app.active { display: block; }
+.landing.hidden { display: none; }
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--border);
+}
+.app-title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 500; }
+.app-title .lc {
+  width: 28px; height: 28px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  border: 0.5px solid var(--border);
+}
+.app-title .lc img { width: 18px; height: 18px; }
+.user-pill {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.user-pill .green-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+.user-pill button {
+  background: transparent; border: none; cursor: pointer; color: var(--text-tertiary);
+  font-size: 11px; padding: 0 0 0 6px; font-family: inherit;
+}
+.user-pill button:hover { color: var(--text-primary); }
+
+.samples-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+}
+.samples-label {
+  font-size: 11px; font-weight: 500; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: .1em; flex-shrink: 0; line-height: 1.4;
+}
+.samples-canvases { display: flex; gap: 12px; }
+.sample-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.sample-cell canvas { width: 80px; height: 80px; }
+.sample-cell .sample-name { font-size: 10px; color: var(--text-tertiary); }
+.samples-hint { font-size: 12px; color: var(--text-secondary); line-height: 1.5; flex: 1; min-width: 0; }
+
+.layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
+.section { margin-bottom: 20px; }
+.section-title {
+  font-size: 11px; font-weight: 500; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px;
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.reset-btn {
+  background: transparent; border: none; font-size: 11px; color: var(--text-tertiary); cursor: pointer; font-family: inherit;
+}
+.upload-area {
+  border: 0.5px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  transition: border-color .15s;
+}
+.upload-area:hover { border-color: var(--text-secondary); }
+.upload-area.has-photo { color: var(--text-primary); border-style: solid; }
+.hidden { display: none; }
+.style-note {
+  font-size: 11px; color: var(--text-tertiary); line-height: 1.5;
+  padding: 8px 10px; background: var(--bg-secondary);
+  border-radius: var(--radius-md); margin-top: 6px;
+}
+
+.dept-list { display: flex; flex-direction: column; gap: 3px; }
+.dept-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px; border-radius: var(--radius-md);
+  cursor: pointer; font-size: 12px; color: var(--text-secondary);
+  border: 0.5px solid transparent; transition: all .15s;
+}
+.dept-item:hover { background: var(--bg-secondary); }
+.dept-item.selected {
+  border-color: var(--border-strong); color: var(--text-primary);
+  font-weight: 500; background: var(--bg-secondary);
+}
+.dept-swatch { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
+.region-row, .bg-row {
+  display: flex; border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+.region-btn, .bg-btn, .size-btn, .fx-btn {
+  background: transparent; border: none; cursor: pointer;
+  color: var(--text-secondary); font-family: inherit;
+}
+.region-btn, .bg-btn {
+  flex: 1; font-size: 11px; padding: 8px 4px;
+  border-right: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.region-btn:last-child, .bg-btn:last-child { border-right: none; }
+.region-btn .swatch { width: 11px; height: 11px; border-radius: 50%; }
+.region-btn[data-region=RU] .swatch { background: var(--brand-blue); }
+.region-btn[data-region=GL] .swatch { background: var(--brand-violet); }
+.region-btn.active, .bg-btn.active, .size-btn.active, .fx-btn.active {
+  background: var(--text-primary); color: #fff;
+}
+.region-btn:hover:not(.active), .bg-btn:hover:not(.active),
+.size-btn:hover:not(.active), .fx-btn:hover:not(.active) {
+  background: var(--bg-secondary);
+}
+
+.fx-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); overflow: hidden;
+}
+.fx-btn {
+  font-size: 11px; padding: 7px 4px;
+  border-right: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+}
+.fx-btn:nth-child(3n) { border-right: none; }
+.fx-btn:nth-child(n+7) { border-bottom: none; }
+
+.tweak-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.tweak-wrap input[type=range] { flex: 1; }
+.tweak-wrap .val { min-width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+
+.size-pill {
+  display: flex; border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+.size-pill button {
+  flex: 1; font-size: 11px; padding: 6px 10px;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--text-secondary); border-right: 0.5px solid var(--border);
+  font-family: inherit;
+}
+.size-pill button:last-child { border-right: none; }
+.size-pill button.active { background: var(--text-primary); color: #fff; }
+
+.preview-area { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.main-canvas { width: 280px; height: 280px; display: block; cursor: move; touch-action: none; }
+.drag-hint { font-size: 11px; color: var(--text-tertiary); margin-top: -8px; text-align: center; }
+.preview-tinys { display: flex; align-items: center; gap: 18px; }
+.tiny-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tiny-cell canvas { display: block; }
+.tiny-label { font-size: 10px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+.action-row { display: flex; gap: 8px; width: 100%; }
+.action-row button {
+  flex: 1; padding: 12px; font-size: 13px;
+  border-radius: var(--radius-md); border: 0.5px solid var(--border-strong);
+  background: transparent; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.action-row button.primary {
+  background: var(--text-primary); color: #fff; border-color: var(--text-primary);
+}
+.action-row button:hover:not(.primary) { background: var(--bg-secondary); }
+.action-row button.primary:hover { opacity: 0.9; }
+
+input[type=text], input[type=email] {
+  width: 100%; padding: 10px 12px; border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md); font-size: 13px; font-family: inherit;
+  background: rgba(255,255,255,0.05); color: #fff;
+}
+input[type=email]:focus { outline: none; border-color: var(--brand-violet); }
+
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  height: 4px; background: var(--border-strong); border-radius: 2px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--text-primary); cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%; border: none;
+  background: var(--text-primary); cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .landing-body { grid-template-columns: 1fr; padding: 40px 24px; gap: 32px; }
+  .landing-h1 { font-size: 32px; }
+  .preview-stack { width: 260px; height: 260px; }
+  .preview-stack canvas:nth-child(1) { width: 200px; height: 200px; top: 30px; left: 30px; }
+  .preview-stack canvas:nth-child(2) { width: 100px; height: 100px; }
+  .preview-stack canvas:nth-child(3) { width: 80px; height: 80px; }
+  .layout { grid-template-columns: 1fr; }
+  .samples-strip { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============== LANDING ============== -->
+<div id="landing" class="landing">
+  <div class="landing-nav">
+    <div class="landing-logo"><span class="lc"><img id="navLogo" alt="ReStaff" /></span>ReStaff · Avatars</div>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="ru" onclick="setLang(this)">RU</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang(this)">EN</button>
+    </div>
+  </div>
+
+  <div class="landing-body">
+    <div class="landing-left">
+      <div class="eyebrow" data-i18n="eyebrow">Internal · Команда ReStaff</div>
+      <h1 class="landing-h1">
+        <span data-i18n="h1a">Единый стиль</span><br>
+        <span class="accent" data-i18n="h1b">для всей команды</span>
+      </h1>
+      <p class="landing-sub" data-i18n="sub">Корпоративный сервис создания аватарок для Zoom, Slack и почты. Загрузите фото — мы обработаем его в едином стиле бренда.</p>
+
+      <div class="features">
+        <div class="feat"><i class="ti ti-circle-check"></i><span data-i18n="f1">Авто-кроп по половине лица</span></div>
+        <div class="feat"><i class="ti ti-circle-check"></i><span data-i18n="f2">Цвет отдела и региона</span></div>
+        <div class="feat"><i class="ti ti-circle-check"></i><span data-i18n="f3">9 фильтров для самовыражения</span></div>
+      </div>
+
+      <button class="google-btn" onclick="openSignIn()">
+        <svg class="g-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
+          <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.5 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+          <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2c-.4.4 6.6-4.8 6.6-14.8 0-1.3-.1-2.6-.4-3.9z"/>
+        </svg>
+        <span data-i18n="signin">Войти через корпоративный Google</span>
+      </button>
+      <div class="access-line" data-i18n="access">Доступ только для сотрудников ReStaff</div>
+    </div>
+
+    <div class="landing-right">
+      <div class="preview-stack">
+        <canvas id="hero-main" width="320" height="320"></canvas>
+        <canvas id="hero-1" width="180" height="180"></canvas>
+        <canvas id="hero-2" width="140" height="140"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-foot" style="text-align:center">
+    <span data-i18n="foot">© ReStaff 2026</span>
+  </div>
+</div>
+
+<!-- ============== SIGN-IN MODAL (DEMO) ============== -->
+<div id="signin-modal" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,0.85);z-index:100;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#0a0a0f;border:0.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px;max-width:380px;width:100%;color:#fff;">
+    <div style="font-size:13px;color:#a78bfa;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;font-weight:500" data-i18n="modal_title">Демо-вход</div>
+    <h2 style="font-size:20px;font-weight:500;margin-bottom:8px;letter-spacing:-0.01em" data-i18n="modal_h">Введите рабочий email</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:20px;line-height:1.5" data-i18n="modal_sub">В демо-версии используется проверка домена. На проде это будет полноценный Google OAuth.</p>
+    <input type="email" id="emailInput" placeholder="ivan@restaff.pro" style="margin-bottom:8px"/>
+    <div id="emailErr" style="font-size:12px;color:#f87171;min-height:18px;margin-bottom:12px"></div>
+    <button onclick="trySignIn()" class="google-btn" style="width:100%;justify-content:center" data-i18n="modal_btn">Войти</button>
+    <button onclick="closeSignIn()" style="margin-top:10px;width:100%;padding:10px;background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;font-size:12px" data-i18n="modal_cancel">Отмена</button>
+  </div>
+</div>
+
+<!-- ============== APP ============== -->
+<div id="app" class="app">
+  <div class="app-header">
+    <div class="app-title"><span class="lc"><img id="appLogo" alt="ReStaff" /></span>ReStaff · Avatar Studio</div>
+    <div class="user-pill">
+      <span class="green-dot"></span>
+      <span id="userEmail">—</span>
+      <button onclick="signOut()" title="Выйти"><i class="ti ti-logout"></i></button>
+    </div>
+  </div>
+
+  <div class="samples-strip">
+    <div class="samples-label" data-i18n="samples_label">Эталон<br>стиля →</div>
+    <div class="samples-canvases">
+      <div class="sample-cell"><canvas id="sample-m" width="180" height="180"></canvas><span class="sample-name" data-i18n="sample_m">пример M</span></div>
+      <div class="sample-cell"><canvas id="sample-f" width="180" height="180"></canvas><span class="sample-name" data-i18n="sample_f">пример Ж</span></div>
+    </div>
+    <div class="samples-hint" data-i18n="samples_hint">Лицо смещено в правую часть круга — видна левая половина. Сдвинь фото мышью если автокроп не попал.</div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="section">
+        <div class="section-title"><span data-i18n="step1">1 · Фото</span></div>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('photoInput').click()">
+          <i class="ti ti-camera" style="font-size:14px;margin-right:6px;vertical-align:-2px"></i><span id="uploadLabel" data-i18n="upload">Загрузить фото</span>
+        </div>
+        <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
+        <div class="style-note" id="cropStatus" data-i18n="status_init">Загрузите фото — лицо встанет на правую сторону</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span data-i18n="step2">2 · Подстройка</span>
+          <button class="reset-btn" onclick="resetTweak()" data-i18n="reset">сбросить</button>
+        </div>
+        <div class="tweak-wrap" style="margin-bottom:6px">
+          <span>Zoom</span>
+          <input type="range" id="zoomRange" min="80" max="180" step="2" value="100" oninput="setZoom(this.value)" />
+          <span class="val" id="zoomVal">1.00×</span>
+        </div>
+        <div style="font-size:11px;color:var(--text-tertiary);text-align:center;margin-top:4px" data-i18n="drag_tip">Сдвинуть мышью</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title" data-i18n="step3">3 · Подразделение</div>
+        <div class="dept-list" id="deptList"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title" data-i18n="step4">4 · Регион</div>
+        <div class="region-row">
+          <button class="region-btn active" data-region="RU" onclick="setRegion(this)"><span class="swatch"></span>РФ</button>
+          <button class="region-btn" data-region="GL" onclick="setRegion(this)"><span class="swatch"></span>Global</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title" data-i18n="step5">5 · Фильтр</div>
+        <div class="fx-grid">
+          <button class="fx-btn active" data-fx="bw" onclick="setFx(this)">Mono</button>
+          <button class="fx-btn" data-fx="hicon" onclick="setFx(this)">Hi-con</button>
+          <button class="fx-btn" data-fx="soft" onclick="setFx(this)">Soft</button>
+          <button class="fx-btn" data-fx="silver" onclick="setFx(this)">Silver</button>
+          <button class="fx-btn" data-fx="grain" onclick="setFx(this)">Grain</button>
+          <button class="fx-btn" data-fx="ink" onclick="setFx(this)">Ink</button>
+          <button class="fx-btn" data-fx="sepia" onclick="setFx(this)">Sepia</button>
+          <button class="fx-btn" data-fx="bluemono" onclick="setFx(this)">Blue·BW</button>
+          <button class="fx-btn" data-fx="violetmono" onclick="setFx(this)">Violet·BW</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-area">
+      <canvas id="cv-main" class="main-canvas" width="600" height="600"></canvas>
+      <div class="drag-hint"><i class="ti ti-hand-grab" style="vertical-align:-2px"></i> <span data-i18n="drag_hint">Перетащи фото в превью</span></div>
+
+      <div class="preview-tinys">
+        <div class="tiny-cell"><canvas id="cv-md" width="56" height="56"></canvas><span class="tiny-label">56px</span></div>
+        <div class="tiny-cell"><canvas id="cv-sm" width="32" height="32"></canvas><span class="tiny-label">32px</span></div>
+        <div class="tiny-cell"><canvas id="cv-xs" width="20" height="20"></canvas><span class="tiny-label">20px</span></div>
+      </div>
+
+      <div class="size-pill">
+        <button onclick="setSize(256,this)">256</button>
+        <button class="active" onclick="setSize(512,this)">512</button>
+        <button onclick="setSize(1024,this)">1024</button>
+      </div>
+
+      <div class="action-row">
+        <button class="primary" onclick="download()"><i class="ti ti-download"></i><span data-i18n="download">Скачать PNG</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
