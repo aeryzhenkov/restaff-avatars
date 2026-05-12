@@ -12,13 +12,14 @@
 <style>
 :root {
   --bg-dark: #0a0a0f;
-  --bg-card: #ffffff;
-  --bg-secondary: #f5f3fc;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
-  --border: #e5e7eb;
-  --border-strong: #d1d5db;
+  --bg-card: #0f0f15;
+  --bg-secondary: #1a1a24;
+  --bg-tertiary: #14141c;
+  --text-primary: #f5f5f7;
+  --text-secondary: #a8a8b3;
+  --text-tertiary: #6b6b78;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.15);
   --brand-violet: #7C3AED;
   --brand-blue: #2563EB;
   --radius-md: 8px;
@@ -28,7 +29,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-card);
+  background: var(--bg-dark);
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -206,35 +207,66 @@ body {
   position: relative;
   z-index: 1;
 }
-.preview-stack {
+.mystery-orb {
   position: relative;
   width: 360px;
   height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.preview-stack canvas { position: absolute; border-radius: 50%; }
-.preview-stack canvas:nth-child(1) {
-  width: 280px;
-  height: 280px;
-  top: 40px;
-  left: 40px;
-  z-index: 3;
-  box-shadow: 0 16px 64px rgba(124,58,237,0.4);
+.orb-glow {
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,0.55) 0%, rgba(124,58,237,0.25) 35%, rgba(124,58,237,0) 70%);
+  filter: blur(20px);
+  animation: pulse 4s ease-in-out infinite;
 }
-.preview-stack canvas:nth-child(2) {
-  width: 140px;
-  height: 140px;
-  top: -10px;
-  right: -10px;
+.orb-ring {
+  position: absolute;
+  inset: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(167,139,250,0.6);
+  box-shadow:
+    0 0 60px rgba(124,58,237,0.5),
+    0 0 120px rgba(124,58,237,0.3),
+    inset 0 0 60px rgba(124,58,237,0.2);
+}
+.orb-ring::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 0.5px solid rgba(167,139,250,0.3);
+}
+.orb-core {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #1a0a2e 0%, #0a0510 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   z-index: 2;
-  opacity: 0.92;
 }
-.preview-stack canvas:nth-child(3) {
-  width: 110px;
-  height: 110px;
-  bottom: 20px;
-  left: -20px;
-  z-index: 2;
-  opacity: 0.85;
+.orb-core::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 70% 70%, rgba(124,58,237,0.25) 0%, transparent 50%);
+}
+.orb-core img {
+  width: 50%;
+  height: 50%;
+  opacity: 0.35;
+  filter: drop-shadow(0 0 20px rgba(124,58,237,0.6));
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
 }
 
 .landing-foot {
@@ -363,11 +395,11 @@ body {
 .region-btn[data-region=RU] .swatch { background: var(--brand-blue); }
 .region-btn[data-region=GL] .swatch { background: var(--brand-violet); }
 .region-btn.active, .bg-btn.active, .size-btn.active, .fx-btn.active {
-  background: var(--text-primary); color: #fff;
+  background: var(--brand-violet); color: #fff;
 }
 .region-btn:hover:not(.active), .bg-btn:hover:not(.active),
 .size-btn:hover:not(.active), .fx-btn:hover:not(.active) {
-  background: var(--bg-secondary);
+  background: rgba(124,58,237,0.1);
 }
 
 .fx-grid {
@@ -397,7 +429,7 @@ body {
   font-family: inherit;
 }
 .size-pill button:last-child { border-right: none; }
-.size-pill button.active { background: var(--text-primary); color: #fff; }
+.size-pill button.active { background: var(--brand-violet); color: #fff; }
 
 .preview-area { display: flex; flex-direction: column; align-items: center; gap: 18px; }
 .main-canvas { width: 280px; height: 280px; display: block; cursor: move; touch-action: none; }
@@ -414,7 +446,7 @@ body {
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 .action-row button.primary {
-  background: var(--text-primary); color: #fff; border-color: var(--text-primary);
+  background: var(--brand-violet); color: #fff; border-color: var(--brand-violet);
 }
 .action-row button:hover:not(.primary) { background: var(--bg-secondary); }
 .action-row button.primary:hover { opacity: 0.9; }
@@ -443,10 +475,7 @@ input[type=range]::-moz-range-thumb {
 @media (max-width: 720px) {
   .landing-body { grid-template-columns: 1fr; padding: 40px 24px; gap: 32px; }
   .landing-h1 { font-size: 32px; }
-  .preview-stack { width: 260px; height: 260px; }
-  .preview-stack canvas:nth-child(1) { width: 200px; height: 200px; top: 30px; left: 30px; }
-  .preview-stack canvas:nth-child(2) { width: 100px; height: 100px; }
-  .preview-stack canvas:nth-child(3) { width: 80px; height: 80px; }
+  .mystery-orb { width: 260px; height: 260px; }
   .layout { grid-template-columns: 1fr; }
   .samples-strip { flex-direction: column; align-items: flex-start; }
 }
@@ -492,10 +521,12 @@ input[type=range]::-moz-range-thumb {
     </div>
 
     <div class="landing-right">
-      <div class="preview-stack">
-        <canvas id="hero-main" width="320" height="320"></canvas>
-        <canvas id="hero-1" width="180" height="180"></canvas>
-        <canvas id="hero-2" width="140" height="140"></canvas>
+      <div class="mystery-orb">
+        <div class="orb-glow"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-core">
+          <img id="orbLogo" alt="" />
+        </div>
       </div>
     </div>
   </div>

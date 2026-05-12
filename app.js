@@ -141,7 +141,6 @@ function onAssetReady() {
       render();
       renderSamples();
     }
-    renderHero();
   }
 }
 
@@ -157,8 +156,11 @@ fetch('assets-data.json')
     blueLogo.src = 'data:image/png;base64,' + data.LOGO_BLUE;
     sampleMale.src = 'data:image/jpeg;base64,' + data.SAMPLE_MALE;
     sampleFemale.src = 'data:image/jpeg;base64,' + data.SAMPLE_FEMALE;
-    document.getElementById('navLogo').src = 'data:image/png;base64,' + data.LOGO_VIOLET;
-    document.getElementById('appLogo').src = 'data:image/png;base64,' + data.LOGO_VIOLET;
+    const logoSrc = 'data:image/png;base64,' + data.LOGO_VIOLET;
+    document.getElementById('navLogo').src = logoSrc;
+    document.getElementById('appLogo').src = logoSrc;
+    const orbLogo = document.getElementById('orbLogo');
+    if (orbLogo) orbLogo.src = logoSrc;
   });
 
 // === Auth ===
@@ -488,9 +490,9 @@ function processSample(srcImg, fxName, size) {
 }
 
 function drawSilhouette(ctx, S) {
-  ctx.fillStyle = '#f5f3fc';
+  ctx.fillStyle = '#0a0a0f';
   ctx.fillRect(0, 0, S, S);
-  ctx.fillStyle = '#d4d1e7';
+  ctx.fillStyle = '#2a2438';
   ctx.beginPath();
   ctx.arc(S*0.62, S*0.40, S*0.22, 0, Math.PI*2);
   ctx.fill();
@@ -511,11 +513,11 @@ function renderAvatarComposition(ctx, S, opts) {
   ctx.beginPath();
   ctx.arc(S/2, S/2, S/2, 0, Math.PI*2);
   ctx.clip();
-  ctx.fillStyle = '#f5f3fc';
+  ctx.fillStyle = '#0a0a0f';
   ctx.fillRect(0, 0, S, S);
   if (violetLogo.complete && violetLogo.naturalWidth > 0) {
     ctx.save();
-    ctx.globalAlpha = 0.07;
+    ctx.globalAlpha = 0.13;
     const lSize = S * 0.85;
     ctx.drawImage(violetLogo, S/2 - lSize/2, S/2 - lSize/2, lSize, lSize);
     ctx.restore();
@@ -622,71 +624,6 @@ function download() {
 }
 
 // === Hero render для лендинга ===
-function drawHeroAvatar(canvas, ringColors, region) {
-  const S = canvas.width;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, S, S);
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(S/2, S/2, S/2, 0, Math.PI*2);
-  ctx.clip();
-  const gbg = ctx.createLinearGradient(0, 0, S, S);
-  gbg.addColorStop(0, '#1a1a2e');
-  gbg.addColorStop(1, '#0a0a1f');
-  ctx.fillStyle = gbg;
-  ctx.fillRect(0, 0, S, S);
-  if (violetLogo.complete && violetLogo.naturalWidth > 0) {
-    ctx.save();
-    ctx.globalAlpha = 0.12;
-    const lSize = S * 0.85;
-    ctx.drawImage(violetLogo, S/2 - lSize/2, S/2 - lSize/2, lSize, lSize);
-    ctx.restore();
-  }
-  // силуэт half-face
-  const cx = S * 0.66, cy = S * 0.42, fr = S * 0.30;
-  const gradFace = ctx.createRadialGradient(cx - fr*0.3, cy - fr*0.3, 0, cx, cy, fr * 1.3);
-  gradFace.addColorStop(0, '#d4d4d4');
-  gradFace.addColorStop(0.6, '#666');
-  gradFace.addColorStop(1, '#1a1a1a');
-  ctx.fillStyle = gradFace;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy, fr * 0.85, fr, 0, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle = '#1a1a1a';
-  ctx.beginPath();
-  ctx.ellipse(cx - fr*0.05, cy - fr*0.6, fr*0.95, fr*0.4, 0, Math.PI, 0);
-  ctx.fill();
-  ctx.fillStyle = '#fafafa';
-  ctx.beginPath();
-  ctx.arc(cx - fr*0.5, cy - fr*0.05, fr*0.07, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle = '#222';
-  ctx.beginPath();
-  ctx.arc(cx - fr*0.5, cy - fr*0.05, fr*0.04, 0, Math.PI*2);
-  ctx.fill();
-  ctx.restore();
-  const ringW = S * 0.075;
-  const grad = ctx.createLinearGradient(0, 0, S, S);
-  grad.addColorStop(0, ringColors[0]);
-  grad.addColorStop(1, ringColors[1]);
-  ctx.strokeStyle = grad;
-  ctx.lineWidth = ringW;
-  ctx.beginPath();
-  ctx.arc(S/2, S/2, S/2 - ringW/2, 0, Math.PI*2);
-  ctx.stroke();
-  if (violetLogo.complete && blueLogo.complete && violetLogo.naturalWidth > 0) {
-    const lo = region === 'RU' ? blueLogo : violetLogo;
-    const bSize = S * 0.44;
-    ctx.drawImage(lo, S*0.78 - bSize/2, S*0.78 - bSize/2, bSize, bSize);
-  }
-}
-
-function renderHero() {
-  drawHeroAvatar(document.getElementById('hero-main'), ['#3B82F6', '#6366F1'], 'GL');
-  drawHeroAvatar(document.getElementById('hero-1'), ['#EC4899', '#A855F7'], 'RU');
-  drawHeroAvatar(document.getElementById('hero-2'), ['#22C55E', '#84CC16'], 'GL');
-}
-
 // === Init ===
 window.addEventListener('DOMContentLoaded', () => {
   applyLang(currentLang);
