@@ -39,6 +39,14 @@ const I18N = {
     sample_m: 'пример M',
     sample_f: 'пример Ж',
     samples_hint: 'Лицо смещено в правую часть круга — видна левая половина. Сдвинь фото мышью если автокроп не попал.',
+    ob_eyebrow: 'Эталон стиля',
+    ob_h: 'Так должна выглядеть ваша аватарка',
+    ob_sub: 'Половина лица в правой части круга · ч/б фильтр · цветное кольцо подразделения · логотип RE (синий — РФ, фиолетовый — Global)',
+    ob_ref_m: 'Топ менеджмент · РФ',
+    ob_ref_f: 'HR · Global',
+    ob_btn: 'Понятно, начинаем',
+    sm_label: 'Эталон →',
+    sm_show: 'Показать снова',
     step1: '1 · Фото',
     step2: '2 · Подстройка',
     step3: '3 · Подразделение',
@@ -76,6 +84,14 @@ const I18N = {
     sample_m: 'sample M',
     sample_f: 'sample F',
     samples_hint: 'Face is shifted to the right side of the circle — left half visible. Drag to adjust if auto-crop missed.',
+    ob_eyebrow: 'Style reference',
+    ob_h: 'This is how your avatar should look',
+    ob_sub: 'Half face on the right · monochrome filter · department color ring · RE logo (blue for RU, violet for Global)',
+    ob_ref_m: 'Leadership · RU',
+    ob_ref_f: 'HR · Global',
+    ob_btn: "Got it, let's start",
+    sm_label: 'Reference →',
+    sm_show: 'Show again',
     step1: '1 · Photo',
     step2: '2 · Fine-tune',
     step3: '3 · Department',
@@ -130,37 +146,38 @@ let currentUser = null;
 // === Assets ===
 const violetLogo = new Image();
 const blueLogo = new Image();
-const sampleMale = new Image();
-const sampleFemale = new Image();
 let assetsReady = 0;
 
 function onAssetReady() {
   assetsReady++;
-  if (assetsReady === 4) {
+  if (assetsReady === 2) {
     if (document.getElementById('app').classList.contains('active')) {
       render();
-      renderSamples();
     }
   }
 }
 
-// Загружаем ассеты с CDN-friendly путей
+// Загружаем ассеты
 fetch('assets-data.json')
   .then(r => r.json())
   .then(data => {
     violetLogo.onload = onAssetReady;
     blueLogo.onload = onAssetReady;
-    sampleMale.onload = onAssetReady;
-    sampleFemale.onload = onAssetReady;
     violetLogo.src = 'data:image/png;base64,' + data.LOGO_VIOLET;
     blueLogo.src = 'data:image/png;base64,' + data.LOGO_BLUE;
-    sampleMale.src = 'data:image/jpeg;base64,' + data.SAMPLE_MALE;
-    sampleFemale.src = 'data:image/jpeg;base64,' + data.SAMPLE_FEMALE;
     const logoSrc = 'data:image/png;base64,' + data.LOGO_VIOLET;
     document.getElementById('navLogo').src = logoSrc;
     document.getElementById('appLogo').src = logoSrc;
     const orbLogo = document.getElementById('orbLogo');
     if (orbLogo) orbLogo.src = logoSrc;
+
+    // Эталонные аватарки — теперь готовые картинки
+    const refMaleSrc = 'data:image/jpeg;base64,' + data.REF_MALE;
+    const refFemaleSrc = 'data:image/jpeg;base64,' + data.REF_FEMALE;
+    document.getElementById('refMaleImg').src = refMaleSrc;
+    document.getElementById('refFemaleImg').src = refFemaleSrc;
+    document.getElementById('smMale').src = refMaleSrc;
+    document.getElementById('smFemale').src = refFemaleSrc;
   });
 
 // === Auth ===
@@ -201,10 +218,30 @@ function showApp() {
   document.getElementById('landing').classList.add('hidden');
   document.getElementById('app').classList.add('active');
   document.getElementById('userEmail').textContent = currentUser;
-  if (assetsReady === 4) {
+  if (assetsReady === 2) {
     render();
-    renderSamples();
   }
+  // Восстанавливаем состояние онбординга
+  const dismissed = localStorage.getItem('restaff_ob_dismissed') === '1';
+  if (dismissed) {
+    document.getElementById('onboarding').style.display = 'none';
+    document.getElementById('samplesMini').classList.add('active');
+  } else {
+    document.getElementById('onboarding').style.display = 'block';
+    document.getElementById('samplesMini').classList.remove('active');
+  }
+}
+
+function dismissOnboarding() {
+  localStorage.setItem('restaff_ob_dismissed', '1');
+  document.getElementById('onboarding').style.display = 'none';
+  document.getElementById('samplesMini').classList.add('active');
+}
+
+function showOnboarding() {
+  localStorage.removeItem('restaff_ob_dismissed');
+  document.getElementById('onboarding').style.display = 'block';
+  document.getElementById('samplesMini').classList.remove('active');
 }
 
 document.addEventListener('keydown', e => {
@@ -468,27 +505,6 @@ function getProcessed(size) {
   return oc;
 }
 
-function processSample(srcImg, fxName, size) {
-  const oc = document.createElement('canvas');
-  oc.width = size; oc.height = size;
-  const ctx = oc.getContext('2d');
-  ctx.fillStyle = '#0f0f12';
-  ctx.fillRect(0, 0, size, size);
-  const w = srcImg.width, h = srcImg.height;
-  const faceW = Math.min(w, h) * 0.55;
-  const fb = {x: w/2 - faceW/2, y: h*0.4 - faceW/2, w: faceW, h: faceW};
-  const crop = computeHalfFaceCrop(srcImg, fb, 1.0, 0, 0);
-  if (crop) {
-    ctx.drawImage(srcImg, crop.sx, crop.sy, crop.size, crop.size, 0, 0, size, size);
-  } else {
-    ctx.drawImage(srcImg, 0, 0, size, size);
-  }
-  const imgData = ctx.getImageData(0, 0, size, size);
-  applyMonoFilter(imgData.data, fxName);
-  ctx.putImageData(imgData, 0, 0);
-  return oc;
-}
-
 function drawSilhouette(ctx, S) {
   ctx.fillStyle = '#0a0a0f';
   ctx.fillRect(0, 0, S, S);
@@ -567,35 +583,6 @@ function renderTo(canvasId) {
   ctx.clip();
   renderAvatarComposition(ctx, cv.width);
   ctx.restore();
-}
-
-function renderSamples() {
-  if (!sampleMale.complete || !sampleFemale.complete) return;
-  if (sampleMale.naturalWidth === 0) return;
-  const sampleDeptM = DEPTS.find(d => d.id === 'dev');
-  const sampleDeptF = DEPTS.find(d => d.id === 'mkt');
-  const processedM = processSample(sampleMale, 'bw', 200);
-  const processedF = processSample(sampleFemale, 'bw', 200);
-  const cm = document.getElementById('sample-m');
-  if (cm) {
-    const ctx = cm.getContext('2d');
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cm.width/2, cm.height/2, cm.width/2, 0, Math.PI*2);
-    ctx.clip();
-    renderAvatarComposition(ctx, cm.width, {region: 'RU', dept: sampleDeptM, customImg: processedM});
-    ctx.restore();
-  }
-  const cf = document.getElementById('sample-f');
-  if (cf) {
-    const ctx = cf.getContext('2d');
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cf.width/2, cf.height/2, cf.width/2, 0, Math.PI*2);
-    ctx.clip();
-    renderAvatarComposition(ctx, cf.width, {region: 'GL', dept: sampleDeptF, customImg: processedF});
-    ctx.restore();
-  }
 }
 
 function render() {

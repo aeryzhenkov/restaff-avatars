@@ -315,24 +315,120 @@ body {
 }
 .user-pill button:hover { color: var(--text-primary); }
 
-.samples-strip {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  background: var(--bg-secondary);
+/* === Onboarding (большой блок при первом входе) === */
+.onboarding {
+  background: linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(37,99,235,0.06) 100%);
+  border: 0.5px solid rgba(124,58,237,0.25);
   border-radius: var(--radius-lg);
+  padding: 28px 24px;
   margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
 }
-.samples-label {
-  font-size: 11px; font-weight: 500; color: var(--text-tertiary);
-  text-transform: uppercase; letter-spacing: .1em; flex-shrink: 0; line-height: 1.4;
+.onboarding::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 60%;
+  height: 180%;
+  background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
+  pointer-events: none;
 }
-.samples-canvases { display: flex; gap: 12px; }
-.sample-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.sample-cell canvas { width: 80px; height: 80px; }
-.sample-cell .sample-name { font-size: 10px; color: var(--text-tertiary); }
-.samples-hint { font-size: 12px; color: var(--text-secondary); line-height: 1.5; flex: 1; min-width: 0; }
+.ob-header { text-align: center; margin-bottom: 20px; position: relative; z-index: 1; }
+.ob-eyebrow {
+  font-size: 11px; color: #a78bfa;
+  text-transform: uppercase; letter-spacing: .12em;
+  margin-bottom: 8px; font-weight: 500;
+}
+.ob-h2 {
+  font-size: 22px; font-weight: 500;
+  letter-spacing: -0.02em; margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.ob-sub {
+  font-size: 13px; color: var(--text-secondary);
+  line-height: 1.6; max-width: 480px; margin: 0 auto;
+}
+.ob-refs {
+  display: flex; gap: 24px;
+  justify-content: center;
+  margin-bottom: 22px;
+  position: relative; z-index: 1;
+}
+.ob-ref-card {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+}
+.ob-ref-card img {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 40px rgba(124,58,237,0.2);
+}
+.ob-ref-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.04);
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+.ob-ref-name { font-weight: 500; color: var(--text-primary); }
+.ob-btn {
+  display: flex; align-items: center;
+  gap: 8px; margin: 0 auto;
+  padding: 11px 22px;
+  background: var(--brand-violet);
+  color: #fff; border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: inherit;
+  transition: transform .15s, box-shadow .15s;
+  position: relative; z-index: 1;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+}
+.ob-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(124,58,237,0.55); }
+.ob-btn i { font-size: 16px; }
+
+/* === Samples mini (компактный блок после онбординга) === */
+.samples-mini {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+.samples-mini.active { display: flex; }
+.sm-label {
+  font-size: 11px; font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: .08em;
+  flex-shrink: 0;
+}
+.sm-img {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sm-show {
+  margin-left: auto;
+  background: transparent; border: none;
+  color: var(--text-tertiary); font-size: 11px;
+  cursor: pointer; font-family: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+.sm-show:hover { color: var(--brand-violet); }
+
+@media (max-width: 720px) {
+  .ob-refs { gap: 16px; }
+  .ob-ref-card img { width: 110px; height: 110px; }
+  .ob-h2 { font-size: 18px; }
+}
 
 .layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
 .section { margin-bottom: 20px; }
@@ -477,7 +573,6 @@ input[type=range]::-moz-range-thumb {
   .landing-h1 { font-size: 32px; }
   .mystery-orb { width: 260px; height: 260px; }
   .layout { grid-template-columns: 1fr; }
-  .samples-strip { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
@@ -560,13 +655,37 @@ input[type=range]::-moz-range-thumb {
     </div>
   </div>
 
-  <div class="samples-strip">
-    <div class="samples-label" data-i18n="samples_label">Эталон<br>стиля →</div>
-    <div class="samples-canvases">
-      <div class="sample-cell"><canvas id="sample-m" width="180" height="180"></canvas><span class="sample-name" data-i18n="sample_m">пример M</span></div>
-      <div class="sample-cell"><canvas id="sample-f" width="180" height="180"></canvas><span class="sample-name" data-i18n="sample_f">пример Ж</span></div>
+  <div class="onboarding" id="onboarding">
+    <div class="ob-header">
+      <div class="ob-eyebrow" data-i18n="ob_eyebrow">Эталон стиля</div>
+      <h2 class="ob-h2" data-i18n="ob_h">Так должна выглядеть ваша аватарка</h2>
+      <p class="ob-sub" data-i18n="ob_sub">Половина лица в правой части круга · ч/б фильтр · цветное кольцо подразделения · логотип RE (синий — РФ, фиолетовый — Global)</p>
     </div>
-    <div class="samples-hint" data-i18n="samples_hint">Лицо смещено в правую часть круга — видна левая половина. Сдвинь фото мышью если автокроп не попал.</div>
+    <div class="ob-refs">
+      <div class="ob-ref-card">
+        <img id="refMaleImg" alt="Пример M" />
+        <div class="ob-ref-meta">
+          <span class="ob-ref-name" data-i18n="ob_ref_m">Топ менеджмент · РФ</span>
+        </div>
+      </div>
+      <div class="ob-ref-card">
+        <img id="refFemaleImg" alt="Пример Ж" />
+        <div class="ob-ref-meta">
+          <span class="ob-ref-name" data-i18n="ob_ref_f">HR · Global</span>
+        </div>
+      </div>
+    </div>
+    <button class="ob-btn" onclick="dismissOnboarding()">
+      <span data-i18n="ob_btn">Понятно, начинаем</span>
+      <i class="ti ti-arrow-right"></i>
+    </button>
+  </div>
+
+  <div class="samples-mini" id="samplesMini">
+    <span class="sm-label" data-i18n="sm_label">Эталон →</span>
+    <img id="smMale" class="sm-img" alt="" />
+    <img id="smFemale" class="sm-img" alt="" />
+    <button class="sm-show" onclick="showOnboarding()" data-i18n="sm_show">Показать снова</button>
   </div>
 
   <div class="layout">
