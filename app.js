@@ -44,6 +44,10 @@ const I18N = {
     ob_sub: 'Половина лица в правой части круга · ч/б фильтр · цветное кольцо подразделения · логотип RE (синий — РФ, фиолетовый — Global)',
     ob_ref_m: 'Топ менеджмент · РФ',
     ob_ref_f: 'HR · Global',
+    ob_rule_1: 'Тёмный фон вокруг лица',
+    ob_rule_2: 'Половина лица в правой части круга',
+    ob_rule_3: 'Чёрно-белая обработка',
+    ob_rule_4: 'Кольцо подразделения и логотип RE',
     ob_btn: 'Понятно, начинаем',
     sm_label: 'Эталон →',
     sm_show: 'Показать снова',
@@ -54,6 +58,12 @@ const I18N = {
     step5: '5 · Фильтр',
     reset: 'сбросить',
     upload: 'Загрузить фото',
+    photo_tip: 'Лучше фото с тёмным однотонным фоном. Если фон светлый — используйте кнопку ниже.',
+    bg_remove: 'Убрать фон автоматически',
+    bg_processing: 'Обрабатываем фото...',
+    bg_done: 'Фон удалён',
+    bg_done_btn: 'Фон удалён ✓',
+    bg_fail: 'Ошибка: ',
     status_init: 'Загрузите фото — лицо встанет на правую сторону',
     status_searching: 'Ищем лицо...',
     status_found: 'Лицо найдено · кадр настроен',
@@ -61,6 +71,16 @@ const I18N = {
     drag_tip: 'Сдвинуть мышью',
     drag_hint: 'Перетащи фото в превью',
     download: 'Скачать PNG',
+    check_eyebrow: 'Проверка перед скачиванием',
+    check_h: 'Похоже не на эталон',
+    check_sub: 'Сравните ваш результат с эталоном — возможно стоит подкорректировать. Можно вернуться и поправить, или скачать как есть.',
+    check_yours: 'Ваш',
+    check_ref: 'Эталон',
+    check_back: '← Вернуться поправить',
+    check_anyway: 'Скачать как есть →',
+    issues_found: 'Найдены отклонения от эталона:',
+    issue_dark_bg: 'Правая часть круга недостаточно тёмная — нужен тёмный фон вокруг лица',
+    issue_face_position: 'Лицо не в правой части круга — двигайте фото мышью пока лицо не уйдёт вправо',
     err_invalid_email: 'Введите корректный email',
     err_wrong_domain: 'Доступ только для сотрудников ReStaff'
   },
@@ -89,6 +109,10 @@ const I18N = {
     ob_sub: 'Half face on the right · monochrome filter · department color ring · RE logo (blue for RU, violet for Global)',
     ob_ref_m: 'Leadership · RU',
     ob_ref_f: 'HR · Global',
+    ob_rule_1: 'Dark background around the face',
+    ob_rule_2: 'Half face on the right side',
+    ob_rule_3: 'Black & white treatment',
+    ob_rule_4: 'Department ring and RE logo',
     ob_btn: "Got it, let's start",
     sm_label: 'Reference →',
     sm_show: 'Show again',
@@ -99,6 +123,12 @@ const I18N = {
     step5: '5 · Filter',
     reset: 'reset',
     upload: 'Upload photo',
+    photo_tip: 'Photos with dark, solid backgrounds work best. For light backgrounds — use the button below.',
+    bg_remove: 'Remove background automatically',
+    bg_processing: 'Processing photo...',
+    bg_done: 'Background removed',
+    bg_done_btn: 'Background removed ✓',
+    bg_fail: 'Error: ',
     status_init: 'Upload your photo — face will land on the right',
     status_searching: 'Detecting face...',
     status_found: 'Face found · crop set',
@@ -106,6 +136,16 @@ const I18N = {
     drag_tip: 'Drag to adjust',
     drag_hint: 'Drag photo in preview',
     download: 'Download PNG',
+    check_eyebrow: 'Pre-download check',
+    check_h: 'Doesn\'t match the reference',
+    check_sub: 'Compare your result with the reference — you may want to adjust. You can go back and fix, or download as-is.',
+    check_yours: 'Yours',
+    check_ref: 'Reference',
+    check_back: '← Back to fix',
+    check_anyway: 'Download anyway →',
+    issues_found: 'Differences from reference:',
+    issue_dark_bg: 'Right side of the circle is not dark enough — needs dark background around face',
+    issue_face_position: 'Face is not on the right side — drag the photo until face moves to the right',
     err_invalid_email: 'Enter a valid email',
     err_wrong_domain: 'For ReStaff team members only'
   }
@@ -344,6 +384,21 @@ function loadPhoto(e) {
     document.getElementById('cropStatus').textContent = faceBox.detected ? t.status_found : t.status_not_found;
     document.getElementById('uploadLabel').textContent = file.name.slice(0, 16);
     document.getElementById('uploadArea').classList.add('has-photo');
+
+    // Сбрасываем состояние кнопки удаления фона
+    const bgBtn = document.getElementById('bgRemoveBtn');
+    const bgStatus = document.getElementById('bgRemoveStatus');
+    if (bgBtn) {
+      bgBtn.disabled = false;
+      bgBtn.classList.remove('done', 'processing');
+      const span = bgBtn.querySelector('span');
+      if (span) span.textContent = I18N[currentLang].bg_remove;
+    }
+    if (bgStatus) {
+      bgStatus.className = 'bg-remove-status';
+      bgStatus.textContent = '';
+    }
+
     render();
   };
   img.src = URL.createObjectURL(file);
@@ -593,7 +648,175 @@ function render() {
   renderTo('cv-xs');
 }
 
-function download() {
+// === Удаление фона через серверный proxy ===
+async function removeBgFromPhoto() {
+  if (!photoImg) return;
+  const btn = document.getElementById('bgRemoveBtn');
+  const status = document.getElementById('bgRemoveStatus');
+  const t = I18N[currentLang];
+
+  btn.disabled = true;
+  btn.classList.add('processing');
+  btn.classList.remove('done');
+  status.className = 'bg-remove-status';
+  status.textContent = t.bg_processing;
+
+  try {
+    const fileInput = document.getElementById('photoInput');
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) {
+      throw new Error('Сначала загрузите фото');
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const response = await fetch('/api/remove-bg', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'X-Image-Type': file.type || 'image/jpeg',
+      },
+      body: arrayBuffer,
+    });
+
+    if (!response.ok) {
+      let msg = 'HTTP ' + response.status;
+      try {
+        const err = await response.json();
+        if (err.error) msg = err.error;
+      } catch (e) {}
+      throw new Error(msg);
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const newImg = new Image();
+    newImg.onload = () => {
+      // Создаём композит: исходное "no-bg" фото на чёрном фоне
+      const cv = document.createElement('canvas');
+      cv.width = newImg.width;
+      cv.height = newImg.height;
+      const cctx = cv.getContext('2d');
+      cctx.fillStyle = '#0a0a0f';
+      cctx.fillRect(0, 0, cv.width, cv.height);
+      cctx.drawImage(newImg, 0, 0);
+
+      const composite = new Image();
+      composite.onload = () => {
+        photoImg = composite;
+        processedCache = null;
+        // Лицо теперь стопроцентно в центре оригинала - сбрасываем кроп
+        faceBox = null;
+        panX = 0; panY = 0; userZoom = 1.0;
+        document.getElementById('zoomRange').value = 100;
+        document.getElementById('zoomVal').textContent = '1.00×';
+        render();
+
+        btn.classList.remove('processing');
+        btn.classList.add('done');
+        status.className = 'bg-remove-status ok';
+        status.textContent = t.bg_done;
+        btn.querySelector('span').textContent = t.bg_done_btn;
+        btn.disabled = false;
+      };
+      composite.src = cv.toDataURL('image/png');
+    };
+    newImg.src = url;
+
+  } catch (e) {
+    console.error('remove-bg error:', e);
+    btn.classList.remove('processing');
+    status.className = 'bg-remove-status fail';
+    status.textContent = (t.bg_fail || 'Ошибка: ') + (e.message || e);
+    btn.disabled = false;
+  }
+}
+
+// === Валидация перед скачиванием ===
+function validateAvatar() {
+  // Создаём временный canvas с финальной аватаркой
+  const S = 256;
+  const cv = document.createElement('canvas');
+  cv.width = S; cv.height = S;
+  const ctx = cv.getContext('2d');
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(S/2, S/2, S/2, 0, Math.PI*2);
+  ctx.clip();
+  renderAvatarComposition(ctx, S);
+  ctx.restore();
+
+  const data = ctx.getImageData(0, 0, S, S).data;
+
+  // Чек 1: правая часть круга должна быть темнее левой (лицо слева → светлее)
+  let leftSum = 0, leftCount = 0, rightSum = 0, rightCount = 0;
+  for (let y = 0; y < S; y += 2) {
+    for (let x = 0; x < S; x += 2) {
+      const dx = x - S/2, dy = y - S/2;
+      if (dx*dx + dy*dy > (S/2 - S*0.08) * (S/2 - S*0.08)) continue;
+      const i = (y * S + x) * 4;
+      const lum = data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114;
+      if (x < S/2) { leftSum += lum; leftCount++; }
+      else { rightSum += lum; rightCount++; }
+    }
+  }
+  const leftAvg = leftSum / leftCount;
+  const rightAvg = rightSum / rightCount;
+
+  // Чек 2: средняя яркость справа должна быть низкой (тёмный фон)
+  const rightIsDark = rightAvg < 100;
+  // Чек 3: левая половина должна быть светлее правой минимум на 20 (лицо есть)
+  const faceOnLeft = leftAvg > rightAvg + 20;
+
+  const issues = [];
+  const t = I18N[currentLang];
+  if (!rightIsDark) issues.push(t.issue_dark_bg);
+  if (!faceOnLeft) issues.push(t.issue_face_position);
+
+  return {
+    pass: issues.length === 0,
+    issues,
+    yoursCanvas: cv,
+    leftAvg, rightAvg
+  };
+}
+
+function showCheckModal(validation) {
+  const modal = document.getElementById('check-modal');
+  // Копируем результат в превью
+  const cv = document.getElementById('checkCvYours');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(validation.yoursCanvas, 0, 0, cv.width, cv.height);
+
+  // Эталон — мужской (отображаем тот что ближе по полу/региону неважно, это иллюстрация)
+  const refImg = document.getElementById('checkRefImg');
+  const refSource = document.getElementById('refMaleImg');
+  if (refSource && refSource.src) refImg.src = refSource.src;
+
+  // Заполняем список проблем
+  const issuesEl = document.getElementById('checkIssues');
+  const t = I18N[currentLang];
+  let html = '<div style="font-weight:500;margin-bottom:6px;color:#f87171">' + t.issues_found + '</div>';
+  html += '<ul style="margin:0;padding-left:18px;color:rgba(255,255,255,0.85)">';
+  validation.issues.forEach(iss => {
+    html += '<li>' + iss + '</li>';
+  });
+  html += '</ul>';
+  issuesEl.innerHTML = html;
+
+  modal.style.display = 'flex';
+}
+
+function closeCheckModal() {
+  document.getElementById('check-modal').style.display = 'none';
+}
+
+function downloadAnyway() {
+  closeCheckModal();
+  actuallyDownload();
+}
+
+function actuallyDownload() {
   processedCache = null;
   const off = document.createElement('canvas');
   off.width = exportSize; off.height = exportSize;
@@ -608,6 +831,19 @@ function download() {
   a.download = `restaff-${dept.id}-${region}-${exportSize}.png`;
   a.href = off.toDataURL('image/png');
   a.click();
+}
+
+function download() {
+  if (!photoImg) {
+    actuallyDownload();
+    return;
+  }
+  const v = validateAvatar();
+  if (v.pass) {
+    actuallyDownload();
+  } else {
+    showCheckModal(v);
+  }
 }
 
 // === Hero render для лендинга ===

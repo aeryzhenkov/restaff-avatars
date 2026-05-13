@@ -374,6 +374,31 @@ body {
   border-radius: 12px;
 }
 .ob-ref-name { font-weight: 500; color: var(--text-primary); }
+.ob-rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 18px;
+  max-width: 480px;
+  margin: 0 auto 20px;
+  position: relative; z-index: 1;
+}
+.ob-rule {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.ob-num {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(124,58,237,0.18);
+  color: #a78bfa;
+  font-size: 11px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.ob-rule-text { line-height: 1.4; }
 .ob-btn {
   display: flex; align-items: center;
   gap: 8px; margin: 0 auto;
@@ -458,6 +483,56 @@ body {
   padding: 8px 10px; background: var(--bg-secondary);
   border-radius: var(--radius-md); margin-top: 6px;
 }
+.photo-tip {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 11px; color: var(--text-secondary);
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: rgba(251,191,36,0.06);
+  border: 0.5px solid rgba(251,191,36,0.18);
+  border-radius: var(--radius-md);
+  margin-top: 8px;
+}
+.bg-remove-btn {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  font-size: 12px;
+  background: rgba(124,58,237,0.12);
+  color: #a78bfa;
+  border: 0.5px solid rgba(124,58,237,0.3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.bg-remove-btn:hover:not(:disabled) {
+  background: rgba(124,58,237,0.2);
+  border-color: rgba(124,58,237,0.5);
+}
+.bg-remove-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.bg-remove-btn.processing { background: rgba(124,58,237,0.08); }
+.bg-remove-btn.processing i { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.bg-remove-btn.done {
+  background: rgba(34,197,94,0.12);
+  border-color: rgba(34,197,94,0.3);
+  color: #4ade80;
+}
+.bg-remove-status {
+  font-size: 11px;
+  margin-top: 6px;
+  text-align: center;
+  min-height: 14px;
+  color: var(--text-tertiary);
+}
+.bg-remove-status.ok { color: #4ade80; }
+.bg-remove-status.fail { color: #f87171; }
 
 .dept-list { display: flex; flex-direction: column; gap: 3px; }
 .dept-item {
@@ -659,7 +734,6 @@ input[type=range]::-moz-range-thumb {
     <div class="ob-header">
       <div class="ob-eyebrow" data-i18n="ob_eyebrow">Эталон стиля</div>
       <h2 class="ob-h2" data-i18n="ob_h">Так должна выглядеть ваша аватарка</h2>
-      <p class="ob-sub" data-i18n="ob_sub">Половина лица в правой части круга · ч/б фильтр · цветное кольцо подразделения · логотип RE (синий — РФ, фиолетовый — Global)</p>
     </div>
     <div class="ob-refs">
       <div class="ob-ref-card">
@@ -673,6 +747,24 @@ input[type=range]::-moz-range-thumb {
         <div class="ob-ref-meta">
           <span class="ob-ref-name" data-i18n="ob_ref_f">HR · Global</span>
         </div>
+      </div>
+    </div>
+    <div class="ob-rules">
+      <div class="ob-rule">
+        <span class="ob-num">1</span>
+        <span class="ob-rule-text" data-i18n="ob_rule_1">Тёмный фон вокруг лица</span>
+      </div>
+      <div class="ob-rule">
+        <span class="ob-num">2</span>
+        <span class="ob-rule-text" data-i18n="ob_rule_2">Половина лица в правой части круга</span>
+      </div>
+      <div class="ob-rule">
+        <span class="ob-num">3</span>
+        <span class="ob-rule-text" data-i18n="ob_rule_3">Чёрно-белая обработка</span>
+      </div>
+      <div class="ob-rule">
+        <span class="ob-num">4</span>
+        <span class="ob-rule-text" data-i18n="ob_rule_4">Кольцо подразделения и логотип RE</span>
       </div>
     </div>
     <button class="ob-btn" onclick="dismissOnboarding()">
@@ -696,6 +788,15 @@ input[type=range]::-moz-range-thumb {
           <i class="ti ti-camera" style="font-size:14px;margin-right:6px;vertical-align:-2px"></i><span id="uploadLabel" data-i18n="upload">Загрузить фото</span>
         </div>
         <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
+        <div class="photo-tip" data-i18n="photo_tip">
+          <i class="ti ti-bulb" style="vertical-align:-2px;color:#fbbf24"></i>
+          <span>Лучше фото с тёмным однотонным фоном. Если фон светлый — используйте кнопку ниже.</span>
+        </div>
+        <button class="bg-remove-btn" id="bgRemoveBtn" onclick="removeBgFromPhoto()" disabled>
+          <i class="ti ti-wand"></i>
+          <span data-i18n="bg_remove">Убрать фон автоматически</span>
+        </button>
+        <div class="bg-remove-status" id="bgRemoveStatus"></div>
         <div class="style-note" id="cropStatus" data-i18n="status_init">Загрузите фото — лицо встанет на правую сторону</div>
       </div>
 
@@ -765,5 +866,31 @@ input[type=range]::-moz-range-thumb {
 </div>
 
 <script src="app.js"></script>
+<div id="check-modal" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,0.92);z-index:100;align-items:center;justify-content:center;padding:24px;overflow-y:auto;">
+  <div style="background:#0f0f15;border:0.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:24px;max-width:520px;width:100%;color:#fff;margin:auto;">
+    <div style="font-size:11px;color:#fb923c;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;font-weight:500" data-i18n="check_eyebrow">Проверка перед скачиванием</div>
+    <h2 style="font-size:18px;font-weight:500;margin-bottom:8px;letter-spacing:-0.01em" data-i18n="check_h">Похоже не на эталон</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:18px;line-height:1.5" data-i18n="check_sub">Сравните ваш результат с эталоном — возможно стоит подкорректировать. Можно вернуться и поправить, или скачать как есть.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <canvas id="checkCvYours" width="180" height="180" style="width:100%;aspect-ratio:1;border-radius:50%"></canvas>
+        <span style="font-size:10px;color:#a8a8b3;text-transform:uppercase;letter-spacing:.1em" data-i18n="check_yours">Ваш</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <img id="checkRefImg" alt="Эталон" style="width:100%;aspect-ratio:1;border-radius:50%;display:block" />
+        <span style="font-size:10px;color:#a8a8b3;text-transform:uppercase;letter-spacing:.1em" data-i18n="check_ref">Эталон</span>
+      </div>
+    </div>
+
+    <div id="checkIssues" style="background:rgba(244,63,94,0.06);border:0.5px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 14px;margin-bottom:18px;font-size:12px;line-height:1.7"></div>
+
+    <div style="display:flex;gap:8px">
+      <button onclick="closeCheckModal()" style="flex:1;padding:11px;font-size:13px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.15);background:transparent;color:#fff;cursor:pointer;font-family:inherit" data-i18n="check_back">← Вернуться поправить</button>
+      <button onclick="downloadAnyway()" style="flex:1;padding:11px;font-size:13px;border-radius:8px;border:none;background:#7C3AED;color:#fff;cursor:pointer;font-family:inherit;font-weight:500" data-i18n="check_anyway">Скачать как есть →</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
