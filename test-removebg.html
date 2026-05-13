@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReStaff · Тест remove.bg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" rel="stylesheet" />
+<style>
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: #0f0f15;
+  --bg-secondary: #1a1a24;
+  --text-primary: #f5f5f7;
+  --text-secondary: #a8a8b3;
+  --text-tertiary: #6b6b78;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.15);
+  --brand-violet: #7C3AED;
+  --brand-blue: #2563EB;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 24px 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.warning {
+  background: rgba(251, 146, 60, 0.08);
+  border: 0.5px solid rgba(251, 146, 60, 0.3);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: #fb923c;
+  line-height: 1.5;
+}
+.warning strong { font-weight: 600; }
+
+.uploader {
+  border: 0.5px dashed var(--border-strong);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--bg-secondary);
+  margin-bottom: 20px;
+  transition: border-color .15s;
+}
+.uploader:hover { border-color: var(--brand-violet); }
+.uploader.has-photo { border-style: solid; background: var(--bg-card); }
+.uploader i { font-size: 28px; color: var(--text-tertiary); margin-bottom: 8px; }
+.up-title { font-size: 15px; font-weight: 500; }
+.up-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; }
+
+.progress {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: none;
+  text-align: center;
+}
+.progress.active { display: block; }
+.progress.error { color: #f87171; background: rgba(244,63,94,0.08); border: 0.5px solid rgba(244,63,94,0.3); }
+.progress.success { color: #4ade80; background: rgba(34,197,94,0.08); border: 0.5px solid rgba(34,197,94,0.3); }
+
+.results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.cell {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+}
+.cell canvas {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  border-radius: 50%;
+}
+.cell .lbl {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.cell .meta {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.bg-row {
+  display: flex; gap: 6px;
+  margin-bottom: 20px;
+}
+.bg-row button {
+  flex: 1;
+  padding: 10px 6px;
+  font-size: 11px;
+  background: transparent;
+  border: 0.5px solid var(--border-strong);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.bg-row button .sw {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 0.5px solid rgba(255,255,255,0.15);
+}
+.bg-row button.active {
+  background: var(--brand-violet);
+  color: #fff;
+  border-color: var(--brand-violet);
+}
+
+.btn {
+  width: 100%;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--brand-violet);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; background: var(--bg-secondary); }
+.btn:hover:not(:disabled) { opacity: 0.9; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; color: var(--text-tertiary);
+  text-decoration: none;
+  margin-top: 24px;
+}
+.back-link:hover { color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Тест remove.bg API</h1>
+  <p class="subtitle">Отдельная страница для проверки удаления фона. Если работает — интегрируем в основной флоу.</p>
+
+  <div class="warning">
+    <strong>⚠️ Это тестовая страница</strong> — API-ключ захардкожен в коде. После теста ОБЯЗАТЕЛЬНО сгенерируй новый ключ на remove.bg и удали этот файл из репозитория.
+  </div>
+
+  <div class="uploader" id="up" onclick="document.getElementById('pi').click()">
+    <i class="ti ti-cloud-upload"></i>
+    <div class="up-title" id="upTitle">Загрузить фото для теста</div>
+    <div class="up-sub" id="upSub">Любое селфи · работает прямо с remove.bg API</div>
+  </div>
+  <input type="file" id="pi" accept="image/*" style="display:none" onchange="loadPhoto(event)" />
+
+  <div class="progress" id="prog">Готовим запрос...</div>
+
+  <div class="results">
+    <div class="cell">
+      <canvas id="cvOrig" width="320" height="320"></canvas>
+      <span class="lbl">Оригинал</span>
+      <span class="meta" id="metaOrig">Ждём фото</span>
+    </div>
+    <div class="cell">
+      <canvas id="cvResult" width="320" height="320"></canvas>
+      <span class="lbl">Без фона</span>
+      <span class="meta" id="metaResult">—</span>
+    </div>
+  </div>
+
+  <div class="bg-row">
+    <button class="active" data-bg="#0a0a0f" onclick="setBg(this)"><span class="sw" style="background:#0a0a0f"></span>Чёрный</button>
+    <button data-bg="#1a1a24" onclick="setBg(this)"><span class="sw" style="background:#1a1a24"></span>Графит</button>
+    <button data-bg="#1a0a2e" onclick="setBg(this)"><span class="sw" style="background:#1a0a2e"></span>Фиолетовый</button>
+    <button data-bg="transparent" onclick="setBg(this)"><span class="sw" style="background:repeating-conic-gradient(#666 0% 25%, #999 0% 50%) 50% / 8px 8px"></span>Прозрачный</button>
+  </div>
+
+  <button class="btn" id="dlBtn" onclick="download()" disabled>
+    <i class="ti ti-download"></i> Скачать PNG 512×512
+  </button>
+
+  <a class="back-link" href="/">← Назад к основному сервису</a>
+</div>
+
+<script>
+const API_KEY = '8U9M3QtkNP6QXUYyiEyQuRo7';
+
+let processedImg = null;
+let originalImg = null;
+let currentBg = '#0a0a0f';
+
+const up = document.getElementById('up');
+const prog = document.getElementById('prog');
+const cvOrig = document.getElementById('cvOrig');
+const ctxOrig = cvOrig.getContext('2d');
+const cvResult = document.getElementById('cvResult');
+const ctxResult = cvResult.getContext('2d');
+const metaOrig = document.getElementById('metaOrig');
+const metaResult = document.getElementById('metaResult');
+const dlBtn = document.getElementById('dlBtn');
+
+[ctxOrig, ctxResult].forEach(ctx => {
+  ctx.fillStyle = '#1a1a24';
+  ctx.beginPath();
+  ctx.arc(160, 160, 160, 0, Math.PI*2);
+  ctx.fill();
+});
+
+function loadPhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  originalImg = new Image();
+  originalImg.onload = () => {
+    drawOnCircle(ctxOrig, originalImg, '#0a0a0f');
+    metaOrig.textContent = originalImg.width + '×' + originalImg.height + ' · ' + (file.size/1024).toFixed(0) + ' KB';
+    document.getElementById('upTitle').textContent = file.name.slice(0, 30);
+    up.classList.add('has-photo');
+    callRemoveBg(file);
+  };
+  originalImg.src = URL.createObjectURL(file);
+}
+
+function drawOnCircle(ctx, img, bg) {
+  const S = 320;
+  ctx.clearRect(0, 0, S, S);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(S/2, S/2, S/2, 0, Math.PI*2);
+  ctx.clip();
+  if (bg === 'transparent') {
+    for (let y = 0; y < S; y += 12) {
+      for (let x = 0; x < S; x += 12) {
+        ctx.fillStyle = ((x/12 + y/12) % 2) ? '#444' : '#222';
+        ctx.fillRect(x, y, 12, 12);
+      }
+    }
+  } else {
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, S, S);
+  }
+  const r = Math.max(S / img.width, S / img.height);
+  const w = img.width * r;
+  const h = img.height * r;
+  ctx.drawImage(img, S/2 - w/2, S/2 - h/2, w, h);
+  ctx.restore();
+}
+
+async function callRemoveBg(file) {
+  prog.className = 'progress active';
+  prog.textContent = '📡 Отправляем фото на remove.bg...';
+  metaResult.textContent = 'Обрабатываем...';
+  dlBtn.disabled = true;
+  const t0 = performance.now();
+
+  try {
+    const formData = new FormData();
+    formData.append('image_file', file);
+    formData.append('size', 'auto');
+
+    const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+      method: 'POST',
+      headers: { 'X-Api-Key': API_KEY },
+      body: formData
+    });
+
+    if (!response.ok) {
+      let errorMsg = 'HTTP ' + response.status;
+      try {
+        const errData = await response.json();
+        if (errData.errors && errData.errors[0]) {
+          errorMsg = errData.errors[0].title || errorMsg;
+        }
+      } catch(e) {}
+      if (response.status === 402) errorMsg = '💳 Лимит исчерпан · нужны кредиты';
+      if (response.status === 403) errorMsg = '🔑 Неверный API-ключ';
+      throw new Error(errorMsg);
+    }
+
+    const blob = await response.blob();
+    
+    processedImg = new Image();
+    processedImg.onload = () => {
+      drawOnCircle(ctxResult, processedImg, currentBg);
+      const dt = ((performance.now() - t0) / 1000).toFixed(1);
+      metaResult.textContent = '✓ ' + dt + ' с · ' + (blob.size/1024).toFixed(0) + ' KB';
+      dlBtn.disabled = false;
+      prog.className = 'progress active success';
+      prog.textContent = '✓ Готово за ' + dt + ' секунд';
+      setTimeout(() => prog.classList.remove('active'), 3000);
+    };
+    processedImg.src = URL.createObjectURL(blob);
+
+  } catch (e) {
+    console.error('Error:', e);
+    prog.className = 'progress active error';
+    prog.textContent = '⚠️ ' + (e.message || e);
+    metaResult.textContent = 'Ошибка';
+  }
+}
+
+function setBg(el) {
+  document.querySelectorAll('.bg-row button').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentBg = el.dataset.bg;
+  if (processedImg) drawOnCircle(ctxResult, processedImg, currentBg);
+}
+
+function download() {
+  if (!processedImg) return;
+  const tmp = document.createElement('canvas');
+  tmp.width = 512; tmp.height = 512;
+  const tctx = tmp.getContext('2d');
+  tctx.save();
+  tctx.beginPath();
+  tctx.arc(256, 256, 256, 0, Math.PI*2);
+  tctx.clip();
+  if (currentBg !== 'transparent') {
+    tctx.fillStyle = currentBg;
+    tctx.fillRect(0, 0, 512, 512);
+  }
+  const r = Math.max(512 / processedImg.width, 512 / processedImg.height);
+  const w = processedImg.width * r;
+  const h = processedImg.height * r;
+  tctx.drawImage(processedImg, 256 - w/2, 256 - h/2, w, h);
+  tctx.restore();
+  const a = document.createElement('a');
+  a.download = 'restaff-test-bg-removed.png';
+  a.href = tmp.toDataURL('image/png');
+  a.click();
+}
+</script>
+</body>
+</html>
