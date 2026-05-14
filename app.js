@@ -14,7 +14,8 @@ const DEPTS = [
 ];
 
 const TATTOO_TEXT = 'Успех\nнеизбежен';
-const CIRC_SIZE = 0.32;
+const CIRC_SIZE = 0.38;
+const EMOJI_FONT = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
 
 // === СТЕЙТ ===
 let currentUser = null;
@@ -143,10 +144,6 @@ function setDir(el) {
   document.querySelectorAll('.dir-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active'); gradDir = el.dataset.dir; render();
 }
-function toggleGuide() {
-  document.getElementById('guideBtn').classList.toggle('active');
-  document.getElementById('cropGuide').classList.toggle('active');
-}
 function toggleCringe() {
   document.getElementById('cringeHeader').classList.toggle('open');
   document.getElementById('cringeBody').classList.toggle('open');
@@ -269,7 +266,7 @@ function drawPetPeeking(targetCtx, S, cx, cy, radius, kind) {
   targetCtx.save();
   targetCtx.translate(px, py);
   targetCtx.rotate(-25 * Math.PI / 180);
-  targetCtx.font = sz + 'px serif';
+  targetCtx.font = sz + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
   targetCtx.textAlign = 'center';
   targetCtx.textBaseline = 'middle';
   targetCtx.fillText(kind === 'cat' ? '🐱' : '🐶', 0, 0);
@@ -282,11 +279,11 @@ function drawPassport(targetCtx, S, cx, cy, radius) {
   targetCtx.save();
   targetCtx.translate(px, py);
   targetCtx.rotate(8 * Math.PI / 180);
-  targetCtx.font = sz + 'px serif';
+  targetCtx.font = sz + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
   targetCtx.textAlign = 'center';
   targetCtx.textBaseline = 'middle';
   targetCtx.fillText('📖', 0, 0);
-  targetCtx.font = (sz * 0.35) + 'px serif';
+  targetCtx.font = (sz * 0.35) + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
   targetCtx.fillText('🪪', -sz * 0.05, -sz * 0.05);
   targetCtx.restore();
 }
@@ -357,7 +354,7 @@ function drawPotatoMountain(targetCtx, S, cx, cy, radius) {
     }
   }
   potatoes.forEach(p => {
-    targetCtx.font = (S * p.sz) + 'px serif';
+    targetCtx.font = (S * p.sz) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
     targetCtx.fillText('🥔', cx + p.x * radius, cy + p.y * radius);
@@ -373,7 +370,7 @@ function drawWineAndMic(targetCtx, S, cx, cy, radius) {
   targetCtx.beginPath();
   targetCtx.rect(0, cy + radius * 0.1, S, S);
   targetCtx.clip();
-  targetCtx.font = (S * 0.22) + 'px serif';
+  targetCtx.font = (S * 0.22) + 'px ' + EMOJI_FONT;
   targetCtx.textAlign = 'center';
   targetCtx.textBaseline = 'middle';
   targetCtx.fillText('🎤', cx, cy + radius * 0.65);
@@ -384,7 +381,7 @@ function drawWineAndMic(targetCtx, S, cx, cy, radius) {
     {x: -0.6, y: 0.9, sz: 0.15}, {x: 0.55, y: 0.95, sz: 0.16}
   ];
   wines.forEach(w => {
-    targetCtx.font = (S * w.sz) + 'px serif';
+    targetCtx.font = (S * w.sz) + 'px ' + EMOJI_FONT;
     targetCtx.fillText('🍷', cx + w.x * radius, cy + w.y * radius);
   });
   targetCtx.restore();
@@ -395,14 +392,14 @@ function drawBurnoutAttrs(targetCtx, S, cx, cy, radius) {
   // 3 пилюли справа
   const pillBaseX = cx + radius * 1.18, pillBaseY = cy - radius * 0.25;
   const pillSz = S * 0.085;
-  targetCtx.font = pillSz + 'px serif';
+  targetCtx.font = pillSz + 'px ' + EMOJI_FONT;
   targetCtx.textAlign = 'center';
   targetCtx.textBaseline = 'middle';
   for (let i = 0; i < 3; i++) {
     targetCtx.fillText('💊', pillBaseX + i * pillSz * 0.85 - pillSz, pillBaseY);
   }
   // Кофе и молоко внизу снаружи
-  targetCtx.font = (S * 0.1) + 'px serif';
+  targetCtx.font = (S * 0.1) + 'px ' + EMOJI_FONT;
   targetCtx.fillText('☕', cx - radius * 0.7, cy + radius * 1.18);
   targetCtx.fillText('🥛', cx - radius * 0.35, cy + radius * 1.22);
   targetCtx.fillText('☕', cx + radius * 0.35, cy + radius * 1.22);
@@ -415,7 +412,7 @@ function drawBurnoutAttrs(targetCtx, S, cx, cy, radius) {
   targetCtx.beginPath();
   targetCtx.rect(0, cy + radius * 0.3, S, S);
   targetCtx.clip();
-  targetCtx.font = (S * 0.075) + 'px serif';
+  targetCtx.font = (S * 0.075) + 'px ' + EMOJI_FONT;
   targetCtx.globalAlpha = 0.85;
   targetCtx.fillText('💀', cx - radius * 0.35, cy + radius * 0.55);
   targetCtx.fillText('💀', cx + radius * 0.35, cy + radius * 0.55);
@@ -439,7 +436,7 @@ function renderAvatar(targetCtx, S, withBg) {
       const seed = i * 37;
       const x = (seed * 13) % S, y = (seed * 17) % S;
       const sz = 18 + (seed % 32);
-      targetCtx.font = sz + 'px serif';
+      targetCtx.font = sz + 'px ' + EMOJI_FONT;
       targetCtx.globalAlpha = 0.55;
       targetCtx.fillText(stars[i % stars.length], x, y);
     }
@@ -455,12 +452,15 @@ function renderAvatar(targetCtx, S, withBg) {
     if (modes.villain) { glowColor = '#DC2626'; glowStrength = Math.max(glowAmt, 0.85); }
     else if (modes.burnout) { glowColor = '#9CA3AF'; glowStrength = Math.max(glowAmt * 0.4, 0.15); }
     else if (dept.isLuxBlack) { glowColor = topNeonColor; glowStrength = Math.pow(glowAmt, 1.8) * 0.85 + 0.1; }
-    const glow = targetCtx.createRadialGradient(cx, cy, radius * 0.95, cx, cy, radius * (1 + glowStrength * 0.9));
-    glow.addColorStop(0, hexToRgba(glowColor, glowStrength * 0.7));
+    // ✱ FIX: ограничиваем максимальный радиус glow чтобы не затирать кринж-элементы
+    const glowRadius = radius * (1 + Math.min(glowStrength, 0.5) * 0.4);
+    const glow = targetCtx.createRadialGradient(cx, cy, radius * 0.98, cx, cy, glowRadius);
+    // ✱ FIX: альфа ограничена, чтобы остатки glow не были слишком плотными снаружи
+    glow.addColorStop(0, hexToRgba(glowColor, Math.min(glowStrength * 0.55, 0.55)));
     glow.addColorStop(1, hexToRgba(glowColor, 0));
     targetCtx.fillStyle = glow;
     targetCtx.beginPath();
-    targetCtx.arc(cx, cy, radius * (1 + glowStrength * 0.9), 0, Math.PI * 2);
+    targetCtx.arc(cx, cy, glowRadius, 0, Math.PI * 2);
     targetCtx.fill();
   }
 
@@ -512,7 +512,7 @@ function renderAvatar(targetCtx, S, withBg) {
 
   if (dept.isLuxBlack && !modes.villain && !modes.burnout) {
     const sheen = targetCtx.createRadialGradient(cx - radius * 0.4, cy - radius * 0.5, 0, cx - radius * 0.4, cy - radius * 0.5, radius * 0.8);
-    sheen.addColorStop(0, 'rgba(212, 175, 55, 0.18)');
+    sheen.addColorStop(0, 'rgba(212, 175, 55, 0.09)');
     sheen.addColorStop(1, 'rgba(212, 175, 55, 0)');
     targetCtx.fillStyle = sheen;
     targetCtx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
@@ -658,7 +658,7 @@ function renderAvatar(targetCtx, S, withBg) {
   if (modes.belarus && !modes.vacation) {
     drawPotatoMountain(targetCtx, S, cx, cy, radius);
     targetCtx.save();
-    targetCtx.font = (S * 0.16) + 'px serif';
+    targetCtx.font = (S * 0.16) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
     targetCtx.fillText('🇧🇾', cx + radius * 1.05, cy - radius * 0.95);
@@ -667,7 +667,7 @@ function renderAvatar(targetCtx, S, withBg) {
   if (modes.karaoke && !modes.vacation) {
     drawWineAndMic(targetCtx, S, cx, cy, radius);
     targetCtx.save();
-    targetCtx.font = (S * 0.16) + 'px serif';
+    targetCtx.font = (S * 0.16) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
     targetCtx.fillText('🇬🇪', cx - radius * 1.05, cy - radius * 0.95);
@@ -675,7 +675,7 @@ function renderAvatar(targetCtx, S, withBg) {
   }
   if (modes.redflag && !modes.vacation) {
     targetCtx.save();
-    targetCtx.font = (S * 0.16) + 'px serif';
+    targetCtx.font = (S * 0.16) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
     targetCtx.fillText('🚩', cx + radius * 1.05, cy - radius * 0.95);
@@ -720,7 +720,7 @@ function renderAvatar(targetCtx, S, withBg) {
     targetCtx.fillText('вверх как у Илона! 🚀', 0, S * 0.09);
     targetCtx.restore();
 
-    targetCtx.font = (S * 0.09) + 'px serif';
+    targetCtx.font = (S * 0.09) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
     targetCtx.fillText('🌹', S * 0.08, S * 0.92);
