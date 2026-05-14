@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ReStaff · Avatar Studio</title>
-<meta name="description" content="Корпоративный сервис создания аватарок для команды ReStaff" />
+<title>ReStaff Avatars</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Caveat:wght@400;500;600&family=Permanent+Marker&family=Lobster&family=Bungee+Shade&family=Monoton&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" rel="stylesheet" />
 <style>
 :root {
   --bg-dark: #0a0a0f;
   --bg-card: #0f0f15;
   --bg-secondary: #1a1a24;
-  --bg-tertiary: #14141c;
+  --bg-tertiary: #25252f;
   --text-primary: #f5f5f7;
   --text-secondary: #a8a8b3;
   --text-tertiary: #6b6b78;
@@ -28,262 +27,105 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', sans-serif;
   background: var(--bg-dark);
   color: var(--text-primary);
-  line-height: 1.5;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-/* === LANDING === */
+/* === Landing === */
 .landing {
-  background: var(--bg-dark);
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-}
-.landing::before {
-  content: '';
-  position: absolute;
-  top: 20%;
-  right: -10%;
-  width: 60%;
-  height: 70%;
-  background: radial-gradient(circle, rgba(124,58,237,0.25) 0%, rgba(124,58,237,0) 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-.landing::after {
-  content: '';
-  position: absolute;
-  bottom: -10%;
-  left: -10%;
-  width: 50%;
-  height: 50%;
-  background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0) 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.landing-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 40px;
-  border-bottom: 0.5px solid rgba(255,255,255,0.08);
-  position: relative;
-  z-index: 2;
-}
-.landing-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
-  letter-spacing: -0.01em;
-}
-.landing-logo .lc {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.landing-logo .lc img { width: 22px; height: 22px; }
-
-.lang-switch {
-  display: flex;
-  background: rgba(255,255,255,0.06);
-  border-radius: 20px;
-  padding: 3px;
-  gap: 2px;
-}
-.lang-btn {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.5);
-  font-size: 12px;
-  padding: 6px 14px;
-  border-radius: 16px;
-  cursor: pointer;
-  font-weight: 500;
-  font-family: inherit;
-}
-.lang-btn.active { background: rgba(255,255,255,0.12); color: #fff; }
-
-.landing-body {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  padding: 64px 40px;
-  align-items: center;
-  max-width: 1100px;
+  max-width: 980px;
   margin: 0 auto;
-  width: 100%;
-  position: relative;
-  z-index: 2;
+  padding: 64px 24px;
+  display: none;
 }
-.landing-left { padding-right: 24px; }
+.landing.active { display: block; }
 .eyebrow {
-  font-size: 12px;
-  color: #a78bfa;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: .12em;
-  margin-bottom: 18px;
+  letter-spacing: 0.15em;
+  color: var(--brand-violet);
+  margin-bottom: 16px;
   font-weight: 500;
 }
-.landing-h1 {
-  font-size: 44px;
-  font-weight: 500;
-  line-height: 1.1;
+.landing h1 {
+  font-size: 42px;
+  font-weight: 600;
   letter-spacing: -0.025em;
+  line-height: 1.1;
   margin-bottom: 18px;
 }
-.landing-h1 .accent { color: #a78bfa; }
-.landing-sub {
-  font-size: 15px;
-  line-height: 1.65;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 28px;
-  max-width: 420px;
+.landing .sub {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 580px;
+  margin-bottom: 32px;
 }
-
-.features {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 30px;
+.landing-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
 }
 .feat {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.75);
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
 }
-.feat i { color: #a78bfa; font-size: 16px; }
+.feat i { color: var(--brand-violet); font-size: 20px; margin-bottom: 8px; display: block; }
+.feat h3 { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.feat p { font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
 
-.google-btn {
+.btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 13px 22px;
-  background: #fff;
-  color: #1f1f1f;
+  gap: 8px;
+  padding: 12px 22px;
+  background: var(--brand-violet);
+  color: white;
   border: none;
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
-  transition: transform .15s, box-shadow .15s;
-  box-shadow: 0 4px 16px rgba(124,58,237,0.2);
 }
-.google-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(124,58,237,0.3);
-}
-.google-btn .g-icon { width: 20px; height: 20px; flex-shrink: 0; }
-
-.access-line {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  margin-top: 14px;
-  line-height: 1.5;
-}
-
-.landing-right {
-  display: flex;
-  justify-content: center;
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary {
+  display: inline-flex;
   align-items: center;
-  position: relative;
-  z-index: 1;
+  gap: 6px;
+  padding: 10px 18px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
 }
-.mystery-orb {
-  position: relative;
-  width: 360px;
-  height: 360px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.orb-glow {
-  position: absolute;
-  inset: -40px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(124,58,237,0.55) 0%, rgba(124,58,237,0.25) 35%, rgba(124,58,237,0) 70%);
-  filter: blur(20px);
-  animation: pulse 4s ease-in-out infinite;
-}
-.orb-ring {
-  position: absolute;
-  inset: 20px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(167,139,250,0.6);
-  box-shadow:
-    0 0 60px rgba(124,58,237,0.5),
-    0 0 120px rgba(124,58,237,0.3),
-    inset 0 0 60px rgba(124,58,237,0.2);
-}
-.orb-ring::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 0.5px solid rgba(167,139,250,0.3);
-}
-.orb-core {
-  position: relative;
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #1a0a2e 0%, #0a0510 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  z-index: 2;
-}
-.orb-core::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 70% 70%, rgba(124,58,237,0.25) 0%, transparent 50%);
-}
-.orb-core img {
-  width: 50%;
-  height: 50%;
-  opacity: 0.35;
-  filter: drop-shadow(0 0 20px rgba(124,58,237,0.6));
-}
-@keyframes pulse {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
+.btn-secondary:hover { background: var(--bg-secondary); }
+
+.access-note {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 12px;
 }
 
-.landing-foot {
-  padding: 18px 40px;
-  border-top: 0.5px solid rgba(255,255,255,0.08);
-  font-size: 12px;
-  color: rgba(255,255,255,0.35);
-  position: relative;
-  z-index: 2;
+/* === App === */
+.app-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  display: none;
 }
+.app-wrap.active { display: block; }
 
-/* === APP === */
-.app { display: none; padding: 32px 24px; max-width: 720px; margin: 0 auto; }
-.app.active { display: block; }
-.landing.hidden { display: none; }
-
-.app-header {
+.topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -291,210 +133,66 @@ body {
   padding-bottom: 16px;
   border-bottom: 0.5px solid var(--border);
 }
-.app-title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 500; }
-.app-title .lc {
-  width: 28px; height: 28px; border-radius: 50%; background: #fff;
-  display: flex; align-items: center; justify-content: center; overflow: hidden;
-  border: 0.5px solid var(--border);
-}
-.app-title .lc img { width: 18px; height: 18px; }
-.user-pill {
-  font-size: 12px;
-  color: var(--text-secondary);
-  background: var(--bg-secondary);
-  padding: 4px 10px;
-  border-radius: 12px;
+.brand {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-.user-pill .green-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
-.user-pill button {
-  background: transparent; border: none; cursor: pointer; color: var(--text-tertiary);
-  font-size: 11px; padding: 0 0 0 6px; font-family: inherit;
-}
-.user-pill button:hover { color: var(--text-primary); }
-
-/* === Onboarding (большой блок при первом входе) === */
-.onboarding {
-  background: linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(37,99,235,0.06) 100%);
-  border: 0.5px solid rgba(124,58,237,0.25);
-  border-radius: var(--radius-lg);
-  padding: 28px 24px;
-  margin-bottom: 24px;
-  position: relative;
-  overflow: hidden;
-}
-.onboarding::before {
-  content: '';
-  position: absolute;
-  top: -40%;
-  right: -10%;
-  width: 60%;
-  height: 180%;
-  background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-.ob-header { text-align: center; margin-bottom: 20px; position: relative; z-index: 1; }
-.ob-eyebrow {
-  font-size: 11px; color: #a78bfa;
-  text-transform: uppercase; letter-spacing: .12em;
-  margin-bottom: 8px; font-weight: 500;
-}
-.ob-h2 {
-  font-size: 22px; font-weight: 500;
-  letter-spacing: -0.02em; margin-bottom: 8px;
-  color: var(--text-primary);
-}
-.ob-sub {
-  font-size: 13px; color: var(--text-secondary);
-  line-height: 1.6; max-width: 480px; margin: 0 auto;
-}
-.ob-refs {
-  display: flex; gap: 24px;
-  justify-content: center;
-  margin-bottom: 22px;
-  position: relative; z-index: 1;
-}
-.ob-ref-card {
-  display: flex; flex-direction: column;
-  align-items: center; gap: 10px;
-}
-.ob-ref-card img {
-  width: 140px; height: 140px;
-  border-radius: 50%;
-  display: block;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 40px rgba(124,58,237,0.2);
-}
-.ob-ref-meta {
-  font-size: 12px;
-  color: var(--text-secondary);
-  background: rgba(255,255,255,0.04);
-  padding: 4px 12px;
-  border-radius: 12px;
-}
-.ob-ref-name { font-weight: 500; color: var(--text-primary); }
-.ob-rules {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 18px;
-  max-width: 480px;
-  margin: 0 auto 20px;
-  position: relative; z-index: 1;
-}
-.ob-rule {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.ob-num {
-  display: inline-flex;
-  align-items: center; justify-content: center;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: rgba(124,58,237,0.18);
-  color: #a78bfa;
-  font-size: 11px;
+  gap: 10px;
+  font-size: 14px;
   font-weight: 500;
-  flex-shrink: 0;
 }
-.ob-rule-text { line-height: 1.4; }
-.ob-btn {
-  display: flex; align-items: center;
-  gap: 8px; margin: 0 auto;
-  padding: 11px 22px;
+.brand-mark {
+  width: 28px;
+  height: 28px;
   background: var(--brand-violet);
-  color: #fff; border: none;
-  border-radius: var(--radius-md);
-  font-size: 13px; font-weight: 500;
-  cursor: pointer; font-family: inherit;
-  transition: transform .15s, box-shadow .15s;
-  position: relative; z-index: 1;
-  box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
 }
-.ob-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(124,58,237,0.55); }
-.ob-btn i { font-size: 16px; }
-
-/* === Samples mini (компактный блок после онбординга) === */
-.samples-mini {
-  display: none;
+.user-info {
+  display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  background: rgba(255,255,255,0.03);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.user-info button {
+  background: transparent;
   border: 0.5px solid var(--border);
-  border-radius: var(--radius-md);
-  margin-bottom: 20px;
-}
-.samples-mini.active { display: flex; }
-.sm-label {
-  font-size: 11px; font-weight: 500;
-  color: var(--text-tertiary);
-  text-transform: uppercase; letter-spacing: .08em;
-  flex-shrink: 0;
-}
-.sm-img {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.sm-show {
-  margin-left: auto;
-  background: transparent; border: none;
-  color: var(--text-tertiary); font-size: 11px;
-  cursor: pointer; font-family: inherit;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 3px;
-}
-.sm-show:hover { color: var(--brand-violet); }
-
-@media (max-width: 720px) {
-  .ob-refs { gap: 16px; }
-  .ob-ref-card img { width: 110px; height: 110px; }
-  .ob-h2 { font-size: 18px; }
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
 }
 
-.layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
-.section { margin-bottom: 20px; }
-.section-title {
-  font-size: 11px; font-weight: 500; color: var(--text-tertiary);
-  text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px;
-  display: flex; justify-content: space-between; align-items: baseline;
+/* === Upload === */
+.upload-section {
+  margin-bottom: 16px;
 }
-.reset-btn {
-  background: transparent; border: none; font-size: 11px; color: var(--text-tertiary); cursor: pointer; font-family: inherit;
-}
-.upload-area {
+.uploader {
   border: 0.5px dashed var(--border-strong);
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: 16px;
   text-align: center;
   cursor: pointer;
-  font-size: 12px;
-  color: var(--text-tertiary);
+  background: var(--bg-secondary);
+  font-size: 13px;
   transition: border-color .15s;
 }
-.upload-area:hover { border-color: var(--text-secondary); }
-.upload-area.has-photo { color: var(--text-primary); border-style: solid; }
-.hidden { display: none; }
-.style-note {
-  font-size: 11px; color: var(--text-tertiary); line-height: 1.5;
-  padding: 8px 10px; background: var(--bg-secondary);
-  border-radius: var(--radius-md); margin-top: 6px;
-}
-.photo-tip {
-  display: flex; align-items: flex-start; gap: 8px;
-  font-size: 11px; color: var(--text-secondary);
-  line-height: 1.5;
-  padding: 8px 10px;
-  background: rgba(251,191,36,0.06);
-  border: 0.5px solid rgba(251,191,36,0.18);
-  border-radius: var(--radius-md);
-  margin-top: 8px;
-}
+.uploader:hover { border-color: var(--brand-violet); }
+.uploader.has-photo { border-style: solid; background: var(--bg-card); }
+.uploader i { font-size: 18px; vertical-align: -3px; margin-right: 6px; color: var(--brand-violet); }
+.uploader .sub { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+
 .bg-remove-btn {
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
   width: 100%;
   margin-top: 8px;
@@ -506,24 +204,19 @@ body {
   border-radius: var(--radius-md);
   cursor: pointer;
   font-family: inherit;
-  transition: all .15s;
 }
 .bg-remove-btn:hover:not(:disabled) {
   background: rgba(124,58,237,0.2);
   border-color: rgba(124,58,237,0.5);
 }
-.bg-remove-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.bg-remove-btn.processing { background: rgba(124,58,237,0.08); }
+.bg-remove-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .bg-remove-btn.processing i { animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
 .bg-remove-btn.done {
   background: rgba(34,197,94,0.12);
   border-color: rgba(34,197,94,0.3);
   color: #4ade80;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 .bg-remove-status {
   font-size: 11px;
   margin-top: 6px;
@@ -534,363 +227,636 @@ body {
 .bg-remove-status.ok { color: #4ade80; }
 .bg-remove-status.fail { color: #f87171; }
 
-.dept-list { display: flex; flex-direction: column; gap: 3px; }
+/* === Layout === */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+@media (max-width: 720px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+.preview-area {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.compare-pair {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+}
+.compare-pair .ref-side {
+  flex-shrink: 0;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.compare-pair .ref-side canvas, .compare-pair .ref-side img {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.compare-pair .ref-side .lbl {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.compare-pair .main-side { flex: 1; min-width: 0; }
+.main-canvas-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+.main-canvas { width: 100%; height: 100%; display: block; }
+.crop-guide {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+}
+.crop-guide.active { display: block; }
+.crop-guide svg { width: 100%; height: 100%; display: block; }
+
+.guide-toggle {
+  font-size: 11px;
+  padding: 5px 12px;
+  background: transparent;
+  border: 0.5px solid var(--border-strong);
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: inherit;
+}
+.guide-toggle.active {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+  border-color: var(--text-primary);
+}
+
+.size-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  gap: 6px;
+  padding: 10px 6px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+}
+.size-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.size-cell canvas { display: block; border-radius: 999px; }
+.size-cell .nm { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
+.size-cell .lbl { font-size: 9px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+
+/* === Controls === */
+.controls { display: flex; flex-direction: column; gap: 14px; }
+.sect { display: flex; flex-direction: column; gap: 6px; }
+.section-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 4px;
+}
+
+.dept-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+}
 .dept-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 6px 8px; border-radius: var(--radius-md);
-  cursor: pointer; font-size: 12px; color: var(--text-secondary);
-  border: 0.5px solid transparent; transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 12px;
+  border: 0.5px solid transparent;
 }
 .dept-item:hover { background: var(--bg-secondary); }
 .dept-item.selected {
-  border-color: var(--border-strong); color: var(--text-primary);
-  font-weight: 500; background: var(--bg-secondary);
+  background: var(--bg-secondary);
+  border-color: var(--border-strong);
+  font-weight: 500;
 }
-.dept-swatch { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
-
-.region-row, .bg-row {
-  display: flex; border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md); overflow: hidden;
-}
-.region-btn, .bg-btn, .size-btn, .fx-btn {
-  background: transparent; border: none; cursor: pointer;
-  color: var(--text-secondary); font-family: inherit;
-}
-.region-btn, .bg-btn {
-  flex: 1; font-size: 11px; padding: 8px 4px;
-  border-right: 0.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.region-btn:last-child, .bg-btn:last-child { border-right: none; }
-.region-btn .swatch { width: 11px; height: 11px; border-radius: 50%; }
-.region-btn[data-region=RU] .swatch { background: var(--brand-blue); }
-.region-btn[data-region=GL] .swatch { background: var(--brand-violet); }
-.region-btn.active, .bg-btn.active, .size-btn.active, .fx-btn.active {
-  background: var(--brand-violet); color: #fff;
-}
-.region-btn:hover:not(.active), .bg-btn:hover:not(.active),
-.size-btn:hover:not(.active), .fx-btn:hover:not(.active) {
-  background: rgba(124,58,237,0.1);
+.dept-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.fx-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); overflow: hidden;
+.toggles { display: flex; gap: 4px; }
+.toggles button {
+  flex: 1;
+  padding: 7px 4px;
+  font-size: 11px;
+  background: transparent;
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
-.fx-btn {
-  font-size: 11px; padding: 7px 4px;
-  border-right: 0.5px solid var(--border);
-  border-bottom: 0.5px solid var(--border);
+.toggles button.active {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+  border-color: var(--text-primary);
 }
-.fx-btn:nth-child(3n) { border-right: none; }
-.fx-btn:nth-child(n+7) { border-bottom: none; }
+.toggles .sw {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
 
-.tweak-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
-.tweak-wrap input[type=range] { flex: 1; }
-.tweak-wrap .val { min-width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
-
-.size-pill {
-  display: flex; border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md); overflow: hidden;
+.tweak-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
 }
-.size-pill button {
-  flex: 1; font-size: 11px; padding: 6px 10px;
-  background: transparent; border: none; cursor: pointer;
-  color: var(--text-secondary); border-right: 0.5px solid var(--border);
+.tweak-row .lbl { min-width: 60px; }
+.tweak-row .val {
+  min-width: 38px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+}
+.tweak-row input[type=range] { flex: 1; }
+
+.tweak-row.small { font-size: 10px; }
+.tweak-row.small .lbl { min-width: 44px; }
+.tweak-row.small input[type=range] { height: 14px; }
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+.checkbox-row input { cursor: pointer; }
+
+.dir-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+.dir-btn {
+  aspect-ratio: 1;
+  background: transparent;
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dir-btn.active {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+  border-color: var(--text-primary);
+}
+
+.top-neon-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.top-neon-color {
+  width: 28px;
+  height: 22px;
+  border: 0.5px solid var(--border-strong);
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+}
+
+.btn-download {
+  width: 100%;
+  padding: 11px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--brand-violet);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-download:disabled {
+  background: var(--bg-secondary);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+/* === Cringe === */
+.cringe-section {
+  margin-top: 20px;
+  border: 0.5px solid rgba(244, 63, 94, 0.25);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(244,63,94,0.04), rgba(251,191,36,0.04));
+  overflow: hidden;
+}
+.cringe-header {
+  padding: 14px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+.cringe-header h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+.cringe-header .toggle-icon {
+  font-size: 18px;
+  color: var(--text-tertiary);
+  transition: transform .2s;
+}
+.cringe-header.open .toggle-icon { transform: rotate(180deg); }
+.cringe-body {
+  display: none;
+  padding: 0 18px 18px;
+  flex-direction: column;
+  gap: 14px;
+}
+.cringe-body.open { display: flex; }
+
+.cringe-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.cringe-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 0.5px solid transparent;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.cringe-chip:hover { border-color: var(--border-strong); }
+.cringe-chip.active {
+  background: rgba(244,63,94,0.1);
+  border-color: rgba(244,63,94,0.3);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.cringe-chip .emoji { font-size: 16px; }
+
+.pet-select { display: flex; gap: 6px; }
+.pet-select button {
+  flex: 1;
+  padding: 8px 4px;
+  font-size: 11px;
+  background: var(--bg-secondary);
+  border: 0.5px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-secondary);
   font-family: inherit;
 }
-.size-pill button:last-child { border-right: none; }
-.size-pill button.active { background: var(--brand-violet); color: #fff; }
-
-.preview-area { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.main-canvas { width: 280px; height: 280px; display: block; cursor: move; touch-action: none; }
-.drag-hint { font-size: 11px; color: var(--text-tertiary); margin-top: -8px; text-align: center; }
-.preview-tinys { display: flex; align-items: center; gap: 18px; }
-.tiny-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.tiny-cell canvas { display: block; }
-.tiny-label { font-size: 10px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
-.action-row { display: flex; gap: 8px; width: 100%; }
-.action-row button {
-  flex: 1; padding: 12px; font-size: 13px;
-  border-radius: var(--radius-md); border: 0.5px solid var(--border-strong);
-  background: transparent; cursor: pointer; font-family: inherit;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.action-row button.primary {
-  background: var(--brand-violet); color: #fff; border-color: var(--brand-violet);
-}
-.action-row button:hover:not(.primary) { background: var(--bg-secondary); }
-.action-row button.primary:hover { opacity: 0.9; }
-
-input[type=text], input[type=email] {
-  width: 100%; padding: 10px 12px; border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md); font-size: 13px; font-family: inherit;
-  background: rgba(255,255,255,0.05); color: #fff;
-}
-input[type=email]:focus { outline: none; border-color: var(--brand-violet); }
-
-input[type=range] {
-  -webkit-appearance: none; appearance: none;
-  height: 4px; background: var(--border-strong); border-radius: 2px;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--text-primary); cursor: pointer;
-}
-input[type=range]::-moz-range-thumb {
-  width: 18px; height: 18px; border-radius: 50%; border: none;
-  background: var(--text-primary); cursor: pointer;
+.pet-select button.active {
+  border-color: rgba(244,63,94,0.4);
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
-@media (max-width: 720px) {
-  .landing-body { grid-template-columns: 1fr; padding: 40px 24px; gap: 32px; }
-  .landing-h1 { font-size: 32px; }
-  .mystery-orb { width: 260px; height: 260px; }
-  .layout { grid-template-columns: 1fr; }
+.tattoo-fixed {
+  padding: 7px 10px;
+  font-size: 12px;
+  background: var(--bg-secondary);
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-tertiary);
+  font-style: italic;
 }
+
+/* === Modal === */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,15,0.85);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal.active { display: flex; }
+.modal-content {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+}
+.modal h2 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.modal p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.modal input[type=email] {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 13px;
+  background: var(--bg-secondary);
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  margin-bottom: 8px;
+}
+.modal-err {
+  font-size: 11px;
+  color: #f87171;
+  margin-bottom: 12px;
+  min-height: 14px;
+}
+.modal-actions { display: flex; gap: 8px; }
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: inherit;
+}
+.modal-actions .cancel {
+  background: transparent;
+  border: 0.5px solid var(--border-strong);
+  color: var(--text-primary);
+}
+.modal-actions .submit {
+  background: var(--brand-violet);
+  border: none;
+  color: white;
+  font-weight: 500;
+}
+
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<!-- ============== LANDING ============== -->
-<div id="landing" class="landing">
-  <div class="landing-nav">
-    <div class="landing-logo"><span class="lc"><img id="navLogo" alt="ReStaff" /></span>ReStaff · Avatars</div>
-    <div class="lang-switch">
-      <button class="lang-btn active" data-lang="ru" onclick="setLang(this)">RU</button>
-      <button class="lang-btn" data-lang="en" onclick="setLang(this)">EN</button>
+<!-- LANDING -->
+<div class="landing active" id="landing">
+  <div class="eyebrow">Internal · Команда ReStaff</div>
+  <h1>Единый стиль аватарок<br>для всей команды</h1>
+  <p class="sub">Корпоративный сервис создания аватарок для Telegram, Mattermost, Zoom и почты. Загрузите селфи — мы оформим его в фирменном стиле с цветом подразделения.</p>
+
+  <div class="landing-features">
+    <div class="feat">
+      <i class="ti ti-photo"></i>
+      <h3>Авто-удаление фона</h3>
+      <p>Загружаете обычное селфи — фон убирается автоматически</p>
+    </div>
+    <div class="feat">
+      <i class="ti ti-color-swatch"></i>
+      <h3>Цвет по подразделению</h3>
+      <p>9 цветовых схем для каждого отдела с градиентами и неоном</p>
+    </div>
+    <div class="feat">
+      <i class="ti ti-shirt"></i>
+      <h3>Лого RE на одежде</h3>
+      <p>Имитация корпоративного мерча на вашей футболке</p>
     </div>
   </div>
 
-  <div class="landing-body">
-    <div class="landing-left">
-      <div class="eyebrow" data-i18n="eyebrow">Internal · Команда ReStaff</div>
-      <h1 class="landing-h1">
-        <span data-i18n="h1a">Единый стиль</span><br>
-        <span class="accent" data-i18n="h1b">для всей команды</span>
-      </h1>
-      <p class="landing-sub" data-i18n="sub">Корпоративный сервис создания аватарок для Zoom, Slack и почты. Загрузите фото — мы обработаем его в едином стиле бренда.</p>
-
-      <div class="features">
-        <div class="feat"><i class="ti ti-circle-check"></i><span data-i18n="f1">Авто-кроп по половине лица</span></div>
-        <div class="feat"><i class="ti ti-circle-check"></i><span data-i18n="f2">Цвет отдела и региона</span></div>
-        <div class="feat"><i class="ti ti-circle-check"></i><span data-i18n="f3">9 фильтров для самовыражения</span></div>
-      </div>
-
-      <button class="google-btn" onclick="openSignIn()">
-        <svg class="g-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
-          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
-          <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.5 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
-          <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2c-.4.4 6.6-4.8 6.6-14.8 0-1.3-.1-2.6-.4-3.9z"/>
-        </svg>
-        <span data-i18n="signin">Войти через корпоративный Google</span>
-      </button>
-      <div class="access-line" data-i18n="access">Доступ только для сотрудников ReStaff</div>
-    </div>
-
-    <div class="landing-right">
-      <div class="mystery-orb">
-        <div class="orb-glow"></div>
-        <div class="orb-ring"></div>
-        <div class="orb-core">
-          <img id="orbLogo" alt="" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="landing-foot" style="text-align:center">
-    <span data-i18n="foot">© ReStaff 2026</span>
-  </div>
+  <button class="btn-primary" onclick="openSignIn()">
+    <i class="ti ti-login"></i> Войти через корпоративный Google
+  </button>
+  <div class="access-note">Доступ только для сотрудников ReStaff (@restaff.pro, @restaff.tech, @staffco.ru)</div>
 </div>
 
-<!-- ============== SIGN-IN MODAL (DEMO) ============== -->
-<div id="signin-modal" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,0.85);z-index:100;align-items:center;justify-content:center;padding:24px;">
-  <div style="background:#0a0a0f;border:0.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px;max-width:380px;width:100%;color:#fff;">
-    <div style="font-size:13px;color:#a78bfa;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;font-weight:500" data-i18n="modal_title">Демо-вход</div>
-    <h2 style="font-size:20px;font-weight:500;margin-bottom:8px;letter-spacing:-0.01em" data-i18n="modal_h">Введите рабочий email</h2>
-    <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:20px;line-height:1.5" data-i18n="modal_sub">В демо-версии используется проверка домена. На проде это будет полноценный Google OAuth.</p>
-    <input type="email" id="emailInput" placeholder="ivan@restaff.pro" style="margin-bottom:8px"/>
-    <div id="emailErr" style="font-size:12px;color:#f87171;min-height:18px;margin-bottom:12px"></div>
-    <button onclick="trySignIn()" class="google-btn" style="width:100%;justify-content:center" data-i18n="modal_btn">Войти</button>
-    <button onclick="closeSignIn()" style="margin-top:10px;width:100%;padding:10px;background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;font-size:12px" data-i18n="modal_cancel">Отмена</button>
-  </div>
-</div>
-
-<!-- ============== APP ============== -->
-<div id="app" class="app">
-  <div class="app-header">
-    <div class="app-title"><span class="lc"><img id="appLogo" alt="ReStaff" /></span>ReStaff · Avatar Studio</div>
-    <div class="user-pill">
-      <span class="green-dot"></span>
-      <span id="userEmail">—</span>
-      <button onclick="signOut()" title="Выйти"><i class="ti ti-logout"></i></button>
+<!-- APP -->
+<div class="app-wrap" id="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">RE</div>
+      <span>ReStaff Avatars</span>
+    </div>
+    <div class="user-info">
+      <span id="userEmail"></span>
+      <button onclick="signOut()">Выйти</button>
     </div>
   </div>
 
-  <div class="onboarding" id="onboarding">
-    <div class="ob-header">
-      <div class="ob-eyebrow" data-i18n="ob_eyebrow">Эталон стиля</div>
-      <h2 class="ob-h2" data-i18n="ob_h">Так должна выглядеть ваша аватарка</h2>
+  <div class="upload-section">
+    <div class="uploader" id="up" onclick="document.getElementById('photoInput').click()">
+      <i class="ti ti-cloud-upload"></i>
+      <span id="upLabel">Загрузить фото</span>
+      <div class="sub">селфи фронтально, плечи видны, желательно белая одежда</div>
     </div>
-    <div class="ob-refs">
-      <div class="ob-ref-card">
-        <img id="refMaleImg" alt="Пример M" />
-        <div class="ob-ref-meta">
-          <span class="ob-ref-name" data-i18n="ob_ref_m">Топ менеджмент · РФ</span>
-        </div>
-      </div>
-      <div class="ob-ref-card">
-        <img id="refFemaleImg" alt="Пример Ж" />
-        <div class="ob-ref-meta">
-          <span class="ob-ref-name" data-i18n="ob_ref_f">HR · Global</span>
-        </div>
-      </div>
-    </div>
-    <div class="ob-rules">
-      <div class="ob-rule">
-        <span class="ob-num">1</span>
-        <span class="ob-rule-text" data-i18n="ob_rule_1">Тёмный фон вокруг лица</span>
-      </div>
-      <div class="ob-rule">
-        <span class="ob-num">2</span>
-        <span class="ob-rule-text" data-i18n="ob_rule_2">Половина лица в правой части круга</span>
-      </div>
-      <div class="ob-rule">
-        <span class="ob-num">3</span>
-        <span class="ob-rule-text" data-i18n="ob_rule_3">Чёрно-белая обработка</span>
-      </div>
-      <div class="ob-rule">
-        <span class="ob-num">4</span>
-        <span class="ob-rule-text" data-i18n="ob_rule_4">Кольцо подразделения и логотип RE</span>
-      </div>
-    </div>
-    <button class="ob-btn" onclick="dismissOnboarding()">
-      <span data-i18n="ob_btn">Понятно, начинаем</span>
-      <i class="ti ti-arrow-right"></i>
+    <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
+    <button class="bg-remove-btn" id="bgRemoveBtn" onclick="removeBgFromPhoto()" disabled>
+      <i class="ti ti-wand"></i>
+      <span id="bgRemoveText">Убрать фон автоматически</span>
     </button>
-  </div>
-
-  <div class="samples-mini" id="samplesMini">
-    <span class="sm-label" data-i18n="sm_label">Эталон →</span>
-    <img id="smMale" class="sm-img" alt="" />
-    <img id="smFemale" class="sm-img" alt="" />
-    <button class="sm-show" onclick="showOnboarding()" data-i18n="sm_show">Показать снова</button>
+    <div class="bg-remove-status" id="bgRemoveStatus"></div>
   </div>
 
   <div class="layout">
-    <div>
-      <div class="section">
-        <div class="section-title"><span data-i18n="step1">1 · Фото</span></div>
-        <div class="upload-area" id="uploadArea" onclick="document.getElementById('photoInput').click()">
-          <i class="ti ti-camera" style="font-size:14px;margin-right:6px;vertical-align:-2px"></i><span id="uploadLabel" data-i18n="upload">Загрузить фото</span>
+    <div class="preview-area">
+      <div class="compare-pair">
+        <div class="ref-side">
+          <img id="refImage" alt="Эталон стиля" />
+          <span class="lbl">Эталон</span>
         </div>
-        <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
-        <div class="photo-tip" data-i18n="photo_tip">
-          <i class="ti ti-bulb" style="vertical-align:-2px;color:#fbbf24"></i>
-          <span>Лучше фото с тёмным однотонным фоном. Если фон светлый — используйте кнопку ниже.</span>
-        </div>
-        <button class="bg-remove-btn" id="bgRemoveBtn" onclick="removeBgFromPhoto()" disabled>
-          <i class="ti ti-wand"></i>
-          <span data-i18n="bg_remove">Убрать фон автоматически</span>
-        </button>
-        <div class="bg-remove-status" id="bgRemoveStatus"></div>
-        <div class="style-note" id="cropStatus" data-i18n="status_init">Загрузите фото — лицо встанет на правую сторону</div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span data-i18n="step2">2 · Подстройка</span>
-          <button class="reset-btn" onclick="resetTweak()" data-i18n="reset">сбросить</button>
-        </div>
-        <div class="tweak-wrap" style="margin-bottom:6px">
-          <span>Zoom</span>
-          <input type="range" id="zoomRange" min="80" max="180" step="2" value="100" oninput="setZoom(this.value)" />
-          <span class="val" id="zoomVal">1.00×</span>
-        </div>
-        <div style="font-size:11px;color:var(--text-tertiary);text-align:center;margin-top:4px" data-i18n="drag_tip">Сдвинуть мышью</div>
-      </div>
-
-      <div class="section">
-        <div class="section-title" data-i18n="step3">3 · Подразделение</div>
-        <div class="dept-list" id="deptList"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title" data-i18n="step4">4 · Регион</div>
-        <div class="region-row">
-          <button class="region-btn active" data-region="RU" onclick="setRegion(this)"><span class="swatch"></span>РФ</button>
-          <button class="region-btn" data-region="GL" onclick="setRegion(this)"><span class="swatch"></span>Global</button>
+        <div class="main-side">
+          <div class="main-canvas-wrap">
+            <canvas id="cv" class="main-canvas" width="800" height="800"></canvas>
+            <div class="crop-guide active" id="cropGuide">
+              <svg viewBox="0 0 800 800" preserveAspectRatio="none">
+                <circle cx="400" cy="400" r="256" fill="none" stroke="rgba(124,58,237,0.6)" stroke-width="2" stroke-dasharray="6 6"/>
+                <line x1="320" y1="320" x2="480" y2="320" stroke="rgba(124,58,237,0.5)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <text x="400" y="316" fill="rgba(124,58,237,0.9)" font-size="14" text-anchor="middle" font-family="sans-serif" font-weight="500">↑ ЛИЦО</text>
+                <line x1="280" y1="560" x2="520" y2="560" stroke="rgba(124,58,237,0.5)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <text x="400" y="582" fill="rgba(124,58,237,0.9)" font-size="14" text-anchor="middle" font-family="sans-serif" font-weight="500">↓ ПЛЕЧИ</text>
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="section">
-        <div class="section-title" data-i18n="step5">5 · Фильтр</div>
-        <div class="fx-grid">
-          <button class="fx-btn active" data-fx="bw" onclick="setFx(this)">Mono</button>
-          <button class="fx-btn" data-fx="hicon" onclick="setFx(this)">Hi-con</button>
-          <button class="fx-btn" data-fx="soft" onclick="setFx(this)">Soft</button>
-          <button class="fx-btn" data-fx="silver" onclick="setFx(this)">Silver</button>
-          <button class="fx-btn" data-fx="grain" onclick="setFx(this)">Grain</button>
-          <button class="fx-btn" data-fx="ink" onclick="setFx(this)">Ink</button>
-          <button class="fx-btn" data-fx="sepia" onclick="setFx(this)">Sepia</button>
-          <button class="fx-btn" data-fx="bluemono" onclick="setFx(this)">Blue·BW</button>
-          <button class="fx-btn" data-fx="violetmono" onclick="setFx(this)">Violet·BW</button>
-        </div>
+      <button class="guide-toggle active" id="guideBtn" onclick="toggleGuide()">
+        <i class="ti ti-target" style="vertical-align:-2px"></i> Гайд кадрирования
+      </button>
+      <div class="size-row">
+        <div class="size-cell"><canvas id="pv-tg" width="108" height="108" style="width:54px;height:54px"></canvas><span class="nm">Telegram</span><span class="lbl">54px</span></div>
+        <div class="size-cell"><canvas id="pv-mm" width="64" height="64" style="width:32px;height:32px"></canvas><span class="nm">Mattermost</span><span class="lbl">32px</span></div>
+        <div class="size-cell"><canvas id="pv-zoom" width="160" height="160" style="width:80px;height:80px"></canvas><span class="nm">Zoom</span><span class="lbl">80px</span></div>
+        <div class="size-cell"><canvas id="pv-gmail" width="80" height="80" style="width:40px;height:40px"></canvas><span class="nm">Gmail</span><span class="lbl">40px</span></div>
       </div>
     </div>
 
-    <div class="preview-area">
-      <canvas id="cv-main" class="main-canvas" width="600" height="600"></canvas>
-      <div class="drag-hint"><i class="ti ti-hand-grab" style="vertical-align:-2px"></i> <span data-i18n="drag_hint">Перетащи фото в превью</span></div>
-
-      <div class="preview-tinys">
-        <div class="tiny-cell"><canvas id="cv-md" width="56" height="56"></canvas><span class="tiny-label">56px</span></div>
-        <div class="tiny-cell"><canvas id="cv-sm" width="32" height="32"></canvas><span class="tiny-label">32px</span></div>
-        <div class="tiny-cell"><canvas id="cv-xs" width="20" height="20"></canvas><span class="tiny-label">20px</span></div>
+    <div class="controls">
+      <div class="sect">
+        <div class="section-title">Подразделение</div>
+        <div class="dept-list" id="deptList"></div>
       </div>
 
-      <div class="size-pill">
-        <button onclick="setSize(256,this)">256</button>
-        <button class="active" onclick="setSize(512,this)">512</button>
-        <button onclick="setSize(1024,this)">1024</button>
+      <div class="sect">
+        <div class="section-title">Регион (фон)</div>
+        <div class="toggles">
+          <button data-region="RU" onclick="setRegion(this)"><span class="sw" style="background:#ffffff;border:0.5px solid var(--border-strong)"></span>РФ · белый</button>
+          <button class="active" data-region="GL" onclick="setRegion(this)"><span class="sw" style="background:#0a0a0f"></span>Global · тёмный</button>
+        </div>
       </div>
 
-      <div class="action-row">
-        <button class="primary" onclick="download()"><i class="ti ti-download"></i><span data-i18n="download">Скачать PNG</span></button>
+      <div class="sect">
+        <div class="section-title">Направление градиента</div>
+        <div class="dir-grid">
+          <button class="dir-btn" data-dir="tl" onclick="setDir(this)">↘</button>
+          <button class="dir-btn active" data-dir="tr" onclick="setDir(this)">↙</button>
+          <button class="dir-btn" data-dir="center" onclick="setDir(this)">◉</button>
+          <button class="dir-btn" data-dir="bl" onclick="setDir(this)">↗</button>
+          <button class="dir-btn" data-dir="br" onclick="setDir(this)">↖</button>
+        </div>
       </div>
+
+      <div class="sect">
+        <div class="section-title">Неон</div>
+        <div class="tweak-row"><span class="lbl">Сила</span><input type="range" id="glowR" min="0" max="100" value="40" oninput="setGlow(this.value)" /><span class="val" id="glowV">40%</span></div>
+        <div class="top-neon-row" id="topNeonRow" style="display:none">
+          <span class="lbl" style="font-size:11px;min-width:60px;color:var(--text-secondary)">Цвет</span>
+          <input type="color" class="top-neon-color" id="topNeonInput" value="#7C3AED" oninput="setTopNeon(this.value)" />
+          <span style="font-size:11px;color:var(--text-tertiary)">для топ-менеджмента</span>
+        </div>
+      </div>
+
+      <div class="sect">
+        <div class="section-title">Подстройка фото</div>
+        <div class="tweak-row"><span class="lbl">Зум</span><input type="range" id="zoomR" min="40" max="200" value="100" step="2" oninput="setZoom(this.value)" /><span class="val" id="zoomV">1.0×</span></div>
+        <div class="tweak-row"><span class="lbl">Y-сдвиг</span><input type="range" id="panYR" min="-80" max="80" value="0" oninput="setPanY(this.value)" /><span class="val" id="panYV">0</span></div>
+        <div class="tweak-row"><span class="lbl">X-сдвиг</span><input type="range" id="panXR" min="-50" max="50" value="0" oninput="setPanX(this.value)" /><span class="val" id="panXV">0</span></div>
+      </div>
+
+      <div class="sect">
+        <div class="section-title">Лого на одежде</div>
+        <label class="checkbox-row"><input type="checkbox" id="logoShirtCheck" checked onchange="setLogoShirt(this.checked)" />Добавить на футболку</label>
+        <div class="tweak-row" style="margin-top:4px"><span class="lbl">Размер</span><input type="range" id="logoShirtR" min="3" max="14" value="6" oninput="setLogoShirtSize(this.value)" /><span class="val" id="logoShirtV">6%</span></div>
+        <div class="tweak-row"><span class="lbl">X-сдвиг</span><input type="range" id="logoShirtXR" min="-120" max="120" value="0" oninput="setLogoShirtX(this.value)" /><span class="val" id="logoShirtXV">0</span></div>
+        <div class="tweak-row"><span class="lbl">Y-сдвиг</span><input type="range" id="logoShirtYR" min="-40" max="60" value="0" oninput="setLogoShirtY(this.value)" /><span class="val" id="logoShirtYV">0</span></div>
+      </div>
+
+      <button class="btn-download" id="dlBtn" onclick="download()" disabled>
+        <i class="ti ti-download"></i> Скачать PNG
+      </button>
+    </div>
+  </div>
+
+  <div class="cringe-section">
+    <div class="cringe-header" onclick="toggleCringe()" id="cringeHeader">
+      <h3>🎭 Кринж-режим · только для своих</h3>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="cringe-body" id="cringeBody">
+      <div class="sect">
+        <div class="section-title">💉 Тату «Успех неизбежен»</div>
+        <label class="checkbox-row"><input type="checkbox" id="tattooCheck" onchange="setTattoo(this.checked)" />Набить</label>
+        <div class="tweak-row small" style="margin-top:6px"><span class="lbl">X</span><input type="range" id="tattooXR" min="-100" max="100" value="-25" oninput="setTattooX(this.value)" /><span class="val" id="tattooXV">-25</span></div>
+        <div class="tweak-row small"><span class="lbl">Y</span><input type="range" id="tattooYR" min="-80" max="80" value="-20" oninput="setTattooY(this.value)" /><span class="val" id="tattooYV">-20</span></div>
+        <div class="tweak-row small"><span class="lbl">Размер</span><input type="range" id="tattooSzR" min="60" max="180" value="100" oninput="setTattooSz(this.value)" /><span class="val" id="tattooSzV">100%</span></div>
+        <div class="tweak-row small"><span class="lbl">Поворот</span><input type="range" id="tattooRotR" min="-45" max="45" value="-10" oninput="setTattooRot(this.value)" /><span class="val" id="tattooRotV">-10°</span></div>
+      </div>
+
+      <div class="sect">
+        <div class="section-title">🐾 За кого ты?</div>
+        <div class="pet-select">
+          <button data-pet="none" class="active" onclick="setPet(this)">— нет —</button>
+          <button data-pet="cat" onclick="setPet(this)">🐱 коты</button>
+          <button data-pet="dog" onclick="setPet(this)">🐶 собаки</button>
+        </div>
+      </div>
+
+      <div class="sect">
+        <div class="section-title">🪪 Селфи с паспортом</div>
+        <label class="checkbox-row"><input type="checkbox" id="passportCheck" onchange="setPassport(this.checked)" />Добавить паспорт</label>
+      </div>
+
+      <div class="sect">
+        <div class="section-title">🦹 Спец-режимы</div>
+        <div class="cringe-grid">
+          <label class="cringe-chip" id="chip-villain"><input type="checkbox" id="villainCheck" onchange="setMode('villain', this.checked)" style="display:none" /><span class="emoji">⚠️</span><span>СБП на прод</span></label>
+          <label class="cringe-chip" id="chip-burnout"><input type="checkbox" id="burnoutCheck" onchange="setMode('burnout', this.checked)" style="display:none" /><span class="emoji">🥛</span><span>Творожник</span></label>
+          <label class="cringe-chip" id="chip-belarus"><input type="checkbox" id="belarusCheck" onchange="setMode('belarus', this.checked)" style="display:none" /><span class="emoji">🇧🇾</span><span>Беларусь</span></label>
+          <label class="cringe-chip" id="chip-karaoke"><input type="checkbox" id="karaokeCheck" onchange="setMode('karaoke', this.checked)" style="display:none" /><span class="emoji">🎤</span><span>Караоке (Грузия)</span></label>
+          <label class="cringe-chip" id="chip-redflag"><input type="checkbox" id="redflagCheck" onchange="setMode('redflag', this.checked)" style="display:none" /><span class="emoji">🚩</span><span>Red Flag</span></label>
+          <label class="cringe-chip" id="chip-vacation"><input type="checkbox" id="vacationCheck" onchange="setMode('vacation', this.checked)" style="display:none" /><span class="emoji">🏖️</span><span>Отпуск</span></label>
+          <label class="cringe-chip" id="chip-cringe" style="grid-column:1/-1"><input type="checkbox" id="cringeCheck" onchange="setMode('cringe', this.checked)" style="display:none" /><span class="emoji">🎉</span><span>МАКС КРИНЖ ✨🌹💐🎂</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sign-in modal -->
+<div class="modal" id="signin-modal">
+  <div class="modal-content">
+    <h2>Демо-вход</h2>
+    <p>Введите рабочий email. В демо-версии проверка по домену, на проде — полноценный Google OAuth.</p>
+    <input type="email" id="emailInput" placeholder="you@restaff.pro" />
+    <div class="modal-err" id="emailErr"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeSignIn()">Отмена</button>
+      <button class="submit" onclick="trySignIn()">Войти</button>
     </div>
   </div>
 </div>
 
 <script src="app.js"></script>
-<div id="check-modal" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,0.92);z-index:100;align-items:center;justify-content:center;padding:24px;overflow-y:auto;">
-  <div style="background:#0f0f15;border:0.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:24px;max-width:520px;width:100%;color:#fff;margin:auto;">
-    <div style="font-size:11px;color:#fb923c;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;font-weight:500" data-i18n="check_eyebrow">Проверка перед скачиванием</div>
-    <h2 style="font-size:18px;font-weight:500;margin-bottom:8px;letter-spacing:-0.01em" data-i18n="check_h">Похоже не на эталон</h2>
-    <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:18px;line-height:1.5" data-i18n="check_sub">Сравните ваш результат с эталоном — возможно стоит подкорректировать. Можно вернуться и поправить, или скачать как есть.</p>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-        <canvas id="checkCvYours" width="180" height="180" style="width:100%;aspect-ratio:1;border-radius:50%"></canvas>
-        <span style="font-size:10px;color:#a8a8b3;text-transform:uppercase;letter-spacing:.1em" data-i18n="check_yours">Ваш</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-        <img id="checkRefImg" alt="Эталон" style="width:100%;aspect-ratio:1;border-radius:50%;display:block" />
-        <span style="font-size:10px;color:#a8a8b3;text-transform:uppercase;letter-spacing:.1em" data-i18n="check_ref">Эталон</span>
-      </div>
-    </div>
-
-    <div id="checkIssues" style="background:rgba(244,63,94,0.06);border:0.5px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 14px;margin-bottom:18px;font-size:12px;line-height:1.7"></div>
-
-    <div style="display:flex;gap:8px">
-      <button onclick="closeCheckModal()" style="flex:1;padding:11px;font-size:13px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.15);background:transparent;color:#fff;cursor:pointer;font-family:inherit" data-i18n="check_back">← Вернуться поправить</button>
-      <button onclick="downloadAnyway()" style="flex:1;padding:11px;font-size:13px;border-radius:8px;border:none;background:#7C3AED;color:#fff;cursor:pointer;font-family:inherit;font-weight:500" data-i18n="check_anyway">Скачать как есть →</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>

@@ -1,246 +1,85 @@
-// === Корпоративные домены для проверки в демо ===
+// === КОНФИГ ===
 const ALLOWED_DOMAINS = ['restaff.pro', 'restaff.tech', 'staffco.ru'];
 
-// === Бренд ===
-const BRAND_RU = '#2563EB';
-const BRAND_GL = '#7C3AED';
-
 const DEPTS = [
-  {id:'top',     name:'Топ менеджмент',           name_en:'Leadership',         neon:['#0F172A','#475569']},
-  {id:'sales',   name:'Продажи',                   name_en:'Sales',              neon:['#22C55E','#84CC16']},
-  {id:'mkt',     name:'Маркетинг',                 name_en:'Marketing',          neon:['#EC4899','#A855F7']},
-  {id:'fin',     name:'Финансы и бухгалтерия',     name_en:'Finance',            neon:['#FACC15','#F59E0B']},
-  {id:'legal',   name:'Юристы и комплаенс',        name_en:'Legal & Compliance', neon:['#06B6D4','#0EA5E9']},
-  {id:'dev',     name:'Продукт и Разработка',      name_en:'Product & Engineering', neon:['#3B82F6','#6366F1']},
-  {id:'support', name:'Аккаунтинг SE и поддержка', name_en:'Account SE & Support', neon:['#10B981','#14B8A6']},
-  {id:'analyt',  name:'Аналитика',                 name_en:'Analytics',          neon:['#D946EF','#A855F7']},
-  {id:'hr',      name:'HR',                        name_en:'HR',                 neon:['#FB923C','#F43F5E']}
+  {id:'top',     name:'Топ менеджмент', base:'#000000', baseLight:'#2a2a2a', isLuxBlack: true},
+  {id:'sales',   name:'Продажи',         base:'#DC2626', baseLight:'#F97316'},
+  {id:'mkt',     name:'Маркетинг',       base:'#059669', baseLight:'#10B981'},
+  {id:'fin',     name:'Финансы',         base:'#D97706', baseLight:'#FBBF24'},
+  {id:'legal',   name:'Юристы',          base:'#0E7490', baseLight:'#22D3EE'},
+  {id:'dev',     name:'Разработка',      base:'#1D4ED8', baseLight:'#3B82F6'},
+  {id:'support', name:'Поддержка',       base:'#7C3AED', baseLight:'#A78BFA'},
+  {id:'analyt',  name:'Аналитика',       base:'#0F766E', baseLight:'#5EEAD4'},
+  {id:'hr',      name:'HR',              base:'#F43F5E', baseLight:'#FB7185'}
 ];
 
-// === i18n ===
-const I18N = {
-  ru: {
-    eyebrow: 'Internal · Команда ReStaff',
-    h1a: 'Единый стиль',
-    h1b: 'для всей команды',
-    sub: 'Корпоративный сервис создания аватарок для Zoom, Slack и почты. Загрузите фото — мы обработаем его в едином стиле бренда.',
-    f1: 'Авто-кроп по половине лица',
-    f2: 'Цвет отдела и региона',
-    f3: '9 фильтров для самовыражения',
-    signin: 'Войти через корпоративный Google',
-    access: 'Доступ только для сотрудников ReStaff',
-    foot: '© ReStaff 2026',
-    modal_title: 'Демо-вход',
-    modal_h: 'Введите рабочий email',
-    modal_sub: 'В демо-версии используется проверка домена. На проде это будет полноценный Google OAuth.',
-    modal_btn: 'Войти',
-    modal_cancel: 'Отмена',
-    samples_label: 'Эталон\nстиля →',
-    sample_m: 'пример M',
-    sample_f: 'пример Ж',
-    samples_hint: 'Лицо смещено в правую часть круга — видна левая половина. Сдвинь фото мышью если автокроп не попал.',
-    ob_eyebrow: 'Эталон стиля',
-    ob_h: 'Так должна выглядеть ваша аватарка',
-    ob_sub: 'Половина лица в правой части круга · ч/б фильтр · цветное кольцо подразделения · логотип RE (синий — РФ, фиолетовый — Global)',
-    ob_ref_m: 'Топ менеджмент · РФ',
-    ob_ref_f: 'HR · Global',
-    ob_rule_1: 'Тёмный фон вокруг лица',
-    ob_rule_2: 'Половина лица в правой части круга',
-    ob_rule_3: 'Чёрно-белая обработка',
-    ob_rule_4: 'Кольцо подразделения и логотип RE',
-    ob_btn: 'Понятно, начинаем',
-    sm_label: 'Эталон →',
-    sm_show: 'Показать снова',
-    step1: '1 · Фото',
-    step2: '2 · Подстройка',
-    step3: '3 · Подразделение',
-    step4: '4 · Регион',
-    step5: '5 · Фильтр',
-    reset: 'сбросить',
-    upload: 'Загрузить фото',
-    photo_tip: 'Лучше фото с тёмным однотонным фоном. Если фон светлый — используйте кнопку ниже.',
-    bg_remove: 'Убрать фон автоматически',
-    bg_processing: 'Обрабатываем фото...',
-    bg_done: 'Фон удалён',
-    bg_done_btn: 'Фон удалён ✓',
-    bg_fail: 'Ошибка: ',
-    status_init: 'Загрузите фото — лицо встанет на правую сторону',
-    status_searching: 'Ищем лицо...',
-    status_found: 'Лицо найдено · кадр настроен',
-    status_not_found: 'Лицо не определилось — подстройте мышью',
-    drag_tip: 'Сдвинуть мышью',
-    drag_hint: 'Перетащи фото в превью',
-    download: 'Скачать PNG',
-    check_eyebrow: 'Проверка перед скачиванием',
-    check_h: 'Похоже не на эталон',
-    check_sub: 'Сравните ваш результат с эталоном — возможно стоит подкорректировать. Можно вернуться и поправить, или скачать как есть.',
-    check_yours: 'Ваш',
-    check_ref: 'Эталон',
-    check_back: '← Вернуться поправить',
-    check_anyway: 'Скачать как есть →',
-    issues_found: 'Найдены отклонения от эталона:',
-    issue_dark_bg: 'Правая часть круга недостаточно тёмная — нужен тёмный фон вокруг лица',
-    issue_face_position: 'Лицо не в правой части круга — двигайте фото мышью пока лицо не уйдёт вправо',
-    err_invalid_email: 'Введите корректный email',
-    err_wrong_domain: 'Доступ только для сотрудников ReStaff'
-  },
-  en: {
-    eyebrow: 'Internal · ReStaff team',
-    h1a: 'One brand style',
-    h1b: 'for the whole team',
-    sub: 'Corporate avatar service for Zoom, Slack and email. Upload your photo — we shape it into the unified brand style.',
-    f1: 'Auto half-face crop',
-    f2: 'Department & region color',
-    f3: '9 filters for self-expression',
-    signin: 'Sign in with corporate Google',
-    access: 'For ReStaff team members only',
-    foot: '© ReStaff 2026',
-    modal_title: 'Demo login',
-    modal_h: 'Enter your work email',
-    modal_sub: 'Demo version uses domain check. Production will have full Google OAuth.',
-    modal_btn: 'Sign in',
-    modal_cancel: 'Cancel',
-    samples_label: 'Style\nreference →',
-    sample_m: 'sample M',
-    sample_f: 'sample F',
-    samples_hint: 'Face is shifted to the right side of the circle — left half visible. Drag to adjust if auto-crop missed.',
-    ob_eyebrow: 'Style reference',
-    ob_h: 'This is how your avatar should look',
-    ob_sub: 'Half face on the right · monochrome filter · department color ring · RE logo (blue for RU, violet for Global)',
-    ob_ref_m: 'Leadership · RU',
-    ob_ref_f: 'HR · Global',
-    ob_rule_1: 'Dark background around the face',
-    ob_rule_2: 'Half face on the right side',
-    ob_rule_3: 'Black & white treatment',
-    ob_rule_4: 'Department ring and RE logo',
-    ob_btn: "Got it, let's start",
-    sm_label: 'Reference →',
-    sm_show: 'Show again',
-    step1: '1 · Photo',
-    step2: '2 · Fine-tune',
-    step3: '3 · Department',
-    step4: '4 · Region',
-    step5: '5 · Filter',
-    reset: 'reset',
-    upload: 'Upload photo',
-    photo_tip: 'Photos with dark, solid backgrounds work best. For light backgrounds — use the button below.',
-    bg_remove: 'Remove background automatically',
-    bg_processing: 'Processing photo...',
-    bg_done: 'Background removed',
-    bg_done_btn: 'Background removed ✓',
-    bg_fail: 'Error: ',
-    status_init: 'Upload your photo — face will land on the right',
-    status_searching: 'Detecting face...',
-    status_found: 'Face found · crop set',
-    status_not_found: 'Face not detected — adjust with mouse',
-    drag_tip: 'Drag to adjust',
-    drag_hint: 'Drag photo in preview',
-    download: 'Download PNG',
-    check_eyebrow: 'Pre-download check',
-    check_h: 'Doesn\'t match the reference',
-    check_sub: 'Compare your result with the reference — you may want to adjust. You can go back and fix, or download as-is.',
-    check_yours: 'Yours',
-    check_ref: 'Reference',
-    check_back: '← Back to fix',
-    check_anyway: 'Download anyway →',
-    issues_found: 'Differences from reference:',
-    issue_dark_bg: 'Right side of the circle is not dark enough — needs dark background around face',
-    issue_face_position: 'Face is not on the right side — drag the photo until face moves to the right',
-    err_invalid_email: 'Enter a valid email',
-    err_wrong_domain: 'For ReStaff team members only'
-  }
-};
+const TATTOO_TEXT = 'Успех\nнеизбежен';
+const CIRC_SIZE = 0.32;
 
-let currentLang = localStorage.getItem('restaff_lang') || 'ru';
-
-function applyLang(lang) {
-  const t = I18N[lang];
-  document.querySelectorAll('[data-i18n]').forEach(node => {
-    const key = node.dataset.i18n;
-    if (t[key]) node.innerHTML = t[key].replace(/\n/g, '<br>');
-  });
-  document.documentElement.lang = lang;
-}
-
-function setLang(el) {
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  currentLang = el.dataset.lang;
-  localStorage.setItem('restaff_lang', currentLang);
-  applyLang(currentLang);
-  if (deptList) renderDeptList();
-}
-
-// === State ===
-let dept = DEPTS[0];
-let region = 'RU';
-let photoImg = null;
-let processedCache = null, cacheKey = '';
-let exportSize = 512;
-let fx = 'bw';
-let userZoom = 1.0;
-let panX = 0, panY = 0;
-let faceBox = null;
+// === СТЕЙТ ===
 let currentUser = null;
+let dept = DEPTS[5];
+let region = 'GL';
+let img = null;
+let zoom = 1.0, panX = 0, panY = 0;
+let glowAmt = 0.4;
+let showLogoShirt = true;
+let logoShirtSize = 0.06, logoShirtX = 0, logoShirtY = 0;
+let gradDir = 'tr';
+let topNeonColor = '#7C3AED';
 
-// === Assets ===
-const violetLogo = new Image();
-const blueLogo = new Image();
-let assetsReady = 0;
+let showTattoo = false;
+let tattooX = -0.25, tattooY = -0.2, tattooSz = 1.0, tattooRot = -10;
+let pet = 'none';
+let showPassport = false;
+let modes = { villain:false, burnout:false, belarus:false, karaoke:false, redflag:false, vacation:false, cringe:false };
 
-function onAssetReady() {
-  assetsReady++;
-  if (assetsReady === 2) {
-    if (document.getElementById('app').classList.contains('active')) {
-      render();
+let violetLogo = null;
+let logoReady = false;
+let refImage = null;
+
+// === ЛОГО RE ИЗ ASSETS ===
+async function loadLogo() {
+  try {
+    const r = await fetch('assets-data.json');
+    const data = await r.json();
+    if (data.logo) {
+      violetLogo = new Image();
+      violetLogo.onload = () => { logoReady = true; render(); };
+      violetLogo.src = data.logo;
+    } else if (data.LOGO_VIOLET) {
+      violetLogo = new Image();
+      violetLogo.onload = () => { logoReady = true; render(); };
+      violetLogo.src = 'data:image/png;base64,' + data.LOGO_VIOLET;
     }
+    // ✱ Эталон-изображение
+    if (data.ref) {
+      const refImgEl = document.getElementById('refImage');
+      if (refImgEl) refImgEl.src = data.ref;
+    }
+    return;
+  } catch(e) {
+    console.warn('Assets load failed', e);
   }
+  logoReady = true;
 }
 
-// Загружаем ассеты
-fetch('assets-data.json')
-  .then(r => r.json())
-  .then(data => {
-    violetLogo.onload = onAssetReady;
-    blueLogo.onload = onAssetReady;
-    violetLogo.src = 'data:image/png;base64,' + data.LOGO_VIOLET;
-    blueLogo.src = 'data:image/png;base64,' + data.LOGO_BLUE;
-    const logoSrc = 'data:image/png;base64,' + data.LOGO_VIOLET;
-    document.getElementById('navLogo').src = logoSrc;
-    document.getElementById('appLogo').src = logoSrc;
-    const orbLogo = document.getElementById('orbLogo');
-    if (orbLogo) orbLogo.src = logoSrc;
-
-    // Эталонные аватарки — теперь готовые картинки
-    const refMaleSrc = 'data:image/jpeg;base64,' + data.REF_MALE;
-    const refFemaleSrc = 'data:image/jpeg;base64,' + data.REF_FEMALE;
-    document.getElementById('refMaleImg').src = refMaleSrc;
-    document.getElementById('refFemaleImg').src = refFemaleSrc;
-    document.getElementById('smMale').src = refMaleSrc;
-    document.getElementById('smFemale').src = refFemaleSrc;
-  });
-
-// === Auth ===
+// === АВТОРИЗАЦИЯ ===
 function openSignIn() {
-  document.getElementById('signin-modal').style.display = 'flex';
-  setTimeout(() => document.getElementById('emailInput').focus(), 100);
+  document.getElementById('signin-modal').classList.add('active');
+  document.getElementById('emailInput').focus();
 }
 function closeSignIn() {
-  document.getElementById('signin-modal').style.display = 'none';
+  document.getElementById('signin-modal').classList.remove('active');
   document.getElementById('emailErr').textContent = '';
-  document.getElementById('emailInput').value = '';
 }
 function trySignIn() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
-  const errEl = document.getElementById('emailErr');
-  const t = I18N[currentLang];
-  if (!email || !email.includes('@') || !email.includes('.')) {
-    errEl.textContent = t.err_invalid_email;
-    return;
-  }
+  const err = document.getElementById('emailErr');
+  if (!email.includes('@')) { err.textContent = 'Введите корректный email'; return; }
   const domain = email.split('@')[1];
   if (!ALLOWED_DOMAINS.includes(domain)) {
-    errEl.textContent = t.err_wrong_domain;
+    err.textContent = 'Доступ только для сотрудников ReStaff';
     return;
   }
   currentUser = email;
@@ -252,422 +91,124 @@ function signOut() {
   currentUser = null;
   localStorage.removeItem('restaff_user');
   document.getElementById('app').classList.remove('active');
-  document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('landing').classList.add('active');
 }
 function showApp() {
-  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('landing').classList.remove('active');
   document.getElementById('app').classList.add('active');
   document.getElementById('userEmail').textContent = currentUser;
-  if (assetsReady === 2) {
-    render();
-  }
-  // Восстанавливаем состояние онбординга
-  const dismissed = localStorage.getItem('restaff_ob_dismissed') === '1';
-  if (dismissed) {
-    document.getElementById('onboarding').style.display = 'none';
-    document.getElementById('samplesMini').classList.add('active');
-  } else {
-    document.getElementById('onboarding').style.display = 'block';
-    document.getElementById('samplesMini').classList.remove('active');
-  }
+  initApp();
 }
 
-function dismissOnboarding() {
-  localStorage.setItem('restaff_ob_dismissed', '1');
-  document.getElementById('onboarding').style.display = 'none';
-  document.getElementById('samplesMini').classList.add('active');
-}
+// === INIT APP ===
+let appInitialized = false;
+function initApp() {
+  if (appInitialized) return;
+  appInitialized = true;
 
-function showOnboarding() {
-  localStorage.removeItem('restaff_ob_dismissed');
-  document.getElementById('onboarding').style.display = 'block';
-  document.getElementById('samplesMini').classList.remove('active');
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('signin-modal').style.display === 'flex') {
-    trySignIn();
-  }
-  if (e.key === 'Escape' && document.getElementById('signin-modal').style.display === 'flex') {
-    closeSignIn();
-  }
-});
-
-// === Dept list ===
-let deptList;
-function renderDeptList() {
-  deptList = document.getElementById('deptList');
-  if (!deptList) return;
-  deptList.innerHTML = '';
+  const deptListEl = document.getElementById('deptList');
   DEPTS.forEach(d => {
-    const item = document.createElement('div');
-    item.className = 'dept-item' + (d.id === dept.id ? ' selected' : '');
-    const sw = `linear-gradient(135deg, ${d.neon[0]}, ${d.neon[1]})`;
-    const name = currentLang === 'en' ? d.name_en : d.name;
-    item.innerHTML = `<div class="dept-swatch" style="background:${sw}"></div>${name}`;
-    item.onclick = () => {
+    const el = document.createElement('div');
+    el.className = 'dept-item' + (d.id === dept.id ? ' selected' : '');
+    el.innerHTML = '<div class="dept-swatch" style="background:linear-gradient(135deg, ' + d.base + ', ' + d.baseLight + ')"></div>' + d.name;
+    el.onclick = () => {
       document.querySelectorAll('.dept-item').forEach(x => x.classList.remove('selected'));
-      item.classList.add('selected');
+      el.classList.add('selected');
       dept = d;
-      processedCache = null;
+      document.getElementById('topNeonRow').style.display = d.isLuxBlack ? 'flex' : 'none';
       render();
     };
-    deptList.appendChild(item);
+    deptListEl.appendChild(el);
   });
+
+  loadLogo().then(() => render());
+  render();
 }
 
-// === Controls ===
+// === КОНТРОЛЫ ===
+function setZoom(v) { zoom = v/100; document.getElementById('zoomV').textContent = zoom.toFixed(2)+'×'; render(); }
+function setPanY(v) { panY = v/100; document.getElementById('panYV').textContent = v; render(); }
+function setPanX(v) { panX = v/100; document.getElementById('panXV').textContent = v; render(); }
+function setGlow(v) { glowAmt = v/100; document.getElementById('glowV').textContent = v + '%'; render(); }
+function setTopNeon(v) { topNeonColor = v; render(); }
 function setRegion(el) {
-  region = el.dataset.region;
-  document.querySelectorAll('.region-btn').forEach(x => x.classList.remove('active'));
-  el.classList.add('active');
-  render();
+  document.querySelectorAll('[data-region]').forEach(b => b.classList.remove('active'));
+  el.classList.add('active'); region = el.dataset.region; render();
 }
-function setSize(s, el) {
-  exportSize = s;
-  document.querySelectorAll('.size-pill button').forEach(x => x.classList.remove('active'));
-  el.classList.add('active');
+function setLogoShirt(v) { showLogoShirt = v; render(); }
+function setLogoShirtSize(v) { logoShirtSize = v/100; document.getElementById('logoShirtV').textContent = v + '%'; render(); }
+function setLogoShirtX(v) { logoShirtX = v/100; document.getElementById('logoShirtXV').textContent = v; render(); }
+function setLogoShirtY(v) { logoShirtY = v/100; document.getElementById('logoShirtYV').textContent = v; render(); }
+function setDir(el) {
+  document.querySelectorAll('.dir-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active'); gradDir = el.dataset.dir; render();
 }
-function setFx(el) {
-  fx = el.dataset.fx;
-  document.querySelectorAll('.fx-btn').forEach(x => x.classList.remove('active'));
-  el.classList.add('active');
-  processedCache = null;
-  render();
+function toggleGuide() {
+  document.getElementById('guideBtn').classList.toggle('active');
+  document.getElementById('cropGuide').classList.toggle('active');
 }
-function setZoom(v) {
-  userZoom = v/100;
-  document.getElementById('zoomVal').textContent = userZoom.toFixed(2) + '×';
-  processedCache = null;
-  render();
+function toggleCringe() {
+  document.getElementById('cringeHeader').classList.toggle('open');
+  document.getElementById('cringeBody').classList.toggle('open');
 }
-function resetTweak() {
-  userZoom = 1.0;
-  panX = 0; panY = 0;
-  document.getElementById('zoomRange').value = 100;
-  document.getElementById('zoomVal').textContent = '1.00×';
-  processedCache = null;
+function setTattoo(v) { showTattoo = v; render(); }
+function setTattooX(v) { tattooX = v/100; document.getElementById('tattooXV').textContent = v; render(); }
+function setTattooY(v) { tattooY = v/100; document.getElementById('tattooYV').textContent = v; render(); }
+function setTattooSz(v) { tattooSz = v/100; document.getElementById('tattooSzV').textContent = v + '%'; render(); }
+function setTattooRot(v) { tattooRot = parseInt(v); document.getElementById('tattooRotV').textContent = v + '°'; render(); }
+function setPet(el) {
+  document.querySelectorAll('[data-pet]').forEach(b => b.classList.remove('active'));
+  el.classList.add('active'); pet = el.dataset.pet; render();
+}
+function setPassport(v) { showPassport = v; render(); }
+function setMode(name, v) {
+  modes[name] = v;
+  const chip = document.getElementById('chip-' + name);
+  if (chip) chip.classList.toggle('active', v);
+  if (name === 'villain' && v) { modes.burnout = false; document.getElementById('chip-burnout').classList.remove('active'); document.getElementById('burnoutCheck').checked = false; }
+  if (name === 'burnout' && v) { modes.villain = false; document.getElementById('chip-villain').classList.remove('active'); document.getElementById('villainCheck').checked = false; }
   render();
 }
 
-// === Photo loading ===
-async function detectFace(img) {
-  if ('FaceDetector' in window) {
-    try {
-      const detector = new window.FaceDetector({fastMode: true, maxDetectedFaces: 1});
-      const faces = await detector.detect(img);
-      if (faces && faces.length > 0) {
-        const f = faces[0].boundingBox;
-        return {x: f.x, y: f.y, w: f.width, h: f.height, detected: true};
-      }
-    } catch(e) {}
-  }
-  const w = img.width, h = img.height;
-  const fw = Math.min(w, h) * 0.35;
-  const fh = fw * 1.15;
-  return {x: w/2 - fw/2, y: h*0.32 - fh/2, w: fw, h: fh, detected: false};
-}
-
+// === ЗАГРУЗКА ФОТО ===
 function loadPhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const t = I18N[currentLang];
-  document.getElementById('cropStatus').textContent = t.status_searching;
-  const img = new Image();
-  img.onload = async () => {
-    photoImg = img;
-    processedCache = null;
-    panX = 0; panY = 0; userZoom = 1.0;
-    document.getElementById('zoomRange').value = 100;
-    document.getElementById('zoomVal').textContent = '1.00×';
-    faceBox = await detectFace(img);
-    document.getElementById('cropStatus').textContent = faceBox.detected ? t.status_found : t.status_not_found;
-    document.getElementById('uploadLabel').textContent = file.name.slice(0, 16);
-    document.getElementById('uploadArea').classList.add('has-photo');
-
+  const file = e.target.files[0]; if (!file) return;
+  const i = new Image();
+  i.onload = () => {
+    img = i;
+    document.getElementById('upLabel').textContent = file.name.slice(0, 28);
+    document.getElementById('up').classList.add('has-photo');
+    document.getElementById('dlBtn').disabled = false;
     // Сбрасываем состояние кнопки удаления фона
     const bgBtn = document.getElementById('bgRemoveBtn');
-    const bgStatus = document.getElementById('bgRemoveStatus');
-    if (bgBtn) {
-      bgBtn.disabled = false;
-      bgBtn.classList.remove('done', 'processing');
-      const span = bgBtn.querySelector('span');
-      if (span) span.textContent = I18N[currentLang].bg_remove;
-    }
-    if (bgStatus) {
-      bgStatus.className = 'bg-remove-status';
-      bgStatus.textContent = '';
-    }
-
+    bgBtn.disabled = false;
+    bgBtn.classList.remove('processing', 'done');
+    document.getElementById('bgRemoveText').textContent = 'Убрать фон автоматически';
+    document.getElementById('bgRemoveStatus').className = 'bg-remove-status';
+    document.getElementById('bgRemoveStatus').textContent = '';
     render();
   };
-  img.src = URL.createObjectURL(file);
+  i.src = URL.createObjectURL(file);
 }
 
-// === Drag ===
-function initDrag() {
-  const mainCv = document.getElementById('cv-main');
-  let dragging = false, lastX = 0, lastY = 0;
-  mainCv.addEventListener('mousedown', e => {
-    if (!photoImg) return;
-    dragging = true; lastX = e.clientX; lastY = e.clientY;
-    mainCv.style.cursor = 'grabbing';
-  });
-  window.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    const rect = mainCv.getBoundingClientRect();
-    const scale = 1 / rect.width;
-    panX += (e.clientX - lastX) * scale;
-    panY += (e.clientY - lastY) * scale;
-    panX = Math.max(-0.8, Math.min(0.8, panX));
-    panY = Math.max(-0.8, Math.min(0.8, panY));
-    lastX = e.clientX; lastY = e.clientY;
-    processedCache = null;
-    render();
-  });
-  window.addEventListener('mouseup', () => {
-    dragging = false;
-    mainCv.style.cursor = 'move';
-  });
-  mainCv.addEventListener('touchstart', e => {
-    if (!photoImg || !e.touches[0]) return;
-    dragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
-    e.preventDefault();
-  });
-  mainCv.addEventListener('touchmove', e => {
-    if (!dragging || !e.touches[0]) return;
-    const rect = mainCv.getBoundingClientRect();
-    const scale = 1 / rect.width;
-    panX += (e.touches[0].clientX - lastX) * scale;
-    panY += (e.touches[0].clientY - lastY) * scale;
-    panX = Math.max(-0.8, Math.min(0.8, panX));
-    panY = Math.max(-0.8, Math.min(0.8, panY));
-    lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
-    processedCache = null;
-    render();
-    e.preventDefault();
-  });
-  mainCv.addEventListener('touchend', () => { dragging = false; });
-}
-
-// === Image processing ===
-function computeHalfFaceCrop(srcImg, srcFaceBox, zoomVal, pX, pY) {
-  if (!srcFaceBox) return null;
-  const faceCenterX = srcFaceBox.x + srcFaceBox.w / 2;
-  const faceCenterY = srcFaceBox.y + srcFaceBox.h / 2;
-  const faceSize = Math.max(srcFaceBox.w, srcFaceBox.h);
-  const baseCropSize = faceSize * 1.35;
-  const cropSize = baseCropSize / zoomVal;
-  const cx = faceCenterX + cropSize * 0.32 + pX * cropSize * 0.6;
-  const cy = faceCenterY + cropSize * 0.05 + pY * cropSize * 0.6;
-  return {sx: cx - cropSize/2, sy: cy - cropSize/2, size: cropSize};
-}
-
-function applyMonoFilter(data, fxName) {
-  if (fxName === 'bw') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-      const c = Math.min(255, Math.max(0, (lum - 128) * 1.2 + 128));
-      data[i] = data[i+1] = data[i+2] = c;
-    }
-  } else if (fxName === 'hicon') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-      const c = Math.min(255, Math.max(0, (lum - 128) * 1.7 + 128));
-      data[i] = data[i+1] = data[i+2] = c;
-    }
-  } else if (fxName === 'soft') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-      const c = Math.min(255, Math.max(0, (lum - 128) * 0.85 + 148));
-      data[i] = data[i+1] = data[i+2] = c;
-    }
-  } else if (fxName === 'silver') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-      const c = Math.min(255, Math.max(0, (lum - 128) * 1.1 + 135));
-      data[i] = Math.min(255, c * 0.97);
-      data[i+1] = Math.min(255, c * 0.99);
-      data[i+2] = Math.min(255, c * 1.03);
-    }
-  } else if (fxName === 'grain') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-      const c = Math.min(255, Math.max(0, (lum - 128) * 1.15 + 128));
-      const n = (Math.random() - 0.5) * 32;
-      const final = Math.min(255, Math.max(0, c + n));
-      data[i] = data[i+1] = data[i+2] = final;
-    }
-  } else if (fxName === 'ink') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-      let c = (lum - 115) * 2.2 + 115;
-      c = Math.min(255, Math.max(0, c));
-      data[i] = data[i+1] = data[i+2] = c;
-    }
-  } else if (fxName === 'sepia') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-      const c = Math.min(255, Math.max(0, (lum - 128) * 1.15 + 128)) / 255;
-      data[i] = Math.round(255 * Math.pow(c, 0.85) * 0.98);
-      data[i+1] = Math.round(255 * Math.pow(c, 0.95) * 0.82);
-      data[i+2] = Math.round(255 * Math.pow(c, 1.1) * 0.6);
-    }
-  } else if (fxName === 'bluemono') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = (data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114) / 255;
-      data[i] = Math.round(10 + (150 - 10) * lum);
-      data[i+1] = Math.round(20 + (180 - 20) * lum);
-      data[i+2] = Math.round(50 + (255 - 50) * lum);
-    }
-  } else if (fxName === 'violetmono') {
-    for (let i = 0; i < data.length; i += 4) {
-      const lum = (data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114) / 255;
-      data[i] = Math.round(25 + (180 - 25) * lum);
-      data[i+1] = Math.round(15 + (130 - 15) * lum);
-      data[i+2] = Math.round(50 + (240 - 50) * lum);
-    }
-  }
-}
-
-function getProcessed(size) {
-  const key = `${size}-${fx}-${userZoom.toFixed(2)}-${panX.toFixed(3)}-${panY.toFixed(3)}`;
-  if (processedCache && cacheKey === key) return processedCache;
-  if (!photoImg) return null;
-  const oc = document.createElement('canvas');
-  oc.width = size; oc.height = size;
-  const ctx = oc.getContext('2d');
-  ctx.fillStyle = '#0f0f12';
-  ctx.fillRect(0, 0, size, size);
-  const crop = computeHalfFaceCrop(photoImg, faceBox, userZoom, panX, panY);
-  if (crop) {
-    ctx.drawImage(photoImg, crop.sx, crop.sy, crop.size, crop.size, 0, 0, size, size);
-  } else {
-    const baseSize = Math.min(photoImg.width, photoImg.height);
-    const cropSize = baseSize / userZoom;
-    const cx = photoImg.width / 2 - panX * baseSize;
-    const cy = photoImg.height / 2 - panY * baseSize;
-    let sx = cx - cropSize/2;
-    let sy = cy - cropSize/2;
-    sx = Math.max(0, Math.min(photoImg.width - cropSize, sx));
-    sy = Math.max(0, Math.min(photoImg.height - cropSize, sy));
-    ctx.drawImage(photoImg, sx, sy, cropSize, cropSize, 0, 0, size, size);
-  }
-  const imgData = ctx.getImageData(0, 0, size, size);
-  applyMonoFilter(imgData.data, fx);
-  ctx.putImageData(imgData, 0, 0);
-  processedCache = oc; cacheKey = key;
-  return oc;
-}
-
-function drawSilhouette(ctx, S) {
-  ctx.fillStyle = '#0a0a0f';
-  ctx.fillRect(0, 0, S, S);
-  ctx.fillStyle = '#2a2438';
-  ctx.beginPath();
-  ctx.arc(S*0.62, S*0.40, S*0.22, 0, Math.PI*2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.ellipse(S*0.62, S*0.95, S*0.42, S*0.32, 0, Math.PI, 0);
-  ctx.fill();
-}
-
-function renderAvatarComposition(ctx, S, opts) {
-  opts = opts || {};
-  const useRegion = opts.region || region;
-  const useDept = opts.dept || dept;
-  const customImg = opts.customImg;
-  const ringWidth = S * 0.075;
-  const ringRadius = S/2 - ringWidth/2;
-  ctx.clearRect(0, 0, S, S);
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(S/2, S/2, S/2, 0, Math.PI*2);
-  ctx.clip();
-  ctx.fillStyle = '#0a0a0f';
-  ctx.fillRect(0, 0, S, S);
-  if (violetLogo.complete && violetLogo.naturalWidth > 0) {
-    ctx.save();
-    ctx.globalAlpha = 0.13;
-    const lSize = S * 0.85;
-    ctx.drawImage(violetLogo, S/2 - lSize/2, S/2 - lSize/2, lSize, lSize);
-    ctx.restore();
-  }
-  if (customImg) {
-    ctx.drawImage(customImg, 0, 0, S, S);
-  } else if (photoImg) {
-    const p = getProcessed(S);
-    if (p) ctx.drawImage(p, 0, 0, S, S);
-  } else {
-    drawSilhouette(ctx, S);
-  }
-  ctx.restore();
-  const cx = S/2, cy = S/2;
-  const grad = ctx.createLinearGradient(S*0.1, S*0.1, S*0.9, S*0.9);
-  grad.addColorStop(0, useDept.neon[0]);
-  grad.addColorStop(1, useDept.neon[1]);
-  ctx.strokeStyle = grad;
-  ctx.lineWidth = ringWidth;
-  ctx.beginPath();
-  ctx.arc(cx, cy, ringRadius, 0, Math.PI*2);
-  ctx.stroke();
-  const innerGlow = ctx.createRadialGradient(cx, cy, S/2 - S*0.08, cx, cy, S/2);
-  innerGlow.addColorStop(0, 'rgba(255,255,255,0)');
-  innerGlow.addColorStop(1, useDept.neon[1] + '33');
-  ctx.fillStyle = innerGlow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, S/2, 0, Math.PI*2);
-  ctx.fill();
-  if (violetLogo.complete && blueLogo.complete && violetLogo.naturalWidth > 0) {
-    const lo = useRegion === 'RU' ? blueLogo : violetLogo;
-    const badgeSize = S * 0.44;
-    const bx = S * 0.78;
-    const by = S * 0.78;
-    ctx.drawImage(lo, bx - badgeSize/2, by - badgeSize/2, badgeSize, badgeSize);
-  }
-}
-
-function renderTo(canvasId) {
-  const cv = document.getElementById(canvasId);
-  if (!cv) return;
-  const ctx = cv.getContext('2d');
-  ctx.clearRect(0, 0, cv.width, cv.height);
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(cv.width/2, cv.height/2, cv.width/2, 0, Math.PI*2);
-  ctx.clip();
-  renderAvatarComposition(ctx, cv.width);
-  ctx.restore();
-}
-
-function render() {
-  processedCache = null;
-  renderTo('cv-main');
-  renderTo('cv-md');
-  renderTo('cv-sm');
-  renderTo('cv-xs');
-}
-
-// === Удаление фона через серверный proxy ===
+// === УДАЛЕНИЕ ФОНА ЧЕРЕЗ /api/remove-bg ===
 async function removeBgFromPhoto() {
-  if (!photoImg) return;
+  if (!img) return;
   const btn = document.getElementById('bgRemoveBtn');
-  const status = document.getElementById('bgRemoveStatus');
-  const t = I18N[currentLang];
+  const textEl = document.getElementById('bgRemoveText');
+  const statusEl = document.getElementById('bgRemoveStatus');
+  const fileInput = document.getElementById('photoInput');
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) return;
 
   btn.disabled = true;
   btn.classList.add('processing');
   btn.classList.remove('done');
-  status.className = 'bg-remove-status';
-  status.textContent = t.bg_processing;
+  textEl.textContent = 'Обрабатываем фото...';
+  statusEl.className = 'bg-remove-status';
+  statusEl.textContent = '';
 
   try {
-    const fileInput = document.getElementById('photoInput');
-    const file = fileInput.files && fileInput.files[0];
-    if (!file) {
-      throw new Error('Сначала загрузите фото');
-    }
-
     const arrayBuffer = await file.arrayBuffer();
     const response = await fetch('/api/remove-bg', {
       method: 'POST',
@@ -677,185 +218,553 @@ async function removeBgFromPhoto() {
       },
       body: arrayBuffer,
     });
-
     if (!response.ok) {
       let msg = 'HTTP ' + response.status;
-      try {
-        const err = await response.json();
-        if (err.error) msg = err.error;
-      } catch (e) {}
+      try { const err = await response.json(); if (err.error) msg = err.error; } catch(e) {}
       throw new Error(msg);
     }
-
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
     const newImg = new Image();
     newImg.onload = () => {
-      // Создаём композит: исходное "no-bg" фото на чёрном фоне
-      const cv = document.createElement('canvas');
-      cv.width = newImg.width;
-      cv.height = newImg.height;
-      const cctx = cv.getContext('2d');
-      cctx.fillStyle = '#0a0a0f';
-      cctx.fillRect(0, 0, cv.width, cv.height);
-      cctx.drawImage(newImg, 0, 0);
-
-      const composite = new Image();
-      composite.onload = () => {
-        photoImg = composite;
-        processedCache = null;
-        // Лицо теперь стопроцентно в центре оригинала - сбрасываем кроп
-        faceBox = null;
-        panX = 0; panY = 0; userZoom = 1.0;
-        document.getElementById('zoomRange').value = 100;
-        document.getElementById('zoomVal').textContent = '1.00×';
-        render();
-
-        btn.classList.remove('processing');
-        btn.classList.add('done');
-        status.className = 'bg-remove-status ok';
-        status.textContent = t.bg_done;
-        btn.querySelector('span').textContent = t.bg_done_btn;
-        btn.disabled = false;
-      };
-      composite.src = cv.toDataURL('image/png');
+      img = newImg;
+      btn.classList.remove('processing');
+      btn.classList.add('done');
+      textEl.textContent = 'Фон удалён ✓';
+      statusEl.className = 'bg-remove-status ok';
+      statusEl.textContent = '✓ Фон убран';
+      btn.disabled = false;
+      render();
     };
     newImg.src = url;
-
   } catch (e) {
-    console.error('remove-bg error:', e);
+    console.error(e);
     btn.classList.remove('processing');
-    status.className = 'bg-remove-status fail';
-    status.textContent = (t.bg_fail || 'Ошибка: ') + (e.message || e);
+    textEl.textContent = 'Убрать фон автоматически';
+    statusEl.className = 'bg-remove-status fail';
+    statusEl.textContent = '⚠️ ' + (e.message || e);
     btn.disabled = false;
   }
 }
 
-// === Валидация перед скачиванием ===
-function validateAvatar() {
-  // Создаём временный canvas с финальной аватаркой
-  const S = 256;
-  const cv = document.createElement('canvas');
-  cv.width = S; cv.height = S;
-  const ctx = cv.getContext('2d');
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(S/2, S/2, S/2, 0, Math.PI*2);
-  ctx.clip();
-  renderAvatarComposition(ctx, S);
-  ctx.restore();
+// === HELPERS ===
+function hexToRgba(hex, a) {
+  const num = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((num >> 16) & 0xff) + ', ' + ((num >> 8) & 0xff) + ', ' + (num & 0xff) + ', ' + a + ')';
+}
 
-  const data = ctx.getImageData(0, 0, S, S).data;
+function getGradStartEnd(cx, cy, radius, dir) {
+  switch (dir) {
+    case 'tl': return [cx - radius, cy - radius, cx + radius, cy + radius];
+    case 'tr': return [cx + radius, cy - radius, cx - radius, cy + radius];
+    case 'bl': return [cx - radius, cy + radius, cx + radius, cy - radius];
+    case 'br': return [cx + radius, cy + radius, cx - radius, cy - radius];
+    default: return [cx - radius, cy - radius, cx + radius, cy + radius];
+  }
+}
 
-  // Чек 1: правая часть круга должна быть темнее левой (лицо слева → светлее)
-  let leftSum = 0, leftCount = 0, rightSum = 0, rightCount = 0;
-  for (let y = 0; y < S; y += 2) {
-    for (let x = 0; x < S; x += 2) {
-      const dx = x - S/2, dy = y - S/2;
-      if (dx*dx + dy*dy > (S/2 - S*0.08) * (S/2 - S*0.08)) continue;
-      const i = (y * S + x) * 4;
-      const lum = data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114;
-      if (x < S/2) { leftSum += lum; leftCount++; }
-      else { rightSum += lum; rightCount++; }
+function drawPetPeeking(targetCtx, S, cx, cy, radius, kind) {
+  const px = cx + radius * 1.1, py = cy - radius * 0.3;
+  const sz = S * 0.32;
+  targetCtx.save();
+  targetCtx.translate(px, py);
+  targetCtx.rotate(-25 * Math.PI / 180);
+  targetCtx.font = sz + 'px serif';
+  targetCtx.textAlign = 'center';
+  targetCtx.textBaseline = 'middle';
+  targetCtx.fillText(kind === 'cat' ? '🐱' : '🐶', 0, 0);
+  targetCtx.restore();
+}
+
+function drawPassport(targetCtx, S, cx, cy, radius) {
+  const px = cx + radius * 1.05, py = cy - radius * 0.1;
+  const sz = S * 0.36;
+  targetCtx.save();
+  targetCtx.translate(px, py);
+  targetCtx.rotate(8 * Math.PI / 180);
+  targetCtx.font = sz + 'px serif';
+  targetCtx.textAlign = 'center';
+  targetCtx.textBaseline = 'middle';
+  targetCtx.fillText('📖', 0, 0);
+  targetCtx.font = (sz * 0.35) + 'px serif';
+  targetCtx.fillText('🪪', -sz * 0.05, -sz * 0.05);
+  targetCtx.restore();
+}
+
+function drawTattoo(targetCtx, S, cx, cy, radius) {
+  if (!showTattoo) return;
+  const tx = cx + tattooX * radius, ty = cy + tattooY * radius;
+  const dx = tx - cx, dy = ty - cy;
+  if (dx*dx + dy*dy > radius * radius * 1.05) return;
+
+  targetCtx.save();
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+  targetCtx.clip();
+  targetCtx.translate(tx, ty);
+  targetCtx.rotate(tattooRot * Math.PI / 180);
+  const baseFontSize = S * 0.034 * tattooSz;
+  targetCtx.font = '600 ' + baseFontSize + 'px "Caveat", cursive';
+  targetCtx.textAlign = 'center';
+  targetCtx.textBaseline = 'middle';
+  targetCtx.fillStyle = modes.villain ? 'rgba(180, 20, 20, 0.85)' : 'rgba(35, 25, 25, 0.78)';
+  const lines = TATTOO_TEXT.split('\n');
+  const lineH = baseFontSize * 1.05;
+  const startY = -((lines.length - 1) * lineH) / 2;
+  lines.forEach((line, idx) => { targetCtx.fillText(line, 0, startY + idx * lineH); });
+  targetCtx.restore();
+}
+
+function drawLightning(targetCtx, x1, y1, x2, y2, segments, color) {
+  targetCtx.save();
+  targetCtx.strokeStyle = color;
+  targetCtx.lineWidth = 3;
+  targetCtx.lineCap = 'round';
+  targetCtx.lineJoin = 'round';
+  targetCtx.shadowBlur = 12;
+  targetCtx.shadowColor = color;
+  targetCtx.beginPath();
+  targetCtx.moveTo(x1, y1);
+  const dx = (x2 - x1) / segments, dy = (y2 - y1) / segments;
+  for (let i = 1; i < segments; i++) {
+    const jx = (Math.sin(i * 13.7) * 0.5) * Math.abs(dx) * 0.7;
+    const jy = (Math.cos(i * 9.3) * 0.5) * Math.abs(dy) * 0.4;
+    targetCtx.lineTo(x1 + dx * i + jx, y1 + dy * i + jy);
+  }
+  targetCtx.lineTo(x2, y2);
+  targetCtx.stroke();
+  targetCtx.restore();
+}
+
+function drawPotatoMountain(targetCtx, S, cx, cy, radius) {
+  targetCtx.save();
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+  targetCtx.clip();
+  targetCtx.beginPath();
+  targetCtx.rect(0, cy + radius * 0.1, S, S);
+  targetCtx.clip();
+  const potatoes = [];
+  for (let row = 0; row < 5; row++) {
+    const yBase = 0.35 + row * 0.15;
+    const count = 8 - row;
+    for (let i = 0; i < count; i++) {
+      potatoes.push({
+        x: -0.85 + (1.7 / (count - 1 || 1)) * i + (Math.sin(row * 7 + i * 3) * 0.05),
+        y: yBase + (Math.cos(i * 5 + row) * 0.04),
+        sz: 0.11 + (Math.sin(i * 11 + row * 2) * 0.025)
+      });
     }
   }
-  const leftAvg = leftSum / leftCount;
-  const rightAvg = rightSum / rightCount;
-
-  // Чек 2: средняя яркость справа должна быть низкой (тёмный фон)
-  const rightIsDark = rightAvg < 100;
-  // Чек 3: левая половина должна быть светлее правой минимум на 20 (лицо есть)
-  const faceOnLeft = leftAvg > rightAvg + 20;
-
-  const issues = [];
-  const t = I18N[currentLang];
-  if (!rightIsDark) issues.push(t.issue_dark_bg);
-  if (!faceOnLeft) issues.push(t.issue_face_position);
-
-  return {
-    pass: issues.length === 0,
-    issues,
-    yoursCanvas: cv,
-    leftAvg, rightAvg
-  };
-}
-
-function showCheckModal(validation) {
-  const modal = document.getElementById('check-modal');
-  // Копируем результат в превью
-  const cv = document.getElementById('checkCvYours');
-  const ctx = cv.getContext('2d');
-  ctx.clearRect(0, 0, cv.width, cv.height);
-  ctx.drawImage(validation.yoursCanvas, 0, 0, cv.width, cv.height);
-
-  // Эталон — мужской (отображаем тот что ближе по полу/региону неважно, это иллюстрация)
-  const refImg = document.getElementById('checkRefImg');
-  const refSource = document.getElementById('refMaleImg');
-  if (refSource && refSource.src) refImg.src = refSource.src;
-
-  // Заполняем список проблем
-  const issuesEl = document.getElementById('checkIssues');
-  const t = I18N[currentLang];
-  let html = '<div style="font-weight:500;margin-bottom:6px;color:#f87171">' + t.issues_found + '</div>';
-  html += '<ul style="margin:0;padding-left:18px;color:rgba(255,255,255,0.85)">';
-  validation.issues.forEach(iss => {
-    html += '<li>' + iss + '</li>';
+  potatoes.forEach(p => {
+    targetCtx.font = (S * p.sz) + 'px serif';
+    targetCtx.textAlign = 'center';
+    targetCtx.textBaseline = 'middle';
+    targetCtx.fillText('🥔', cx + p.x * radius, cy + p.y * radius);
   });
-  html += '</ul>';
-  issuesEl.innerHTML = html;
-
-  modal.style.display = 'flex';
+  targetCtx.restore();
 }
 
-function closeCheckModal() {
-  document.getElementById('check-modal').style.display = 'none';
+function drawWineAndMic(targetCtx, S, cx, cy, radius) {
+  targetCtx.save();
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+  targetCtx.clip();
+  targetCtx.beginPath();
+  targetCtx.rect(0, cy + radius * 0.1, S, S);
+  targetCtx.clip();
+  targetCtx.font = (S * 0.22) + 'px serif';
+  targetCtx.textAlign = 'center';
+  targetCtx.textBaseline = 'middle';
+  targetCtx.fillText('🎤', cx, cy + radius * 0.65);
+  const wines = [
+    {x: -0.7, y: 0.5, sz: 0.16}, {x: -0.45, y: 0.7, sz: 0.17},
+    {x: -0.2, y: 0.85, sz: 0.16}, {x: 0.25, y: 0.85, sz: 0.17},
+    {x: 0.5, y: 0.7, sz: 0.17}, {x: 0.75, y: 0.55, sz: 0.15},
+    {x: -0.6, y: 0.9, sz: 0.15}, {x: 0.55, y: 0.95, sz: 0.16}
+  ];
+  wines.forEach(w => {
+    targetCtx.font = (S * w.sz) + 'px serif';
+    targetCtx.fillText('🍷', cx + w.x * radius, cy + w.y * radius);
+  });
+  targetCtx.restore();
 }
 
-function downloadAnyway() {
-  closeCheckModal();
-  actuallyDownload();
+function drawBurnoutAttrs(targetCtx, S, cx, cy, radius) {
+  targetCtx.save();
+  // 3 пилюли справа
+  const pillBaseX = cx + radius * 1.18, pillBaseY = cy - radius * 0.25;
+  const pillSz = S * 0.085;
+  targetCtx.font = pillSz + 'px serif';
+  targetCtx.textAlign = 'center';
+  targetCtx.textBaseline = 'middle';
+  for (let i = 0; i < 3; i++) {
+    targetCtx.fillText('💊', pillBaseX + i * pillSz * 0.85 - pillSz, pillBaseY);
+  }
+  // Кофе и молоко внизу снаружи
+  targetCtx.font = (S * 0.1) + 'px serif';
+  targetCtx.fillText('☕', cx - radius * 0.7, cy + radius * 1.18);
+  targetCtx.fillText('🥛', cx - radius * 0.35, cy + radius * 1.22);
+  targetCtx.fillText('☕', cx + radius * 0.35, cy + radius * 1.22);
+  targetCtx.fillText('🥛', cx + radius * 0.7, cy + radius * 1.18);
+  // Черепа на футболке
+  targetCtx.save();
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+  targetCtx.clip();
+  targetCtx.beginPath();
+  targetCtx.rect(0, cy + radius * 0.3, S, S);
+  targetCtx.clip();
+  targetCtx.font = (S * 0.075) + 'px serif';
+  targetCtx.globalAlpha = 0.85;
+  targetCtx.fillText('💀', cx - radius * 0.35, cy + radius * 0.55);
+  targetCtx.fillText('💀', cx + radius * 0.35, cy + radius * 0.55);
+  targetCtx.fillText('💀', cx, cy + radius * 0.78);
+  targetCtx.restore();
+  targetCtx.restore();
 }
 
-function actuallyDownload() {
-  processedCache = null;
-  const off = document.createElement('canvas');
-  off.width = exportSize; off.height = exportSize;
-  const ctx = off.getContext('2d');
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(exportSize/2, exportSize/2, exportSize/2, 0, Math.PI*2);
-  ctx.clip();
-  renderAvatarComposition(ctx, exportSize);
-  ctx.restore();
-  const a = document.createElement('a');
-  a.download = `restaff-${dept.id}-${region}-${exportSize}.png`;
-  a.href = off.toDataURL('image/png');
-  a.click();
+// === ГЛАВНАЯ ФУНКЦИЯ РЕНДЕРА ===
+function renderAvatar(targetCtx, S, withBg) {
+  targetCtx.clearRect(0, 0, S, S);
+  if (withBg) {
+    targetCtx.fillStyle = (region === 'RU') ? '#ffffff' : '#0a0a0f';
+    targetCtx.fillRect(0, 0, S, S);
+  }
+
+  if (modes.cringe && withBg) {
+    const stars = ['⭐','✨','🌟','💫','🎊','🎉','🌈','💖','🎁','🌹','💐'];
+    targetCtx.save();
+    for (let i = 0; i < 40; i++) {
+      const seed = i * 37;
+      const x = (seed * 13) % S, y = (seed * 17) % S;
+      const sz = 18 + (seed % 32);
+      targetCtx.font = sz + 'px serif';
+      targetCtx.globalAlpha = 0.55;
+      targetCtx.fillText(stars[i % stars.length], x, y);
+    }
+    targetCtx.restore();
+  }
+
+  const cx = S / 2, cy = S / 2;
+  const radius = S * CIRC_SIZE;
+  const onDarkBg = withBg && region === 'GL';
+
+  if (glowAmt > 0) {
+    let glowColor = dept.baseLight, glowStrength = glowAmt;
+    if (modes.villain) { glowColor = '#DC2626'; glowStrength = Math.max(glowAmt, 0.85); }
+    else if (modes.burnout) { glowColor = '#9CA3AF'; glowStrength = Math.max(glowAmt * 0.4, 0.15); }
+    else if (dept.isLuxBlack) { glowColor = topNeonColor; glowStrength = Math.pow(glowAmt, 1.8) * 0.85 + 0.1; }
+    const glow = targetCtx.createRadialGradient(cx, cy, radius * 0.95, cx, cy, radius * (1 + glowStrength * 0.9));
+    glow.addColorStop(0, hexToRgba(glowColor, glowStrength * 0.7));
+    glow.addColorStop(1, hexToRgba(glowColor, 0));
+    targetCtx.fillStyle = glow;
+    targetCtx.beginPath();
+    targetCtx.arc(cx, cy, radius * (1 + glowStrength * 0.9), 0, Math.PI * 2);
+    targetCtx.fill();
+  }
+
+  if (modes.villain) {
+    targetCtx.save();
+    const lightnings = [
+      {a: -Math.PI/3, len: 1.6}, {a: -Math.PI*2/3, len: 1.4},
+      {a: -Math.PI*0.95, len: 1.5}, {a: Math.PI/3, len: 1.5},
+      {a: Math.PI*2/3, len: 1.6}, {a: Math.PI*0.95, len: 1.4}
+    ];
+    lightnings.forEach(l => {
+      const x1 = cx + Math.cos(l.a) * radius * 0.95, y1 = cy + Math.sin(l.a) * radius * 0.95;
+      const x2 = cx + Math.cos(l.a) * radius * l.len, y2 = cy + Math.sin(l.a) * radius * l.len;
+      drawLightning(targetCtx, x1, y1, x2, y2, 6, '#ff3030');
+    });
+    targetCtx.restore();
+  }
+
+  targetCtx.save();
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+  targetCtx.clip();
+
+  let grad;
+  if (modes.villain) {
+    grad = targetCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    grad.addColorStop(0, '#991B1B'); grad.addColorStop(0.5, '#1a0606'); grad.addColorStop(1, '#000000');
+  } else if (modes.burnout) {
+    grad = targetCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    grad.addColorStop(0, '#9CA3AF'); grad.addColorStop(0.5, '#6B7280'); grad.addColorStop(1, '#4B5563');
+  } else if (gradDir === 'center') {
+    grad = targetCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    if (dept.isLuxBlack) {
+      grad.addColorStop(0, '#2a2a2a'); grad.addColorStop(0.55, '#0f0f0f'); grad.addColorStop(1, '#000000');
+    } else {
+      grad.addColorStop(0, dept.baseLight); grad.addColorStop(1, dept.base);
+    }
+  } else {
+    const ends = getGradStartEnd(cx, cy, radius, gradDir);
+    grad = targetCtx.createLinearGradient(ends[0], ends[1], ends[2], ends[3]);
+    if (dept.isLuxBlack) {
+      grad.addColorStop(0, '#1f1f1f'); grad.addColorStop(0.55, '#0a0a0a'); grad.addColorStop(1, '#000000');
+    } else {
+      grad.addColorStop(0, dept.baseLight); grad.addColorStop(1, dept.base);
+    }
+  }
+  targetCtx.fillStyle = grad;
+  targetCtx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+  if (dept.isLuxBlack && !modes.villain && !modes.burnout) {
+    const sheen = targetCtx.createRadialGradient(cx - radius * 0.4, cy - radius * 0.5, 0, cx - radius * 0.4, cy - radius * 0.5, radius * 0.8);
+    sheen.addColorStop(0, 'rgba(212, 175, 55, 0.18)');
+    sheen.addColorStop(1, 'rgba(212, 175, 55, 0)');
+    targetCtx.fillStyle = sheen;
+    targetCtx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+  }
+  targetCtx.restore();
+
+  if (onDarkBg) {
+    targetCtx.strokeStyle = 'rgba(255,255,255,0.12)';
+    targetCtx.lineWidth = 1;
+    targetCtx.beginPath();
+    targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+    targetCtx.stroke();
+  }
+
+  // === ОТПУСК ===
+  if (modes.vacation) {
+    targetCtx.save();
+    targetCtx.beginPath();
+    targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+    targetCtx.clip();
+    targetCtx.translate(cx, cy);
+    targetCtx.rotate(-7 * Math.PI / 180);
+    const fontSize = radius * 0.55;
+    targetCtx.font = '400 ' + fontSize + 'px "Permanent Marker", cursive';
+    targetCtx.textAlign = 'center';
+    targetCtx.textBaseline = 'middle';
+    targetCtx.fillStyle = 'rgba(0,0,0,0.25)';
+    targetCtx.fillText('Отпуск', 4, 4);
+    targetCtx.fillStyle = '#ffffff';
+    targetCtx.fillText('Отпуск', 0, 0);
+    targetCtx.restore();
+  } else if (img) {
+    const photoH = img.height;
+    const headTargetH = radius * 1.5;
+    const headInPhotoH = photoH * 0.28;
+    let scale = headTargetH / headInPhotoH * zoom;
+    const drawW = img.width * scale, drawH = photoH * scale;
+    const headCenterInPhoto = drawH * 0.14;
+    const drawX = cx - drawW / 2 + panX * radius;
+    const drawY = cy - headCenterInPhoto + panY * radius;
+
+    // Слой 1: верх
+    targetCtx.save();
+    targetCtx.beginPath();
+    targetCtx.rect(0, 0, S, cy);
+    targetCtx.clip();
+    targetCtx.drawImage(img, drawX, drawY, drawW, drawH);
+
+    if (modes.villain) {
+      targetCtx.globalCompositeOperation = 'overlay';
+      targetCtx.fillStyle = 'rgba(220, 38, 38, 0.55)';
+      targetCtx.fillRect(0, 0, S, cy);
+      targetCtx.globalCompositeOperation = 'source-over';
+      const dark = targetCtx.createRadialGradient(cx, cy - radius*0.3, radius*0.5, cx, cy - radius*0.3, radius);
+      dark.addColorStop(0, 'rgba(0,0,0,0)');
+      dark.addColorStop(1, 'rgba(0,0,0,0.55)');
+      targetCtx.fillStyle = dark;
+      targetCtx.fillRect(0, 0, S, cy);
+    }
+    if (modes.burnout) {
+      targetCtx.globalCompositeOperation = 'saturation';
+      targetCtx.fillStyle = '#888888';
+      targetCtx.fillRect(0, 0, S, cy);
+      targetCtx.globalCompositeOperation = 'source-over';
+      targetCtx.fillStyle = 'rgba(120, 130, 110, 0.25)';
+      targetCtx.fillRect(0, 0, S, cy);
+      const eyeBagY = cy - radius * 0.25 + panY * radius;
+      targetCtx.fillStyle = 'rgba(60, 50, 55, 0.35)';
+      targetCtx.beginPath();
+      targetCtx.ellipse(cx - radius * 0.18 + panX * radius, eyeBagY, radius * 0.13, radius * 0.05, 0, 0, Math.PI*2);
+      targetCtx.ellipse(cx + radius * 0.18 + panX * radius, eyeBagY, radius * 0.13, radius * 0.05, 0, 0, Math.PI*2);
+      targetCtx.fill();
+    }
+    targetCtx.restore();
+
+    // Слой 2: низ
+    targetCtx.save();
+    targetCtx.beginPath();
+    targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+    targetCtx.clip();
+    targetCtx.beginPath();
+    targetCtx.rect(0, cy, S, S - cy);
+    targetCtx.clip();
+    targetCtx.drawImage(img, drawX, drawY, drawW, drawH);
+    if (modes.villain) {
+      targetCtx.globalCompositeOperation = 'overlay';
+      targetCtx.fillStyle = 'rgba(220, 38, 38, 0.45)';
+      targetCtx.fillRect(0, cy, S, S - cy);
+      targetCtx.globalCompositeOperation = 'source-over';
+    }
+    if (modes.burnout) {
+      targetCtx.globalCompositeOperation = 'saturation';
+      targetCtx.fillStyle = '#888888';
+      targetCtx.fillRect(0, cy, S, S - cy);
+      targetCtx.globalCompositeOperation = 'source-over';
+      targetCtx.fillStyle = 'rgba(120, 130, 110, 0.25)';
+      targetCtx.fillRect(0, cy, S, S - cy);
+    }
+    targetCtx.restore();
+
+    // ✱ ТАТУ ПОВЕРХ ОБОИХ СЛОЁВ ФОТО — иначе была не видна
+    drawTattoo(targetCtx, S, cx, cy, radius);
+
+    // Лого на футболке
+    if (showLogoShirt && logoReady && violetLogo) {
+      const shirtLogoSize = S * logoShirtSize;
+      const shirtLogoX = cx + logoShirtX * radius * 2;
+      const shirtLogoY = cy + radius * 0.7 + logoShirtY * radius;
+      targetCtx.save();
+      if (shirtLogoY < cy) {
+        targetCtx.beginPath();
+        targetCtx.rect(0, 0, S, cy);
+        targetCtx.clip();
+      } else {
+        targetCtx.beginPath();
+        targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+        targetCtx.clip();
+      }
+      targetCtx.drawImage(violetLogo, shirtLogoX - shirtLogoSize/2, shirtLogoY - shirtLogoSize/2, shirtLogoSize, shirtLogoSize);
+      targetCtx.restore();
+    }
+  } else {
+    // Placeholder силуэт
+    targetCtx.save();
+    targetCtx.beginPath();
+    targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+    targetCtx.clip();
+    targetCtx.fillStyle = 'rgba(255,255,255,0.35)';
+    targetCtx.beginPath();
+    targetCtx.arc(cx, cy - radius * 0.1, radius * 0.45, 0, Math.PI * 2);
+    targetCtx.fill();
+    targetCtx.fillStyle = 'rgba(255,255,255,0.28)';
+    targetCtx.beginPath();
+    targetCtx.ellipse(cx, cy + radius * 0.95, radius * 0.85, radius * 0.55, 0, Math.PI, 0);
+    targetCtx.fill();
+    targetCtx.restore();
+  }
+
+  if (modes.burnout && !modes.vacation) drawBurnoutAttrs(targetCtx, S, cx, cy, radius);
+  if (pet !== 'none' && !modes.vacation) drawPetPeeking(targetCtx, S, cx, cy, radius, pet);
+  if (showPassport && !modes.vacation) drawPassport(targetCtx, S, cx, cy, radius);
+
+  if (modes.belarus && !modes.vacation) {
+    drawPotatoMountain(targetCtx, S, cx, cy, radius);
+    targetCtx.save();
+    targetCtx.font = (S * 0.16) + 'px serif';
+    targetCtx.textAlign = 'center';
+    targetCtx.textBaseline = 'middle';
+    targetCtx.fillText('🇧🇾', cx + radius * 1.05, cy - radius * 0.95);
+    targetCtx.restore();
+  }
+  if (modes.karaoke && !modes.vacation) {
+    drawWineAndMic(targetCtx, S, cx, cy, radius);
+    targetCtx.save();
+    targetCtx.font = (S * 0.16) + 'px serif';
+    targetCtx.textAlign = 'center';
+    targetCtx.textBaseline = 'middle';
+    targetCtx.fillText('🇬🇪', cx - radius * 1.05, cy - radius * 0.95);
+    targetCtx.restore();
+  }
+  if (modes.redflag && !modes.vacation) {
+    targetCtx.save();
+    targetCtx.font = (S * 0.16) + 'px serif';
+    targetCtx.textAlign = 'center';
+    targetCtx.textBaseline = 'middle';
+    targetCtx.fillText('🚩', cx + radius * 1.05, cy - radius * 0.95);
+    targetCtx.restore();
+  }
+
+  if (modes.cringe) {
+    targetCtx.save();
+    const vig = targetCtx.createRadialGradient(cx, cy, radius * 1.2, cx, cy, S * 0.75);
+    vig.addColorStop(0, 'rgba(244, 114, 182, 0)');
+    vig.addColorStop(1, 'rgba(244, 114, 182, 0.4)');
+    targetCtx.fillStyle = vig;
+    targetCtx.fillRect(0, 0, S, S);
+
+    targetCtx.font = '700 ' + Math.round(S * 0.052) + 'px "Lobster", "Caveat", serif';
+    targetCtx.textAlign = 'center';
+    targetCtx.strokeStyle = '#fde047';
+    targetCtx.lineWidth = 8;
+    targetCtx.strokeText('✨ С ДНЁМ РОЖДЕНЬЯ ✨', cx, S * 0.07);
+    targetCtx.strokeStyle = '#3b82f6';
+    targetCtx.lineWidth = 4;
+    targetCtx.strokeText('✨ С ДНЁМ РОЖДЕНЬЯ ✨', cx, S * 0.07);
+    targetCtx.fillStyle = '#dc2626';
+    targetCtx.fillText('✨ С ДНЁМ РОЖДЕНЬЯ ✨', cx, S * 0.07);
+
+    targetCtx.font = '700 ' + Math.round(S * 0.032) + 'px "Monoton", serif';
+    targetCtx.fillStyle = '#7e22ce';
+    targetCtx.strokeStyle = '#fff';
+    targetCtx.lineWidth = 3;
+    targetCtx.strokeText('★ ДОРОГОМУ КОЛЛЕГЕ ★', cx, S * 0.14);
+    targetCtx.fillText('★ ДОРОГОМУ КОЛЛЕГЕ ★', cx, S * 0.14);
+
+    targetCtx.save();
+    targetCtx.translate(S * 0.08, S * 0.35);
+    targetCtx.rotate(-12 * Math.PI / 180);
+    targetCtx.font = '500 ' + Math.round(S * 0.024) + 'px "Caveat", cursive';
+    targetCtx.fillStyle = '#be185d';
+    targetCtx.textAlign = 'left';
+    targetCtx.fillText('Желаю счастья', 0, 0);
+    targetCtx.fillText('и здоровья крепкого!', 0, S * 0.03);
+    targetCtx.fillText('А ещё карьеры', 0, S * 0.06);
+    targetCtx.fillText('вверх как у Илона! 🚀', 0, S * 0.09);
+    targetCtx.restore();
+
+    targetCtx.font = (S * 0.09) + 'px serif';
+    targetCtx.textAlign = 'center';
+    targetCtx.textBaseline = 'middle';
+    targetCtx.fillText('🌹', S * 0.08, S * 0.92);
+    targetCtx.fillText('💐', S * 0.92, S * 0.92);
+    targetCtx.fillText('🌷', S * 0.92, S * 0.5);
+    targetCtx.fillText('🌸', S * 0.08, S * 0.5);
+    targetCtx.fillText('💖', S * 0.5, S * 0.88);
+
+    targetCtx.font = '700 ' + Math.round(S * 0.03) + 'px "Bungee Shade", "Lobster", serif';
+    targetCtx.fillStyle = '#16a34a';
+    targetCtx.strokeStyle = '#fde047';
+    targetCtx.lineWidth = 4;
+    targetCtx.strokeText('🎂 ОТ ВСЕЙ КОМАНДЫ 🎂', cx, S * 0.97);
+    targetCtx.fillText('🎂 ОТ ВСЕЙ КОМАНДЫ 🎂', cx, S * 0.97);
+    targetCtx.restore();
+  }
+}
+
+
+function render() {
+  const cv = document.getElementById('cv');
+  if (!cv) return;
+  renderAvatar(cv.getContext('2d'), cv.width, true);
+  ['pv-tg', 'pv-mm', 'pv-zoom', 'pv-gmail'].forEach(id => {
+    const m = document.getElementById(id);
+    if (m) renderAvatar(m.getContext('2d'), m.width, true);
+  });
+  // эталон теперь img, рендер не нужен
 }
 
 function download() {
-  if (!photoImg) {
-    actuallyDownload();
-    return;
-  }
-  const v = validateAvatar();
-  if (v.pass) {
-    actuallyDownload();
-  } else {
-    showCheckModal(v);
-  }
+  if (!img && !modes.vacation) return;
+  const cv = document.getElementById('cv');
+  const tmp = document.createElement('canvas');
+  tmp.width = cv.width; tmp.height = cv.height;
+  renderAvatar(tmp.getContext('2d'), tmp.width, false);
+  const a = document.createElement('a');
+  a.download = 'restaff-' + dept.id + '-' + region + '.png';
+  a.href = tmp.toDataURL('image/png');
+  a.click();
 }
 
-// === Hero render для лендинга ===
-// === Init ===
+// === INIT ===
 window.addEventListener('DOMContentLoaded', () => {
-  applyLang(currentLang);
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === currentLang);
-  });
-  renderDeptList();
-  initDrag();
-
   const savedUser = localStorage.getItem('restaff_user');
   if (savedUser) {
     const domain = savedUser.split('@')[1];
@@ -865,3 +774,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => render());
+}
