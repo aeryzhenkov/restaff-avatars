@@ -16,6 +16,19 @@ const DEPTS = [
 const TATTOO_TEXT = 'Успех\nнеизбежен';
 const CIRC_SIZE = 0.38;
 const EMOJI_FONT = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+// ✱ Универсальный рендерер emoji: всегда сбрасываем fillStyle чтобы избежать "окраски" emoji
+// в цвет предыдущего fillStyle (glow). На системах где emoji-шрифт не загружен,
+// canvas использует fillStyle для рендера символа.
+function drawEmoji(ctx, emoji, x, y, size) {
+  ctx.save();
+  ctx.font = size + 'px ' + EMOJI_FONT;
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(emoji, x, y);
+  ctx.restore();
+}
+
 
 // === СТЕЙТ ===
 let currentUser = null;
@@ -264,6 +277,7 @@ function drawPetPeeking(targetCtx, S, cx, cy, radius, kind) {
   const px = cx + radius * 1.1, py = cy - radius * 0.3;
   const sz = S * 0.32;
   targetCtx.save();
+  targetCtx.fillStyle = '#000000';
   targetCtx.translate(px, py);
   targetCtx.rotate(-25 * Math.PI / 180);
   targetCtx.font = sz + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
@@ -277,6 +291,7 @@ function drawPassport(targetCtx, S, cx, cy, radius) {
   const px = cx + radius * 1.05, py = cy - radius * 0.1;
   const sz = S * 0.36;
   targetCtx.save();
+  targetCtx.fillStyle = '#000000';
   targetCtx.translate(px, py);
   targetCtx.rotate(8 * Math.PI / 180);
   targetCtx.font = sz + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
@@ -335,6 +350,7 @@ function drawLightning(targetCtx, x1, y1, x2, y2, segments, color) {
 
 function drawPotatoMountain(targetCtx, S, cx, cy, radius) {
   targetCtx.save();
+  targetCtx.fillStyle = '#000000';
   targetCtx.beginPath();
   targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
   targetCtx.clip();
@@ -364,6 +380,7 @@ function drawPotatoMountain(targetCtx, S, cx, cy, radius) {
 
 function drawWineAndMic(targetCtx, S, cx, cy, radius) {
   targetCtx.save();
+  targetCtx.fillStyle = '#000000';
   targetCtx.beginPath();
   targetCtx.arc(cx, cy, radius, 0, Math.PI * 2);
   targetCtx.clip();
@@ -389,6 +406,7 @@ function drawWineAndMic(targetCtx, S, cx, cy, radius) {
 
 function drawBurnoutAttrs(targetCtx, S, cx, cy, radius) {
   targetCtx.save();
+  targetCtx.fillStyle = '#000000';
   // 3 пилюли справа
   const pillBaseX = cx + radius * 1.18, pillBaseY = cy - radius * 0.25;
   const pillSz = S * 0.085;
@@ -452,16 +470,19 @@ function renderAvatar(targetCtx, S, withBg) {
     if (modes.villain) { glowColor = '#DC2626'; glowStrength = Math.max(glowAmt, 0.85); }
     else if (modes.burnout) { glowColor = '#9CA3AF'; glowStrength = Math.max(glowAmt * 0.4, 0.15); }
     else if (dept.isLuxBlack) { glowColor = topNeonColor; glowStrength = Math.pow(glowAmt, 1.8) * 0.85 + 0.1; }
-    // ✱ FIX: ограничиваем максимальный радиус glow чтобы не затирать кринж-элементы
+    // ✱ FIX: ограничиваем размер glow и его альфу, чтобы не "окрашивать" emoji вокруг
     const glowRadius = radius * (1 + Math.min(glowStrength, 0.5) * 0.4);
+    targetCtx.save();
     const glow = targetCtx.createRadialGradient(cx, cy, radius * 0.98, cx, cy, glowRadius);
-    // ✱ FIX: альфа ограничена, чтобы остатки glow не были слишком плотными снаружи
     glow.addColorStop(0, hexToRgba(glowColor, Math.min(glowStrength * 0.55, 0.55)));
     glow.addColorStop(1, hexToRgba(glowColor, 0));
     targetCtx.fillStyle = glow;
     targetCtx.beginPath();
     targetCtx.arc(cx, cy, glowRadius, 0, Math.PI * 2);
     targetCtx.fill();
+    targetCtx.restore();
+    // ✱ КРИТИЧНО: сбрасываем fillStyle на сплошной цвет, чтобы последующие emoji не отрисовались градиентом
+    targetCtx.fillStyle = '#000000';
   }
 
   if (modes.villain) {
@@ -661,6 +682,7 @@ function renderAvatar(targetCtx, S, withBg) {
     targetCtx.font = (S * 0.16) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
+    targetCtx.fillStyle = '#000000';
     targetCtx.fillText('🇧🇾', cx + radius * 1.05, cy - radius * 0.95);
     targetCtx.restore();
   }
@@ -670,6 +692,7 @@ function renderAvatar(targetCtx, S, withBg) {
     targetCtx.font = (S * 0.16) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
+    targetCtx.fillStyle = '#000000';
     targetCtx.fillText('🇬🇪', cx - radius * 1.05, cy - radius * 0.95);
     targetCtx.restore();
   }
@@ -678,6 +701,7 @@ function renderAvatar(targetCtx, S, withBg) {
     targetCtx.font = (S * 0.16) + 'px ' + EMOJI_FONT;
     targetCtx.textAlign = 'center';
     targetCtx.textBaseline = 'middle';
+    targetCtx.fillStyle = '#000000';
     targetCtx.fillText('🚩', cx + radius * 1.05, cy - radius * 0.95);
     targetCtx.restore();
   }
