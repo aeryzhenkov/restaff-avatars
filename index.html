@@ -324,7 +324,7 @@ body {
 .modal-content { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 24px; max-width: 420px; width: 100%; }
 .modal h2 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
 .modal p { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.5; }
-.modal input[type=email] { width: 100%; padding: 10px 12px; font-size: 13px; background: var(--bg-secondary); border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); color: var(--text-primary); font-family: inherit; margin-bottom: 8px; }
+.modal input[type=email], .modal input[type=password], .modal input[type=text] { width: 100%; padding: 10px 12px; font-size: 13px; background: var(--bg-secondary); border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); color: var(--text-primary); font-family: inherit; margin-bottom: 8px; }
 .modal-err { font-size: 11px; color: var(--danger); margin-bottom: 12px; min-height: 14px; }
 .modal-actions { display: flex; gap: 8px; }
 .modal-actions button { flex: 1; padding: 10px; font-size: 13px; border-radius: var(--radius-md); cursor: pointer; font-family: inherit; }
@@ -346,8 +346,7 @@ body {
     <div class="feat"><i class="ti ti-color-swatch"></i><h3>Цвет по подразделению</h3><p>9 цветовых схем для каждого отдела с градиентами и неоном</p></div>
     <div class="feat"><i class="ti ti-shirt"></i><h3>Лого RE на одежде</h3><p>Имитация корпоративного мерча на вашей футболке</p></div>
   </div>
-  <button class="btn-primary" onclick="openSignIn()"><i class="ti ti-login"></i> Войти через корпоративный Google</button>
-  <div class="access-note">Доступ только для сотрудников ReStaff (@restaff.pro, @restaff.tech, @staffco.ru)</div>
+  <button class="btn-primary" onclick="openSignIn()"><i class="ti ti-login"></i> Войти</button>
 </div>
 
 <!-- APP -->
@@ -558,28 +557,15 @@ body {
 
 <div class="modal" id="signin-modal">
   <div class="modal-content">
-    <div id="auth-stage-email">
-      <h2>Вход в ReStaff Avatars</h2>
-      <p>Введите рабочий email — мы пришлём код подтверждения. Доступ только для сотрудников ReStaff.</p>
-      <input type="email" id="emailInput" placeholder="you@restaff.pro" onkeydown="if(event.key==='Enter')requestCode()" />
-      <div class="modal-err" id="emailErr"></div>
-      <div class="modal-actions">
-        <button class="cancel" onclick="closeSignIn()">Отмена</button>
-        <button class="submit" id="sendCodeBtn" onclick="requestCode()">Получить код</button>
-      </div>
-    </div>
-    <div id="auth-stage-code" style="display:none">
-      <h2>Введите код</h2>
-      <p>Мы отправили 6-значный код на <b id="codeEmailHint" style="color:var(--text-primary)"></b>. Действует 10 минут.</p>
-      <input type="text" id="codeInput" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="000000" style="text-align:center;font-size:20px;letter-spacing:0.3em;font-family:monospace" onkeydown="if(event.key==='Enter')verifyCode()" />
-      <div class="modal-err" id="codeErr"></div>
-      <div class="modal-actions">
-        <button class="cancel" onclick="backToEmail()">Назад</button>
-        <button class="submit" id="verifyBtn" onclick="verifyCode()">Войти</button>
-      </div>
-      <div style="margin-top:14px;text-align:center">
-        <button id="resendBtn" onclick="requestCode()" style="background:transparent;border:none;color:var(--text-tertiary);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:3px">Отправить повторно</button>
-      </div>
+    <h2>Вход в ReStaff Avatars</h2>
+    <p>Введите рабочий email и общий пароль команды.</p>
+    <input type="email" id="emailInput" placeholder="you@restaff.pro" onkeydown="if(event.key==='Enter')document.getElementById('passInput').focus()" />
+    <div style="height:8px"></div>
+    <input type="password" id="passInput" placeholder="Пароль" onkeydown="if(event.key==='Enter')trySignIn()" />
+    <div class="modal-err" id="emailErr"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeSignIn()">Отмена</button>
+      <button class="submit" id="signInBtn" onclick="trySignIn()">Войти</button>
     </div>
   </div>
 </div>

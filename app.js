@@ -82,129 +82,49 @@ async function loadLogo() {
   logoReady = true;
 }
 
-// === АВТОРИЗАЦИЯ (6-значный код на email) ===
-let pendingAuthToken = null;
-let pendingAuthEmail = null;
-let resendTimer = null;
+// === АВТОРИЗАЦИЯ (email + общий пароль команды) ===
+const TEAM_PASSWORD = 'Успех неизбежен';
 
 function openSignIn() {
   document.getElementById('signin-modal').classList.add('active');
-  showAuthStage('email');
-  document.getElementById('emailInput').focus();
+  document.getElementById('emailErr').textContent = '';
+  setTimeout(() => document.getElementById('emailInput').focus(), 50);
 }
 function closeSignIn() {
   document.getElementById('signin-modal').classList.remove('active');
   document.getElementById('emailErr').textContent = '';
-  document.getElementById('codeErr').textContent = '';
-  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
 }
-function showAuthStage(stage) {
-  document.getElementById('auth-stage-email').style.display = stage === 'email' ? 'block' : 'none';
-  document.getElementById('auth-stage-code').style.display = stage === 'code' ? 'block' : 'none';
-}
-
-async function requestCode() {
+function trySignIn() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  const pass = document.getElementById('passInput').value;
   const err = document.getElementById('emailErr');
   err.textContent = '';
+
   if (!email.includes('@')) { err.textContent = 'Введите корректный email'; return; }
   const domain = email.split('@')[1];
   if (!ALLOWED_DOMAINS.includes(domain)) {
-    err.textContent = 'Доступ только для сотрудников ReStaff';
+    err.textContent = 'Доступ только для рабочей почты';
     return;
   }
-  const sendBtn = document.getElementById('sendCodeBtn');
-  sendBtn.disabled = true;
-  sendBtn.textContent = 'Отправляем...';
-  try {
-    const resp = await fetch('/api/auth-send-code', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    const data = await resp.json();
-    if (!resp.ok) throw new Error(data.error || 'Ошибка отправки');
-    pendingAuthToken = data.token;
-    pendingAuthEmail = email;
-    document.getElementById('codeEmailHint').textContent = email;
-    document.getElementById('codeInput').value = '';
-    showAuthStage('code');
-    document.getElementById('codeInput').focus();
-    startResendTimer(60);
-  } catch (e) {
-    err.textContent = e.message || 'Ошибка отправки';
-  } finally {
-    sendBtn.disabled = false;
-    sendBtn.textContent = 'Получить код';
-  }
-}
-
-function startResendTimer(seconds) {
-  const btn = document.getElementById('resendBtn');
-  let left = seconds;
-  if (resendTimer) clearInterval(resendTimer);
-  const tick = () => {
-    if (left <= 0) {
-      btn.disabled = false;
-      btn.textContent = 'Отправить повторно';
-      clearInterval(resendTimer);
-      resendTimer = null;
-      return;
-    }
-    btn.disabled = true;
-    btn.textContent = `Отправить повторно (${left}с)`;
-    left--;
-  };
-  tick();
-  resendTimer = setInterval(tick, 1000);
-}
-
-function backToEmail() {
-  showAuthStage('email');
-  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
-}
-
-async function verifyCode() {
-  const code = document.getElementById('codeInput').value.trim();
-  const err = document.getElementById('codeErr');
-  err.textContent = '';
-  if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-    err.textContent = 'Введите 6 цифр';
+  if (!pass) { err.textContent = 'Введите пароль'; return; }
+  if (pass.trim() !== TEAM_PASSWORD) {
+    err.textContent = 'Неверный пароль';
     return;
   }
-  if (!pendingAuthToken) {
-    err.textContent = 'Сессия истекла. Запросите код заново.';
-    return;
-  }
-  const verifyBtn = document.getElementById('verifyBtn');
-  verifyBtn.disabled = true;
-  verifyBtn.textContent = 'Проверяем...';
-  try {
-    const resp = await fetch('/api/auth-verify-code', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: pendingAuthToken, code })
-    });
-    const data = await resp.json();
-    if (!resp.ok) throw new Error(data.error || 'Неверный код');
-    // Сохраняем сессию
-    currentUser = data.email;
-    localStorage.setItem('restaff_session', data.sessionToken);
-    localStorage.setItem('restaff_user', data.email);
-    closeSignIn();
-    showApp();
-  } catch (e) {
-    err.textContent = e.message || 'Ошибка';
-  } finally {
-    verifyBtn.disabled = false;
-    verifyBtn.textContent = 'Войти';
-  }
+
+  // Успех — сохраняем сессию на 30 дней
+  currentUser = email;
+  const expiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
+  localStorage.setItem('restaff_user', email);
+  localStorage.setItem('restaff_session_until', String(expiresAt));
+  closeSignIn();
+  showApp();
 }
 
 function signOut() {
   currentUser = null;
   localStorage.removeItem('restaff_user');
-  localStorage.removeItem('restaff_session');
+  localStorage.removeItem('restaff_session_until');
   document.getElementById('app').classList.remove('active');
   document.getElementById('landing').classList.add('active');
 }
@@ -997,28 +917,19 @@ function download() {
 // === INIT ===
 window.addEventListener('DOMContentLoaded', () => {
   const savedUser = localStorage.getItem('restaff_user');
-  const sessionToken = localStorage.getItem('restaff_session');
-  if (savedUser && sessionToken) {
-    // Поверхностная проверка — расшифруем токен и проверим срок
-    try {
-      const decoded = atob(sessionToken.replace(/-/g, '+').replace(/_/g, '/'));
-      const parts = decoded.split('|');
-      if (parts.length === 3) {
-        const expiry = parseInt(parts[1], 10);
-        if (expiry > Date.now()) {
-          const domain = savedUser.split('@')[1];
-          if (ALLOWED_DOMAINS.includes(domain)) {
-            currentUser = savedUser;
-            showApp();
-            return;
-          }
-        }
-      }
-    } catch (e) {}
-    // Сессия неполная/просрочена — чистим
-    localStorage.removeItem('restaff_session');
-    localStorage.removeItem('restaff_user');
+  const sessionUntil = parseInt(localStorage.getItem('restaff_session_until') || '0', 10);
+  if (savedUser && sessionUntil > Date.now()) {
+    const domain = savedUser.split('@')[1];
+    if (ALLOWED_DOMAINS.includes(domain)) {
+      currentUser = savedUser;
+      showApp();
+      return;
+    }
   }
+  // Сессия истекла или некорректна — чистим
+  localStorage.removeItem('restaff_user');
+  localStorage.removeItem('restaff_session_until');
+  localStorage.removeItem('restaff_session'); // на случай если осталось от старой версии
 });
 
 if (document.fonts && document.fonts.ready) {
