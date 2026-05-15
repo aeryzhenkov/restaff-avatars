@@ -83,7 +83,7 @@ async function loadLogo() {
 }
 
 // === АВТОРИЗАЦИЯ (email + общий пароль команды) ===
-const TEAM_PASSWORD = 'Успех неизбежен';
+const TEAM_PASSWORD = '67';
 
 function openSignIn() {
   document.getElementById('signin-modal').classList.add('active');
