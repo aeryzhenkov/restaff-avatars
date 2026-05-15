@@ -907,7 +907,8 @@ function download() {
   const cv = document.getElementById('cv');
   const tmp = document.createElement('canvas');
   tmp.width = cv.width; tmp.height = cv.height;
-  renderAvatar(tmp.getContext('2d'), tmp.width, false);
+  // ✱ Рисуем С ФОНОМ — иначе РФ и Global скачиваются одинаково прозрачными
+  renderAvatar(tmp.getContext('2d'), tmp.width, true);
   const a = document.createElement('a');
   a.download = 'restaff-' + dept.id + '-' + region + '.png';
   a.href = tmp.toDataURL('image/png');
