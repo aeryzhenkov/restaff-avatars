@@ -194,6 +194,35 @@ body {
   align-items: center;
   gap: 14px;
 }
+.bg-remove-step-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--brand-violet);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.bg-remove-section.success .bg-remove-step-num { background: var(--success); }
+.step-num-inline {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--brand-violet);
+  color: white;
+  font-size: 11px; font-weight: 700;
+  margin-right: 4px;
+  vertical-align: -3px;
+}
+
+/* Превью размеров — выравниваем по нижнему краю чтобы не "скакали" */
+.size-row {
+  width: 100%; display: flex; justify-content: space-around;
+  align-items: flex-end;
+  gap: 6px; padding: 10px 6px;
+  background: var(--bg-card); border-radius: var(--radius-md);
+}
 .bg-remove-section.success { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
 .bg-remove-info { flex: 1; }
 .bg-remove-info-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
@@ -226,7 +255,6 @@ body {
 .style-canvas-wrap { width: 100%; max-width: 380px; aspect-ratio: 1; }
 .style-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
 
-.size-row { width: 100%; display: flex; justify-content: space-around; gap: 6px; padding: 10px 6px; background: var(--bg-card); border-radius: var(--radius-md); }
 .size-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .size-cell canvas { display: block; border-radius: 999px; }
 .size-cell .nm { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
@@ -276,12 +304,12 @@ body {
 .btn-download:hover { background: var(--brand-violet-hover); }
 .btn-download:disabled { background: var(--bg-secondary); color: var(--text-tertiary); cursor: not-allowed; }
 
-.cringe-section { margin-top: 20px; border: 0.5px solid rgba(244, 63, 94, 0.25); border-radius: var(--radius-lg); background: linear-gradient(135deg, rgba(244,63,94,0.04), rgba(251,191,36,0.04)); overflow: hidden; }
-.cringe-header { padding: 14px 18px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
-.cringe-header h3 { font-size: 14px; font-weight: 500; margin: 0; }
-.cringe-header .toggle-icon { font-size: 18px; color: var(--text-tertiary); transition: transform .2s; }
+.cringe-section { margin-top: 0; border: 0.5px solid rgba(244, 63, 94, 0.3); border-radius: var(--radius-md); background: linear-gradient(135deg, rgba(244,63,94,0.08), rgba(251,191,36,0.06)); overflow: hidden; }
+.cringe-header { padding: 12px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
+.cringe-header h3 { font-size: 13px; font-weight: 600; margin: 0; }
+.cringe-header .toggle-icon { font-size: 16px; color: var(--text-tertiary); transition: transform .2s; }
 .cringe-header.open .toggle-icon { transform: rotate(180deg); }
-.cringe-body { display: none; padding: 0 18px 18px; flex-direction: column; gap: 14px; }
+.cringe-body { display: none; padding: 0 14px 14px; flex-direction: column; gap: 12px; }
 .cringe-body.open { display: flex; }
 .cringe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .cringe-chip { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; background: var(--bg-secondary); border: 0.5px solid transparent; cursor: pointer; font-size: 11px; color: var(--text-secondary); }
@@ -378,13 +406,28 @@ body {
         </div>
         <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
 
+        <!-- Шаг 1.1: Убрать фон (СНАЧАЛА) -->
+        <div class="bg-remove-section" id="bgRemoveSection">
+          <div class="bg-remove-step-num">1</div>
+          <div class="bg-remove-info">
+            <div class="bg-remove-info-title" id="bgRemoveTitle">Убери фон с фото</div>
+            <div class="bg-remove-info-sub" id="bgRemoveSub">Автоматически отделит тебя от фона за 3-5 секунд. Сделай это <b>перед кадрированием</b>.</div>
+          </div>
+          <button class="bg-remove-btn-big" id="bgRemoveBtn" onclick="removeBgFromPhoto()" disabled>
+            <i class="ti ti-wand"></i>
+            <span id="bgRemoveText">Убрать фон</span>
+          </button>
+        </div>
+        <div class="bg-remove-error" id="bgRemoveError"></div>
+
+        <!-- Шаг 1.2: Превью и кадрирование (ПОТОМ) -->
         <div class="preview-area">
           <div class="canvas-wrap">
             <canvas id="cv" width="800" height="800"></canvas>
           </div>
 
           <div class="adjust-block">
-            <div class="adjust-title"><i class="ti ti-adjustments"></i> Подгони кадр</div>
+            <div class="adjust-title"><span class="step-num-inline">2</span> <i class="ti ti-adjustments"></i> Подгони кадр</div>
             <div class="adjust-hint">
               Двигай ползунки чтобы <b>голова вышла за круг сверху</b>, а <b>плечи срезались нижней дугой</b>. Сверяйся с эталоном слева!
             </div>
@@ -393,18 +436,6 @@ body {
             <div class="tweak-row"><span class="lbl">Влево / Вправо</span><input type="range" id="panXR" min="-100" max="100" value="0" oninput="setPanX(this.value)" /><span class="val" id="panXV">0</span></div>
           </div>
         </div>
-
-        <div class="bg-remove-section" id="bgRemoveSection">
-          <div class="bg-remove-info">
-            <div class="bg-remove-info-title" id="bgRemoveTitle">Шаг следующий: убери фон</div>
-            <div class="bg-remove-info-sub" id="bgRemoveSub">Автоматически отделит тебя от фона за 3-5 секунд</div>
-          </div>
-          <button class="bg-remove-btn-big" id="bgRemoveBtn" onclick="removeBgFromPhoto()" disabled>
-            <i class="ti ti-wand"></i>
-            <span id="bgRemoveText">Убрать фон</span>
-          </button>
-        </div>
-        <div class="bg-remove-error" id="bgRemoveError"></div>
 
         <div class="step-actions">
           <button class="btn-primary" id="goStep2Btn" onclick="goToStep(2)" disabled>
@@ -474,50 +505,52 @@ body {
           <div class="tweak-row"><span class="lbl">X-сдвиг</span><input type="range" id="logoShirtXR" min="-120" max="120" value="0" oninput="setLogoShirtX(this.value)" /><span class="val" id="logoShirtXV">0</span></div>
           <div class="tweak-row"><span class="lbl">Y-сдвиг</span><input type="range" id="logoShirtYR" min="-40" max="60" value="0" oninput="setLogoShirtY(this.value)" /><span class="val" id="logoShirtYV">0</span></div>
         </div>
+
+        <!-- КРИНЖ-СЕКЦИЯ перенесена в правую колонку, между Лого и Скачать -->
+        <div class="cringe-section">
+          <div class="cringe-header open" onclick="toggleCringe()" id="cringeHeader">
+            <h3>🎭 Кринж-режим</h3>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="cringe-body open" id="cringeBody">
+            <div>
+              <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">💉 Тату «Успех неизбежен»</div>
+              <label class="checkbox-row"><input type="checkbox" id="tattooCheck" onchange="setTattoo(this.checked)" />Набить</label>
+              <div class="tweak-row" style="margin-top:8px;font-size:11px"><span class="lbl" style="min-width:60px">X</span><input type="range" id="tattooXR" min="-100" max="100" value="-25" oninput="setTattooX(this.value)" /><span class="val" id="tattooXV">-25</span></div>
+              <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Y</span><input type="range" id="tattooYR" min="-80" max="80" value="-20" oninput="setTattooY(this.value)" /><span class="val" id="tattooYV">-20</span></div>
+              <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Размер</span><input type="range" id="tattooSzR" min="60" max="180" value="100" oninput="setTattooSz(this.value)" /><span class="val" id="tattooSzV">100%</span></div>
+              <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Поворот</span><input type="range" id="tattooRotR" min="-45" max="45" value="-10" oninput="setTattooRot(this.value)" /><span class="val" id="tattooRotV">-10°</span></div>
+            </div>
+            <div>
+              <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🐾 За кого ты?</div>
+              <div class="pet-select">
+                <button data-pet="none" class="active" onclick="setPet(this)">— нет —</button>
+                <button data-pet="cat" onclick="setPet(this)">🐱 коты</button>
+                <button data-pet="dog" onclick="setPet(this)">🐶 собаки</button>
+              </div>
+            </div>
+            <div>
+              <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🪪 Селфи с паспортом</div>
+              <label class="checkbox-row"><input type="checkbox" id="passportCheck" onchange="setPassport(this.checked)" />Добавить паспорт</label>
+            </div>
+            <div>
+              <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🦹 Спец-режимы</div>
+              <div class="cringe-grid">
+                <label class="cringe-chip" id="chip-villain"><input type="checkbox" id="villainCheck" onchange="setMode('villain', this.checked)" style="display:none" /><span class="emoji">⚠️</span><span>СБП на прод</span></label>
+                <label class="cringe-chip" id="chip-burnout"><input type="checkbox" id="burnoutCheck" onchange="setMode('burnout', this.checked)" style="display:none" /><span class="emoji">🥛</span><span>Творожник</span></label>
+                <label class="cringe-chip" id="chip-belarus"><input type="checkbox" id="belarusCheck" onchange="setMode('belarus', this.checked)" style="display:none" /><span class="emoji">🇧🇾</span><span>Беларусь</span></label>
+                <label class="cringe-chip" id="chip-karaoke"><input type="checkbox" id="karaokeCheck" onchange="setMode('karaoke', this.checked)" style="display:none" /><span class="emoji">🎤</span><span>Караоке (Грузия)</span></label>
+                <label class="cringe-chip" id="chip-redflag"><input type="checkbox" id="redflagCheck" onchange="setMode('redflag', this.checked)" style="display:none" /><span class="emoji">🚩</span><span>Red Flag</span></label>
+                <label class="cringe-chip" id="chip-vacation"><input type="checkbox" id="vacationCheck" onchange="setMode('vacation', this.checked)" style="display:none" /><span class="emoji">🏖️</span><span>Отпуск</span></label>
+                <label class="cringe-chip" id="chip-cringe" style="grid-column:1/-1"><input type="checkbox" id="cringeCheck" onchange="setMode('cringe', this.checked)" style="display:none" /><span class="emoji">🎉</span><span>МАКС КРИНЖ ✨🌹💐🎂</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button class="btn-download" id="dlBtn" onclick="download()">
           <i class="ti ti-download"></i> Скачать PNG
         </button>
-      </div>
-    </div>
-
-    <div class="cringe-section">
-      <div class="cringe-header" onclick="toggleCringe()" id="cringeHeader">
-        <h3>🎭 Кринж-режим · только для своих</h3>
-        <span class="toggle-icon">▼</span>
-      </div>
-      <div class="cringe-body" id="cringeBody">
-        <div>
-          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">💉 Тату «Успех неизбежен»</div>
-          <label class="checkbox-row"><input type="checkbox" id="tattooCheck" onchange="setTattoo(this.checked)" />Набить</label>
-          <div class="tweak-row" style="margin-top:8px;font-size:11px"><span class="lbl" style="min-width:60px">X</span><input type="range" id="tattooXR" min="-100" max="100" value="-25" oninput="setTattooX(this.value)" /><span class="val" id="tattooXV">-25</span></div>
-          <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Y</span><input type="range" id="tattooYR" min="-80" max="80" value="-20" oninput="setTattooY(this.value)" /><span class="val" id="tattooYV">-20</span></div>
-          <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Размер</span><input type="range" id="tattooSzR" min="60" max="180" value="100" oninput="setTattooSz(this.value)" /><span class="val" id="tattooSzV">100%</span></div>
-          <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Поворот</span><input type="range" id="tattooRotR" min="-45" max="45" value="-10" oninput="setTattooRot(this.value)" /><span class="val" id="tattooRotV">-10°</span></div>
-        </div>
-        <div>
-          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🐾 За кого ты?</div>
-          <div class="pet-select">
-            <button data-pet="none" class="active" onclick="setPet(this)">— нет —</button>
-            <button data-pet="cat" onclick="setPet(this)">🐱 коты</button>
-            <button data-pet="dog" onclick="setPet(this)">🐶 собаки</button>
-          </div>
-        </div>
-        <div>
-          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🪪 Селфи с паспортом</div>
-          <label class="checkbox-row"><input type="checkbox" id="passportCheck" onchange="setPassport(this.checked)" />Добавить паспорт</label>
-        </div>
-        <div>
-          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🦹 Спец-режимы</div>
-          <div class="cringe-grid">
-            <label class="cringe-chip" id="chip-villain"><input type="checkbox" id="villainCheck" onchange="setMode('villain', this.checked)" style="display:none" /><span class="emoji">⚠️</span><span>СБП на прод</span></label>
-            <label class="cringe-chip" id="chip-burnout"><input type="checkbox" id="burnoutCheck" onchange="setMode('burnout', this.checked)" style="display:none" /><span class="emoji">🥛</span><span>Творожник</span></label>
-            <label class="cringe-chip" id="chip-belarus"><input type="checkbox" id="belarusCheck" onchange="setMode('belarus', this.checked)" style="display:none" /><span class="emoji">🇧🇾</span><span>Беларусь</span></label>
-            <label class="cringe-chip" id="chip-karaoke"><input type="checkbox" id="karaokeCheck" onchange="setMode('karaoke', this.checked)" style="display:none" /><span class="emoji">🎤</span><span>Караоке (Грузия)</span></label>
-            <label class="cringe-chip" id="chip-redflag"><input type="checkbox" id="redflagCheck" onchange="setMode('redflag', this.checked)" style="display:none" /><span class="emoji">🚩</span><span>Red Flag</span></label>
-            <label class="cringe-chip" id="chip-vacation"><input type="checkbox" id="vacationCheck" onchange="setMode('vacation', this.checked)" style="display:none" /><span class="emoji">🏖️</span><span>Отпуск</span></label>
-            <label class="cringe-chip" id="chip-cringe" style="grid-column:1/-1"><input type="checkbox" id="cringeCheck" onchange="setMode('cringe', this.checked)" style="display:none" /><span class="emoji">🎉</span><span>МАКС КРИНЖ ✨🌹💐🎂</span></label>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -525,13 +558,28 @@ body {
 
 <div class="modal" id="signin-modal">
   <div class="modal-content">
-    <h2>Демо-вход</h2>
-    <p>Введите рабочий email. В демо-версии проверка по домену, на проде — полноценный Google OAuth.</p>
-    <input type="email" id="emailInput" placeholder="you@restaff.pro" />
-    <div class="modal-err" id="emailErr"></div>
-    <div class="modal-actions">
-      <button class="cancel" onclick="closeSignIn()">Отмена</button>
-      <button class="submit" onclick="trySignIn()">Войти</button>
+    <div id="auth-stage-email">
+      <h2>Вход в ReStaff Avatars</h2>
+      <p>Введите рабочий email — мы пришлём код подтверждения. Доступ только для сотрудников ReStaff.</p>
+      <input type="email" id="emailInput" placeholder="you@restaff.pro" onkeydown="if(event.key==='Enter')requestCode()" />
+      <div class="modal-err" id="emailErr"></div>
+      <div class="modal-actions">
+        <button class="cancel" onclick="closeSignIn()">Отмена</button>
+        <button class="submit" id="sendCodeBtn" onclick="requestCode()">Получить код</button>
+      </div>
+    </div>
+    <div id="auth-stage-code" style="display:none">
+      <h2>Введите код</h2>
+      <p>Мы отправили 6-значный код на <b id="codeEmailHint" style="color:var(--text-primary)"></b>. Действует 10 минут.</p>
+      <input type="text" id="codeInput" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="000000" style="text-align:center;font-size:20px;letter-spacing:0.3em;font-family:monospace" onkeydown="if(event.key==='Enter')verifyCode()" />
+      <div class="modal-err" id="codeErr"></div>
+      <div class="modal-actions">
+        <button class="cancel" onclick="backToEmail()">Назад</button>
+        <button class="submit" id="verifyBtn" onclick="verifyCode()">Войти</button>
+      </div>
+      <div style="margin-top:14px;text-align:center">
+        <button id="resendBtn" onclick="requestCode()" style="background:transparent;border:none;color:var(--text-tertiary);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:3px">Отправить повторно</button>
+      </div>
     </div>
   </div>
 </div>

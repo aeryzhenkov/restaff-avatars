@@ -2,15 +2,15 @@
 const ALLOWED_DOMAINS = ['restaff.pro', 'restaff.tech', 'staffco.ru'];
 
 const DEPTS = [
-  {id:'top',     name:'Топ менеджмент', base:'#000000', baseLight:'#2a2a2a', isLuxBlack: true},
-  {id:'sales',   name:'Продажи',         base:'#DC2626', baseLight:'#F97316'},
-  {id:'mkt',     name:'Маркетинг',       base:'#059669', baseLight:'#10B981'},
-  {id:'fin',     name:'Финансы',         base:'#D97706', baseLight:'#FBBF24'},
-  {id:'legal',   name:'Юристы',          base:'#0E7490', baseLight:'#22D3EE'},
-  {id:'dev',     name:'Разработка',      base:'#1D4ED8', baseLight:'#3B82F6'},
-  {id:'support', name:'Поддержка',       base:'#7C3AED', baseLight:'#A78BFA'},
-  {id:'analyt',  name:'Аналитика',       base:'#0F766E', baseLight:'#5EEAD4'},
-  {id:'hr',      name:'HR',              base:'#F43F5E', baseLight:'#FB7185'}
+  {id:'top',     name:'Топ менеджмент',          base:'#000000', baseLight:'#2a2a2a', isLuxBlack: true},
+  {id:'sales',   name:'Продажи',                 base:'#DC2626', baseLight:'#F97316'},
+  {id:'mkt',     name:'Маркетинг',               base:'#059669', baseLight:'#10B981'},
+  {id:'fin',     name:'Финансы и Бухгалтерия',   base:'#D97706', baseLight:'#FBBF24'},
+  {id:'legal',   name:'Юристы и Комплаенс',      base:'#0E7490', baseLight:'#22D3EE'},
+  {id:'dev',     name:'Разработка и Продукт',    base:'#1D4ED8', baseLight:'#3B82F6'},
+  {id:'support', name:'Поддержка, Аккаунтинг и SE', base:'#7C3AED', baseLight:'#A78BFA'},
+  {id:'analyt',  name:'Аналитика',               base:'#0F766E', baseLight:'#5EEAD4'},
+  {id:'hr',      name:'HR',                      base:'#F43F5E', baseLight:'#FB7185'}
 ];
 
 const TATTOO_TEXT = 'Успех\nнеизбежен';
@@ -82,32 +82,129 @@ async function loadLogo() {
   logoReady = true;
 }
 
-// === АВТОРИЗАЦИЯ ===
+// === АВТОРИЗАЦИЯ (6-значный код на email) ===
+let pendingAuthToken = null;
+let pendingAuthEmail = null;
+let resendTimer = null;
+
 function openSignIn() {
   document.getElementById('signin-modal').classList.add('active');
+  showAuthStage('email');
   document.getElementById('emailInput').focus();
 }
 function closeSignIn() {
   document.getElementById('signin-modal').classList.remove('active');
   document.getElementById('emailErr').textContent = '';
+  document.getElementById('codeErr').textContent = '';
+  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
 }
-function trySignIn() {
+function showAuthStage(stage) {
+  document.getElementById('auth-stage-email').style.display = stage === 'email' ? 'block' : 'none';
+  document.getElementById('auth-stage-code').style.display = stage === 'code' ? 'block' : 'none';
+}
+
+async function requestCode() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
   const err = document.getElementById('emailErr');
+  err.textContent = '';
   if (!email.includes('@')) { err.textContent = 'Введите корректный email'; return; }
   const domain = email.split('@')[1];
   if (!ALLOWED_DOMAINS.includes(domain)) {
     err.textContent = 'Доступ только для сотрудников ReStaff';
     return;
   }
-  currentUser = email;
-  localStorage.setItem('restaff_user', email);
-  closeSignIn();
-  showApp();
+  const sendBtn = document.getElementById('sendCodeBtn');
+  sendBtn.disabled = true;
+  sendBtn.textContent = 'Отправляем...';
+  try {
+    const resp = await fetch('/api/auth-send-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Ошибка отправки');
+    pendingAuthToken = data.token;
+    pendingAuthEmail = email;
+    document.getElementById('codeEmailHint').textContent = email;
+    document.getElementById('codeInput').value = '';
+    showAuthStage('code');
+    document.getElementById('codeInput').focus();
+    startResendTimer(60);
+  } catch (e) {
+    err.textContent = e.message || 'Ошибка отправки';
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.textContent = 'Получить код';
+  }
 }
+
+function startResendTimer(seconds) {
+  const btn = document.getElementById('resendBtn');
+  let left = seconds;
+  if (resendTimer) clearInterval(resendTimer);
+  const tick = () => {
+    if (left <= 0) {
+      btn.disabled = false;
+      btn.textContent = 'Отправить повторно';
+      clearInterval(resendTimer);
+      resendTimer = null;
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = `Отправить повторно (${left}с)`;
+    left--;
+  };
+  tick();
+  resendTimer = setInterval(tick, 1000);
+}
+
+function backToEmail() {
+  showAuthStage('email');
+  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+}
+
+async function verifyCode() {
+  const code = document.getElementById('codeInput').value.trim();
+  const err = document.getElementById('codeErr');
+  err.textContent = '';
+  if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+    err.textContent = 'Введите 6 цифр';
+    return;
+  }
+  if (!pendingAuthToken) {
+    err.textContent = 'Сессия истекла. Запросите код заново.';
+    return;
+  }
+  const verifyBtn = document.getElementById('verifyBtn');
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = 'Проверяем...';
+  try {
+    const resp = await fetch('/api/auth-verify-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: pendingAuthToken, code })
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Неверный код');
+    // Сохраняем сессию
+    currentUser = data.email;
+    localStorage.setItem('restaff_session', data.sessionToken);
+    localStorage.setItem('restaff_user', data.email);
+    closeSignIn();
+    showApp();
+  } catch (e) {
+    err.textContent = e.message || 'Ошибка';
+  } finally {
+    verifyBtn.disabled = false;
+    verifyBtn.textContent = 'Войти';
+  }
+}
+
 function signOut() {
   currentUser = null;
   localStorage.removeItem('restaff_user');
+  localStorage.removeItem('restaff_session');
   document.getElementById('app').classList.remove('active');
   document.getElementById('landing').classList.add('active');
 }
@@ -900,12 +997,27 @@ function download() {
 // === INIT ===
 window.addEventListener('DOMContentLoaded', () => {
   const savedUser = localStorage.getItem('restaff_user');
-  if (savedUser) {
-    const domain = savedUser.split('@')[1];
-    if (ALLOWED_DOMAINS.includes(domain)) {
-      currentUser = savedUser;
-      showApp();
-    }
+  const sessionToken = localStorage.getItem('restaff_session');
+  if (savedUser && sessionToken) {
+    // Поверхностная проверка — расшифруем токен и проверим срок
+    try {
+      const decoded = atob(sessionToken.replace(/-/g, '+').replace(/_/g, '/'));
+      const parts = decoded.split('|');
+      if (parts.length === 3) {
+        const expiry = parseInt(parts[1], 10);
+        if (expiry > Date.now()) {
+          const domain = savedUser.split('@')[1];
+          if (ALLOWED_DOMAINS.includes(domain)) {
+            currentUser = savedUser;
+            showApp();
+            return;
+          }
+        }
+      }
+    } catch (e) {}
+    // Сессия неполная/просрочена — чистим
+    localStorage.removeItem('restaff_session');
+    localStorage.removeItem('restaff_user');
   }
 });
 
