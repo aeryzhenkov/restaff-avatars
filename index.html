@@ -561,7 +561,7 @@ body {
     <p>Введите рабочий email и общий пароль команды.</p>
     <input type="email" id="emailInput" placeholder="you@restaff.pro" onkeydown="if(event.key==='Enter')document.getElementById('passInput').focus()" />
     <div style="height:8px"></div>
-    <input type="password" id="passInput" placeholder="Пароль" onkeydown="if(event.key==='Enter')trySignIn()" />
+    <input type="text" id="passInput" placeholder="Пароль команды" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')trySignIn()" />
     <div class="modal-err" id="emailErr"></div>
     <div class="modal-actions">
       <button class="cancel" onclick="closeSignIn()">Отмена</button>
