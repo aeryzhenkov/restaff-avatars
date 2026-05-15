@@ -52,6 +52,10 @@ let violetLogo = null;
 let logoReady = false;
 let refImage = null;
 
+// ✱ Состояние мастера
+let currentStep = 1;
+let bgRemoved = false;
+
 // === ЛОГО RE ИЗ ASSETS ===
 async function loadLogo() {
   try {
@@ -180,25 +184,75 @@ function setMode(name, v) {
   render();
 }
 
-// === ЗАГРУЗКА ФОТО ===
-function loadPhoto(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const i = new Image();
-  i.onload = () => {
-    img = i;
-    document.getElementById('upLabel').textContent = file.name.slice(0, 28);
+// ✱ Ресайз изображения на клиенте до 2048×2048 — защита от 413 ошибки
+function resizeImageFile(file, maxDim = 2048) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        // Если фото уже мелкое — отдаём как есть
+        if (img.width <= maxDim && img.height <= maxDim && file.size < 3 * 1024 * 1024) {
+          resolve({ blob: file, image: img });
+          return;
+        }
+        // Ресайзим с сохранением пропорций
+        const scale = Math.min(maxDim / img.width, maxDim / img.height, 1);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        c.toBlob((blob) => {
+          if (!blob) { reject(new Error('Не получилось обработать фото')); return; }
+          // Загружаем уже уменьшенное изображение
+          const small = new Image();
+          small.onload = () => resolve({ blob, image: small });
+          small.onerror = () => reject(new Error('Ошибка загрузки уменьшенного фото'));
+          small.src = URL.createObjectURL(blob);
+        }, 'image/jpeg', 0.92);
+      };
+      img.onerror = () => reject(new Error('Неподдерживаемый формат фото'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Не получилось прочитать файл'));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function loadPhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const { blob, image } = await resizeImageFile(file, 2048);
+    img = image;
+    // Сохраняем blob для последующей отправки на remove.bg
+    window._currentPhotoBlob = blob;
+    window._currentPhotoType = blob.type || 'image/jpeg';
+
+    document.getElementById('upLabel').textContent = file.name.length > 28 ? file.name.slice(0, 28) + '…' : file.name;
     document.getElementById('up').classList.add('has-photo');
-    document.getElementById('dlBtn').disabled = false;
-    // Сбрасываем состояние кнопки удаления фона
+
+    // Активируем кнопку убрать фон
     const bgBtn = document.getElementById('bgRemoveBtn');
     bgBtn.disabled = false;
     bgBtn.classList.remove('processing', 'done');
-    document.getElementById('bgRemoveText').textContent = 'Убрать фон автоматически';
-    document.getElementById('bgRemoveStatus').className = 'bg-remove-status';
-    document.getElementById('bgRemoveStatus').textContent = '';
+    document.getElementById('bgRemoveText').textContent = 'Убрать фон';
+    document.getElementById('bgRemoveTitle').textContent = 'Шаг следующий: убери фон';
+    document.getElementById('bgRemoveSub').textContent = 'Автоматически отделит тебя от фона за 3-5 секунд';
+    document.getElementById('bgRemoveSection').classList.remove('success');
+    document.getElementById('bgRemoveError').classList.remove('show');
+
+    // На этом этапе кнопка перехода ко 2-му этапу ещё не активна
+    // (нужно сначала убрать фон)
+    bgRemoved = false;
+    document.getElementById('goStep2Btn').disabled = false; // разрешим переход даже без удаления фона
+    document.getElementById('dlBtn').disabled = false;
+
     render();
-  };
-  i.src = URL.createObjectURL(file);
+  } catch (err) {
+    alert('Не удалось загрузить фото: ' + (err.message || err));
+  }
 }
 
 // === УДАЛЕНИЕ ФОНА ЧЕРЕЗ /api/remove-bg ===
@@ -206,53 +260,83 @@ async function removeBgFromPhoto() {
   if (!img) return;
   const btn = document.getElementById('bgRemoveBtn');
   const textEl = document.getElementById('bgRemoveText');
-  const statusEl = document.getElementById('bgRemoveStatus');
-  const fileInput = document.getElementById('photoInput');
-  const file = fileInput.files && fileInput.files[0];
-  if (!file) return;
+  const titleEl = document.getElementById('bgRemoveTitle');
+  const subEl = document.getElementById('bgRemoveSub');
+  const sectionEl = document.getElementById('bgRemoveSection');
+  const errorEl = document.getElementById('bgRemoveError');
+
+  // Используем УЖЕ УМЕНЬШЕННЫЙ blob — защита от 413
+  const blob = window._currentPhotoBlob;
+  const imgType = window._currentPhotoType || 'image/jpeg';
+  if (!blob) {
+    errorEl.textContent = 'Сначала загрузи фото';
+    errorEl.classList.add('show');
+    return;
+  }
 
   btn.disabled = true;
   btn.classList.add('processing');
   btn.classList.remove('done');
-  textEl.textContent = 'Обрабатываем фото...';
-  statusEl.className = 'bg-remove-status';
-  statusEl.textContent = '';
+  textEl.textContent = 'Обрабатываем...';
+  titleEl.textContent = 'Убираем фон...';
+  subEl.textContent = 'Это занимает 3-5 секунд';
+  errorEl.classList.remove('show');
 
   try {
-    const arrayBuffer = await file.arrayBuffer();
+    const arrayBuffer = await blob.arrayBuffer();
+    // Доп. защита: если буфер больше 10MB — сообщаем заранее
+    if (arrayBuffer.byteLength > 10 * 1024 * 1024) {
+      throw new Error('Фото слишком большое даже после сжатия. Попробуйте другое.');
+    }
     const response = await fetch('/api/remove-bg', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/octet-stream',
-        'X-Image-Type': file.type || 'image/jpeg',
+        'X-Image-Type': imgType,
       },
       body: arrayBuffer,
     });
     if (!response.ok) {
       let msg = 'HTTP ' + response.status;
-      try { const err = await response.json(); if (err.error) msg = err.error; } catch(e) {}
+      if (response.status === 413) msg = 'Фото слишком большое для отправки. Попробуй фото поменьше.';
+      else {
+        try { const err = await response.json(); if (err.error) msg = err.error; } catch(e) {}
+      }
       throw new Error(msg);
     }
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
+    const respBlob = await response.blob();
+    const url = URL.createObjectURL(respBlob);
     const newImg = new Image();
     newImg.onload = () => {
       img = newImg;
+      bgRemoved = true;
       btn.classList.remove('processing');
       btn.classList.add('done');
-      textEl.textContent = 'Фон удалён ✓';
-      statusEl.className = 'bg-remove-status ok';
-      statusEl.textContent = '✓ Фон убран';
-      btn.disabled = false;
+      textEl.textContent = 'Фон убран ✓';
+      titleEl.textContent = '✓ Фон убран';
+      subEl.textContent = 'Можно переходить к стилизации';
+      sectionEl.classList.add('success');
+      // Кнопка остаётся disabled (теперь это done state)
+      btn.disabled = true;
+      document.getElementById('goStep2Btn').disabled = false;
       render();
+    };
+    newImg.onerror = () => {
+      btn.classList.remove('processing');
+      btn.disabled = false;
+      textEl.textContent = 'Убрать фон';
+      errorEl.textContent = 'Не получилось загрузить результат';
+      errorEl.classList.add('show');
     };
     newImg.src = url;
   } catch (e) {
     console.error(e);
     btn.classList.remove('processing');
-    textEl.textContent = 'Убрать фон автоматически';
-    statusEl.className = 'bg-remove-status fail';
-    statusEl.textContent = '⚠️ ' + (e.message || e);
+    textEl.textContent = 'Убрать фон';
+    titleEl.textContent = 'Шаг следующий: убери фон';
+    subEl.textContent = 'Автоматически отделит тебя от фона';
+    errorEl.textContent = '⚠️ ' + (e.message || e);
+    errorEl.classList.add('show');
     btn.disabled = false;
   }
 }
@@ -766,13 +850,39 @@ function renderAvatar(targetCtx, S, withBg) {
 
 function render() {
   const cv = document.getElementById('cv');
-  if (!cv) return;
-  renderAvatar(cv.getContext('2d'), cv.width, true);
+  if (cv) renderAvatar(cv.getContext('2d'), cv.width, true);
+  const cv2 = document.getElementById('cv2');
+  if (cv2) renderAvatar(cv2.getContext('2d'), cv2.width, true);
   ['pv-tg', 'pv-mm', 'pv-zoom', 'pv-gmail'].forEach(id => {
     const m = document.getElementById(id);
     if (m) renderAvatar(m.getContext('2d'), m.width, true);
   });
-  // эталон теперь img, рендер не нужен
+}
+
+// ✱ ПЕРЕКЛЮЧЕНИЕ ЭТАПОВ
+function goToStep(n) {
+  // На шаг 2 пускаем только если есть фото
+  if (n === 2 && !img) {
+    return;
+  }
+  currentStep = n;
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  document.querySelectorAll('.step-item').forEach(p => p.classList.remove('active', 'done'));
+  if (n === 1) {
+    document.getElementById('step-tab-1').classList.add('active');
+    if (img) document.getElementById('step-tab-2').classList.add(bgRemoved ? 'done' : '');
+  } else {
+    document.getElementById('step-tab-1').classList.add('done');
+    document.getElementById('step-tab-2').classList.add('active');
+  }
+  render();
+  // Скролл наверх для удобства
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function onUploadClick() {
+  document.getElementById('photoInput').click();
 }
 
 function download() {

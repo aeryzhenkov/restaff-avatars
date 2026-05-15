@@ -6,7 +6,7 @@
 <title>ReStaff Avatars</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Caveat:wght@400;500;600&family=Permanent+Marker&family=Lobster&family=Bungee+Shade&family=Monoton&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@400;500;600&family=Permanent+Marker&family=Lobster&family=Bungee+Shade&family=Monoton&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" rel="stylesheet" />
 <style>
 :root {
@@ -20,11 +20,12 @@
   --border: rgba(255,255,255,0.08);
   --border-strong: rgba(255,255,255,0.15);
   --brand-violet: #7C3AED;
-  --brand-blue: #2563EB;
+  --brand-violet-hover: #8B5CF6;
+  --success: #4ade80;
+  --danger: #f87171;
   --radius-md: 8px;
   --radius-lg: 12px;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Inter', sans-serif;
@@ -34,618 +35,273 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* === Landing === */
-.landing {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 64px 24px;
-  display: none;
-}
+.landing { max-width: 980px; margin: 0 auto; padding: 64px 24px; display: none; }
 .landing.active { display: block; }
-.eyebrow {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--brand-violet);
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-.landing h1 {
-  font-size: 42px;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  margin-bottom: 18px;
-}
-.landing .sub {
-  font-size: 16px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  max-width: 580px;
-  margin-bottom: 32px;
-}
-.landing-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 40px;
-}
-.feat {
-  padding: 16px 18px;
-  background: var(--bg-card);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-lg);
-}
+.eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--brand-violet); margin-bottom: 16px; font-weight: 500; }
+.landing h1 { font-size: 42px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 18px; }
+.landing .sub { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 580px; margin-bottom: 32px; }
+.landing-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.feat { padding: 16px 18px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); }
 .feat i { color: var(--brand-violet); font-size: 20px; margin-bottom: 8px; display: block; }
 .feat h3 { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
 .feat p { font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
 
 .btn-primary {
-  display: inline-flex;
-  align-items: center;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; background: var(--brand-violet); color: white;
+  border: none; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+  transition: background .15s;
+}
+.btn-primary:hover:not(:disabled) { background: var(--brand-violet-hover); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.access-note { font-size: 11px; color: var(--text-tertiary); margin-top: 12px; }
+
+.app-wrap { max-width: 1100px; margin: 0 auto; padding: 24px; display: none; }
+.app-wrap.active { display: block; }
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 0.5px solid var(--border); }
+.brand { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
+.brand-mark { width: 28px; height: 28px; background: var(--brand-violet); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: white; }
+.user-info { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.user-info button { background: transparent; border: 0.5px solid var(--border); color: var(--text-secondary); padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 11px; }
+
+.steps {
+  display: flex;
   gap: 8px;
-  padding: 12px 22px;
+  align-items: center;
+  margin-bottom: 24px;
+  background: var(--bg-secondary);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+}
+.step-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: var(--text-tertiary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.step-item.active { color: var(--text-primary); background: var(--bg-tertiary); font-weight: 500; }
+.step-item.done { color: var(--success); }
+.step-item .num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600;
+}
+.step-item.active .num { background: var(--brand-violet); color: white; }
+.step-item.done .num { background: var(--success); color: white; }
+.step-arrow { color: var(--text-tertiary); font-size: 16px; }
+
+.step-page { display: none; }
+.step-page.active { display: block; }
+.step-title { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.step-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.55; }
+.step-subtitle b { color: var(--brand-violet); font-weight: 600; }
+.step-subtitle a { color: var(--brand-violet); text-decoration: none; }
+
+.photo-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 880px) {
+  .photo-layout { grid-template-columns: 1fr; }
+}
+
+.ref-panel { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 18px; }
+.ref-panel-img { width: 100%; aspect-ratio: 1; border-radius: 50%; object-fit: cover; margin-bottom: 12px; display: block; }
+.ref-panel h4 { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.ref-panel h4 i { color: var(--brand-violet); }
+.ref-rules { list-style: none; }
+.ref-rules li { display: flex; gap: 8px; padding: 6px 0; font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+.ref-rules li::before { content: ''; flex-shrink: 0; width: 4px; height: 4px; border-radius: 50%; background: var(--brand-violet); margin-top: 7px; }
+.ref-rules li.good::before { background: var(--success); }
+.ref-rules li.bad::before { background: var(--danger); }
+.ref-rules li.bad { color: var(--text-tertiary); }
+.ref-rules li.bad span { text-decoration: line-through; }
+
+.photo-workspace { display: flex; flex-direction: column; gap: 16px; }
+
+.uploader-big {
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--bg-secondary);
+  transition: all .15s;
+}
+.uploader-big:hover { border-color: var(--brand-violet); background: var(--bg-card); }
+.uploader-big.has-photo { border-style: solid; border-color: var(--border); background: var(--bg-card); padding: 14px; cursor: default; }
+.uploader-big.has-photo .upload-default { display: none; }
+.uploader-big.has-photo .upload-loaded { display: flex; }
+.upload-default .upload-icon { font-size: 38px; color: var(--brand-violet); margin-bottom: 10px; display: block; }
+.upload-default .upload-cta { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.upload-default .upload-cta-sub { font-size: 12px; color: var(--text-tertiary); }
+.upload-loaded { display: none; align-items: center; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.upload-loaded i { color: var(--success); font-size: 16px; }
+.upload-loaded .change { margin-left: auto; cursor: pointer; color: var(--brand-violet); }
+
+.preview-area { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 18px; }
+.canvas-wrap { width: 100%; max-width: 380px; aspect-ratio: 1; margin: 0 auto; }
+.canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+
+.adjust-block { margin-top: 16px; background: var(--bg-card); border-radius: var(--radius-md); padding: 14px; }
+.adjust-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.adjust-title i { color: var(--brand-violet); }
+.adjust-hint { font-size: 11px; color: var(--text-tertiary); margin-bottom: 12px; line-height: 1.55; }
+.adjust-hint b { color: var(--brand-violet); font-weight: 500; }
+
+.tweak-row { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; }
+.tweak-row:last-child { margin-bottom: 0; }
+.tweak-row .lbl { min-width: 110px; font-weight: 500; }
+.tweak-row .val { min-width: 44px; text-align: right; font-variant-numeric: tabular-nums; color: var(--text-tertiary); }
+.tweak-row input[type=range] {
+  flex: 1;
+  -webkit-appearance: none; appearance: none;
+  height: 6px; border-radius: 3px;
+  background: var(--bg-tertiary);
+  outline: none;
+}
+.tweak-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--brand-violet);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.tweak-row input[type=range]::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--brand-violet);
+  cursor: pointer;
+  border: 3px solid white;
+}
+
+.bg-remove-section {
+  background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(139,92,246,0.06));
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.bg-remove-section.success { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
+.bg-remove-info { flex: 1; }
+.bg-remove-info-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.bg-remove-info-sub { font-size: 11px; color: var(--text-tertiary); line-height: 1.4; }
+.bg-remove-btn-big {
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 600;
   background: var(--brand-violet);
   color: white;
   border: none;
   border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
   font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
 }
-.btn-primary:hover { opacity: 0.9; }
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 18px;
-  background: transparent;
-  color: var(--text-primary);
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  cursor: pointer;
-  font-family: inherit;
-}
-.btn-secondary:hover { background: var(--bg-secondary); }
-
-.access-note {
-  font-size: 11px;
-  color: var(--text-tertiary);
-  margin-top: 12px;
-}
-
-/* === App === */
-.app-wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px;
-  display: none;
-}
-.app-wrap.active { display: block; }
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 0.5px solid var(--border);
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 500;
-}
-.brand-mark {
-  width: 28px;
-  height: 28px;
-  background: var(--brand-violet);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: white;
-}
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.user-info button {
-  background: transparent;
-  border: 0.5px solid var(--border);
-  color: var(--text-secondary);
-  padding: 5px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 11px;
-}
-
-/* === Upload === */
-.upload-section {
-  margin-bottom: 16px;
-}
-.uploader {
-  border: 0.5px dashed var(--border-strong);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  background: var(--bg-secondary);
-  font-size: 13px;
-  transition: border-color .15s;
-}
-.uploader:hover { border-color: var(--brand-violet); }
-.uploader.has-photo { border-style: solid; background: var(--bg-card); }
-.uploader i { font-size: 18px; vertical-align: -3px; margin-right: 6px; color: var(--brand-violet); }
-.uploader .sub { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
-
-.bg-remove-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  margin-top: 8px;
-  padding: 10px;
-  font-size: 12px;
-  background: rgba(124,58,237,0.12);
-  color: #a78bfa;
-  border: 0.5px solid rgba(124,58,237,0.3);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-family: inherit;
-}
-.bg-remove-btn:hover:not(:disabled) {
-  background: rgba(124,58,237,0.2);
-  border-color: rgba(124,58,237,0.5);
-}
-.bg-remove-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.bg-remove-btn.processing i { animation: spin 1s linear infinite; }
-.bg-remove-btn.done {
-  background: rgba(34,197,94,0.12);
-  border-color: rgba(34,197,94,0.3);
-  color: #4ade80;
-}
+.bg-remove-btn-big:hover:not(:disabled) { background: var(--brand-violet-hover); }
+.bg-remove-btn-big:disabled { opacity: 0.5; cursor: not-allowed; }
+.bg-remove-btn-big.processing i { animation: spin 1s linear infinite; }
+.bg-remove-btn-big.done { background: var(--success); cursor: default; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.bg-remove-status {
-  font-size: 11px;
-  margin-top: 6px;
-  text-align: center;
-  min-height: 14px;
-  color: var(--text-tertiary);
-}
-.bg-remove-status.ok { color: #4ade80; }
-.bg-remove-status.fail { color: #f87171; }
+.bg-remove-error { margin-top: 8px; font-size: 11px; color: var(--danger); display: none; }
+.bg-remove-error.show { display: block; }
+.step-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
 
-/* === Layout === */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 20px;
-  align-items: start;
-  margin-bottom: 1rem;
-}
-@media (max-width: 720px) {
-  .layout { grid-template-columns: 1fr; }
-}
+.style-layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+@media (max-width: 880px) { .style-layout { grid-template-columns: 1fr; } }
+.style-preview { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.style-canvas-wrap { width: 100%; max-width: 380px; aspect-ratio: 1; }
+.style-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
 
-.preview-area {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-.compare-pair {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  width: 100%;
-}
-.compare-pair .ref-side {
-  flex-shrink: 0;
-  width: 120px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-.compare-pair .ref-side canvas, .compare-pair .ref-side img {
-  width: 100%;
-  aspect-ratio: 1;
-  display: block;
-  object-fit: cover;
-  border-radius: 50%;
-}
-.compare-pair .ref-side .lbl {
-  font-size: 10px;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: .1em;
-}
-.compare-pair .main-side { flex: 1; min-width: 0; }
-.main-canvas-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-}
-.main-canvas { width: 100%; height: 100%; display: block; }
-.crop-guide {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: none;
-}
-.crop-guide.active { display: block; }
-.crop-guide svg { width: 100%; height: 100%; display: block; }
-
-.guide-toggle {
-  font-size: 11px;
-  padding: 5px 12px;
-  background: transparent;
-  border: 0.5px solid var(--border-strong);
-  border-radius: 12px;
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-family: inherit;
-}
-.guide-toggle.active {
-  background: var(--text-primary);
-  color: var(--bg-dark);
-  border-color: var(--text-primary);
-}
-
-.size-row {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  gap: 6px;
-  padding: 10px 6px;
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
-}
-.size-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
+.size-row { width: 100%; display: flex; justify-content: space-around; gap: 6px; padding: 10px 6px; background: var(--bg-card); border-radius: var(--radius-md); }
+.size-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .size-cell canvas { display: block; border-radius: 999px; }
 .size-cell .nm { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
 .size-cell .lbl { font-size: 9px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
 
-/* === Controls === */
 .controls { display: flex; flex-direction: column; gap: 14px; }
-.sect { display: flex; flex-direction: column; gap: 6px; }
-.section-title {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-tertiary);
+.sect-block { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px 14px; }
+.sect-block .section-title {
+  font-size: 11px; font-weight: 600;
+  color: var(--text-primary);
   text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-bottom: 4px;
+  letter-spacing: .08em;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 5px;
 }
+.sect-block .section-title i { color: var(--brand-violet); font-size: 14px; }
 
-.dept-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  max-height: 220px;
-  overflow-y: auto;
-}
-.dept-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: 12px;
-  border: 0.5px solid transparent;
-}
-.dept-item:hover { background: var(--bg-secondary); }
-.dept-item.selected {
-  background: var(--bg-secondary);
-  border-color: var(--border-strong);
-  font-weight: 500;
-}
-.dept-swatch {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.dept-list { display: flex; flex-direction: column; gap: 2px; max-height: 220px; overflow-y: auto; }
+.dept-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; border: 0.5px solid transparent; }
+.dept-item:hover { background: var(--bg-card); }
+.dept-item.selected { background: var(--bg-card); border-color: var(--border-strong); font-weight: 500; }
+.dept-swatch { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
 
-.toggles { display: flex; gap: 4px; }
-.toggles button {
-  flex: 1;
-  padding: 7px 4px;
-  font-size: 11px;
-  background: transparent;
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-.toggles button.active {
-  background: var(--text-primary);
-  color: var(--bg-dark);
-  border-color: var(--text-primary);
-}
-.toggles .sw {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.toggles { display: flex; gap: 6px; }
+.toggles button { flex: 1; padding: 8px 4px; font-size: 11px; background: var(--bg-card); border: 0.5px solid var(--border-strong); border-radius: 6px; cursor: pointer; color: var(--text-secondary); font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.toggles button.active { background: var(--text-primary); color: var(--bg-dark); border-color: var(--text-primary); }
+.toggles .sw { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-.tweak-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-.tweak-row .lbl { min-width: 60px; }
-.tweak-row .val {
-  min-width: 38px;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-tertiary);
-}
-.tweak-row input[type=range] { flex: 1; }
+.dir-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.dir-btn { aspect-ratio: 1; background: var(--bg-card); border: 0.5px solid var(--border-strong); border-radius: 6px; cursor: pointer; color: var(--text-secondary); font-family: inherit; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.dir-btn.active { background: var(--text-primary); color: var(--bg-dark); border-color: var(--text-primary); }
 
-.tweak-row.small { font-size: 10px; }
-.tweak-row.small .lbl { min-width: 44px; }
-.tweak-row.small input[type=range] { height: 14px; }
-
-.checkbox-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  user-select: none;
-}
+.checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); cursor: pointer; user-select: none; }
 .checkbox-row input { cursor: pointer; }
 
-.dir-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-}
-.dir-btn {
-  aspect-ratio: 1;
-  background: transparent;
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-family: inherit;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.dir-btn.active {
-  background: var(--text-primary);
-  color: var(--bg-dark);
-  border-color: var(--text-primary);
-}
-
-.top-neon-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.top-neon-color {
-  width: 28px;
-  height: 22px;
-  border: 0.5px solid var(--border-strong);
-  border-radius: 4px;
-  cursor: pointer;
-  background: transparent;
-  padding: 0;
-}
+.top-neon-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.top-neon-color { width: 28px; height: 22px; border: 0.5px solid var(--border-strong); border-radius: 4px; cursor: pointer; background: transparent; padding: 0; }
 
 .btn-download {
-  width: 100%;
-  padding: 11px;
-  font-size: 13px;
-  font-weight: 500;
-  background: var(--brand-violet);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  width: 100%; padding: 12px;
+  font-size: 13px; font-weight: 600;
+  background: var(--brand-violet); color: white;
+  border: none; border-radius: var(--radius-md);
+  cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.btn-download:disabled {
-  background: var(--bg-secondary);
-  color: var(--text-tertiary);
-  cursor: not-allowed;
-}
+.btn-download:hover { background: var(--brand-violet-hover); }
+.btn-download:disabled { background: var(--bg-secondary); color: var(--text-tertiary); cursor: not-allowed; }
 
-/* === Cringe === */
-.cringe-section {
-  margin-top: 20px;
-  border: 0.5px solid rgba(244, 63, 94, 0.25);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, rgba(244,63,94,0.04), rgba(251,191,36,0.04));
-  overflow: hidden;
-}
-.cringe-header {
-  padding: 14px 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  user-select: none;
-}
-.cringe-header h3 {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin: 0;
-}
-.cringe-header .toggle-icon {
-  font-size: 18px;
-  color: var(--text-tertiary);
-  transition: transform .2s;
-}
+.cringe-section { margin-top: 20px; border: 0.5px solid rgba(244, 63, 94, 0.25); border-radius: var(--radius-lg); background: linear-gradient(135deg, rgba(244,63,94,0.04), rgba(251,191,36,0.04)); overflow: hidden; }
+.cringe-header { padding: 14px 18px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
+.cringe-header h3 { font-size: 14px; font-weight: 500; margin: 0; }
+.cringe-header .toggle-icon { font-size: 18px; color: var(--text-tertiary); transition: transform .2s; }
 .cringe-header.open .toggle-icon { transform: rotate(180deg); }
-.cringe-body {
-  display: none;
-  padding: 0 18px 18px;
-  flex-direction: column;
-  gap: 14px;
-}
+.cringe-body { display: none; padding: 0 18px 18px; flex-direction: column; gap: 14px; }
 .cringe-body.open { display: flex; }
-
-.cringe-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-.cringe-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: var(--radius-md);
-  background: var(--bg-secondary);
-  border: 0.5px solid transparent;
-  cursor: pointer;
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-.cringe-chip:hover { border-color: var(--border-strong); }
-.cringe-chip.active {
-  background: rgba(244,63,94,0.1);
-  border-color: rgba(244,63,94,0.3);
-  color: var(--text-primary);
-  font-weight: 500;
-}
+.cringe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cringe-chip { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; background: var(--bg-secondary); border: 0.5px solid transparent; cursor: pointer; font-size: 11px; color: var(--text-secondary); }
+.cringe-chip.active { background: rgba(244,63,94,0.1); border-color: rgba(244,63,94,0.3); color: var(--text-primary); font-weight: 500; }
 .cringe-chip .emoji { font-size: 16px; }
-
 .pet-select { display: flex; gap: 6px; }
-.pet-select button {
-  flex: 1;
-  padding: 8px 4px;
-  font-size: 11px;
-  background: var(--bg-secondary);
-  border: 0.5px solid transparent;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-family: inherit;
-}
-.pet-select button.active {
-  border-color: rgba(244,63,94,0.4);
-  color: var(--text-primary);
-  font-weight: 500;
-}
+.pet-select button { flex: 1; padding: 8px 4px; font-size: 11px; background: var(--bg-secondary); border: 0.5px solid transparent; border-radius: 6px; cursor: pointer; color: var(--text-secondary); font-family: inherit; }
+.pet-select button.active { border-color: rgba(244,63,94,0.4); color: var(--text-primary); font-weight: 500; }
 
-.tattoo-fixed {
-  padding: 7px 10px;
-  font-size: 12px;
-  background: var(--bg-secondary);
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  color: var(--text-tertiary);
-  font-style: italic;
-}
-
-/* === Modal === */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(10,10,15,0.85);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
+.modal { display: none; position: fixed; inset: 0; background: rgba(10,10,15,0.85); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
 .modal.active { display: flex; }
-.modal-content {
-  background: var(--bg-card);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  max-width: 420px;
-  width: 100%;
-}
-.modal h2 {
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-.modal p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 18px;
-  line-height: 1.5;
-}
-.modal input[type=email] {
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 13px;
-  background: var(--bg-secondary);
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
-  font-family: inherit;
-  margin-bottom: 8px;
-}
-.modal-err {
-  font-size: 11px;
-  color: #f87171;
-  margin-bottom: 12px;
-  min-height: 14px;
-}
+.modal-content { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 24px; max-width: 420px; width: 100%; }
+.modal h2 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+.modal p { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.5; }
+.modal input[type=email] { width: 100%; padding: 10px 12px; font-size: 13px; background: var(--bg-secondary); border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); color: var(--text-primary); font-family: inherit; margin-bottom: 8px; }
+.modal-err { font-size: 11px; color: var(--danger); margin-bottom: 12px; min-height: 14px; }
 .modal-actions { display: flex; gap: 8px; }
-.modal-actions button {
-  flex: 1;
-  padding: 10px;
-  font-size: 13px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-family: inherit;
-}
-.modal-actions .cancel {
-  background: transparent;
-  border: 0.5px solid var(--border-strong);
-  color: var(--text-primary);
-}
-.modal-actions .submit {
-  background: var(--brand-violet);
-  border: none;
-  color: white;
-  font-weight: 500;
-}
+.modal-actions button { flex: 1; padding: 10px; font-size: 13px; border-radius: var(--radius-md); cursor: pointer; font-family: inherit; }
+.modal-actions .cancel { background: transparent; border: 0.5px solid var(--border-strong); color: var(--text-primary); }
+.modal-actions .submit { background: var(--brand-violet); border: none; color: white; font-weight: 500; }
 
 .hidden { display: none !important; }
 </style>
@@ -657,181 +313,216 @@ body {
   <div class="eyebrow">Internal · Команда ReStaff</div>
   <h1>Единый стиль аватарок<br>для всей команды</h1>
   <p class="sub">Корпоративный сервис создания аватарок для Telegram, Mattermost, Zoom и почты. Загрузите селфи — мы оформим его в фирменном стиле с цветом подразделения.</p>
-
   <div class="landing-features">
-    <div class="feat">
-      <i class="ti ti-photo"></i>
-      <h3>Авто-удаление фона</h3>
-      <p>Загружаете обычное селфи — фон убирается автоматически</p>
-    </div>
-    <div class="feat">
-      <i class="ti ti-color-swatch"></i>
-      <h3>Цвет по подразделению</h3>
-      <p>9 цветовых схем для каждого отдела с градиентами и неоном</p>
-    </div>
-    <div class="feat">
-      <i class="ti ti-shirt"></i>
-      <h3>Лого RE на одежде</h3>
-      <p>Имитация корпоративного мерча на вашей футболке</p>
-    </div>
+    <div class="feat"><i class="ti ti-photo"></i><h3>Авто-удаление фона</h3><p>Загружаете обычное селфи — фон убирается автоматически</p></div>
+    <div class="feat"><i class="ti ti-color-swatch"></i><h3>Цвет по подразделению</h3><p>9 цветовых схем для каждого отдела с градиентами и неоном</p></div>
+    <div class="feat"><i class="ti ti-shirt"></i><h3>Лого RE на одежде</h3><p>Имитация корпоративного мерча на вашей футболке</p></div>
   </div>
-
-  <button class="btn-primary" onclick="openSignIn()">
-    <i class="ti ti-login"></i> Войти через корпоративный Google
-  </button>
+  <button class="btn-primary" onclick="openSignIn()"><i class="ti ti-login"></i> Войти через корпоративный Google</button>
   <div class="access-note">Доступ только для сотрудников ReStaff (@restaff.pro, @restaff.tech, @staffco.ru)</div>
 </div>
 
 <!-- APP -->
 <div class="app-wrap" id="app">
   <div class="topbar">
-    <div class="brand">
-      <div class="brand-mark">RE</div>
-      <span>ReStaff Avatars</span>
+    <div class="brand"><div class="brand-mark">RE</div><span>ReStaff Avatars</span></div>
+    <div class="user-info"><span id="userEmail"></span><button onclick="signOut()">Выйти</button></div>
+  </div>
+
+  <div class="steps">
+    <div class="step-item active" id="step-tab-1" onclick="goToStep(1)">
+      <div class="num">1</div>
+      <span>Фото</span>
     </div>
-    <div class="user-info">
-      <span id="userEmail"></span>
-      <button onclick="signOut()">Выйти</button>
+    <div class="step-arrow">→</div>
+    <div class="step-item" id="step-tab-2" onclick="goToStep(2)">
+      <div class="num">2</div>
+      <span>Стиль</span>
     </div>
   </div>
 
-  <div class="upload-section">
-    <div class="uploader" id="up" onclick="document.getElementById('photoInput').click()">
-      <i class="ti ti-cloud-upload"></i>
-      <span id="upLabel">Загрузить фото</span>
-      <div class="sub">селфи фронтально, плечи видны, желательно белая одежда</div>
+  <!-- STEP 1 -->
+  <div class="step-page active" id="step-1">
+    <div class="step-title">Шаг 1 · Подготовь фото</div>
+    <div class="step-subtitle">
+      Загрузи селфи, подгони кадр и убери фон. Главное — <b>голова должна выходить за круг сверху</b>, а <b>плечи срезаются нижней дугой</b>, как на эталоне слева. Лицо целиком внутри круга — выглядит скучно.
     </div>
-    <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
-    <button class="bg-remove-btn" id="bgRemoveBtn" onclick="removeBgFromPhoto()" disabled>
-      <i class="ti ti-wand"></i>
-      <span id="bgRemoveText">Убрать фон автоматически</span>
-    </button>
-    <div class="bg-remove-status" id="bgRemoveStatus"></div>
-  </div>
 
-  <div class="layout">
-    <div class="preview-area">
-      <div class="compare-pair">
-        <div class="ref-side">
-          <img id="refImage" alt="Эталон стиля" />
-          <span class="lbl">Эталон</span>
-        </div>
-        <div class="main-side">
-          <div class="main-canvas-wrap">
-            <canvas id="cv" class="main-canvas" width="800" height="800"></canvas>
+    <div class="photo-layout">
+      <div class="ref-panel">
+        <img id="refImage" class="ref-panel-img" alt="Эталон" />
+        <h4><i class="ti ti-target"></i> Так должно получиться</h4>
+        <ul class="ref-rules">
+          <li class="good">Голова <b style="color:var(--success)">выходит за круг</b> сверху</li>
+          <li class="good">Плечи срезаются <b style="color:var(--success)">нижней дугой</b></li>
+          <li class="good">Лицо смотрит прямо в камеру</li>
+          <li class="good">Лучше в светлой однотонной одежде</li>
+          <li class="bad"><span>Лицо целиком внутри круга</span></li>
+          <li class="bad"><span>Слишком далеко от камеры</span></li>
+          <li class="bad"><span>Профиль, в очках, в шапке</span></li>
+        </ul>
+      </div>
+
+      <div class="photo-workspace">
+        <div class="uploader-big" id="up" onclick="onUploadClick()">
+          <div class="upload-default">
+            <i class="ti ti-cloud-upload upload-icon"></i>
+            <div class="upload-cta">Нажми чтобы загрузить фото</div>
+            <div class="upload-cta-sub">JPG или PNG · большие фото уменьшим автоматически</div>
+          </div>
+          <div class="upload-loaded">
+            <i class="ti ti-photo-check"></i>
+            <span id="upLabel">photo.jpg</span>
+            <span class="change" onclick="event.stopPropagation(); onUploadClick()">Заменить</span>
           </div>
         </div>
-      </div>
-      <div class="size-row">
-        <div class="size-cell"><canvas id="pv-tg" width="108" height="108" style="width:54px;height:54px"></canvas><span class="nm">Telegram</span><span class="lbl">54px</span></div>
-        <div class="size-cell"><canvas id="pv-mm" width="64" height="64" style="width:32px;height:32px"></canvas><span class="nm">Mattermost</span><span class="lbl">32px</span></div>
-        <div class="size-cell"><canvas id="pv-zoom" width="160" height="160" style="width:80px;height:80px"></canvas><span class="nm">Zoom</span><span class="lbl">80px</span></div>
-        <div class="size-cell"><canvas id="pv-gmail" width="80" height="80" style="width:40px;height:40px"></canvas><span class="nm">Gmail</span><span class="lbl">40px</span></div>
-      </div>
-    </div>
+        <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
 
-    <div class="controls">
-      <div class="sect">
-        <div class="section-title">Подразделение</div>
-        <div class="dept-list" id="deptList"></div>
-      </div>
+        <div class="preview-area">
+          <div class="canvas-wrap">
+            <canvas id="cv" width="800" height="800"></canvas>
+          </div>
 
-      <div class="sect">
-        <div class="section-title">Регион (фон)</div>
-        <div class="toggles">
-          <button data-region="RU" onclick="setRegion(this)"><span class="sw" style="background:#ffffff;border:0.5px solid var(--border-strong)"></span>РФ · белый</button>
-          <button class="active" data-region="GL" onclick="setRegion(this)"><span class="sw" style="background:#0a0a0f"></span>Global · тёмный</button>
+          <div class="adjust-block">
+            <div class="adjust-title"><i class="ti ti-adjustments"></i> Подгони кадр</div>
+            <div class="adjust-hint">
+              Двигай ползунки чтобы <b>голова вышла за круг сверху</b>, а <b>плечи срезались нижней дугой</b>. Сверяйся с эталоном слева!
+            </div>
+            <div class="tweak-row"><span class="lbl">Зум</span><input type="range" id="zoomR" min="40" max="250" value="100" step="2" oninput="setZoom(this.value)" /><span class="val" id="zoomV">1.0×</span></div>
+            <div class="tweak-row"><span class="lbl">Вверх / Вниз</span><input type="range" id="panYR" min="-200" max="200" value="0" oninput="setPanY(this.value)" /><span class="val" id="panYV">0</span></div>
+            <div class="tweak-row"><span class="lbl">Влево / Вправо</span><input type="range" id="panXR" min="-100" max="100" value="0" oninput="setPanX(this.value)" /><span class="val" id="panXV">0</span></div>
+          </div>
+        </div>
+
+        <div class="bg-remove-section" id="bgRemoveSection">
+          <div class="bg-remove-info">
+            <div class="bg-remove-info-title" id="bgRemoveTitle">Шаг следующий: убери фон</div>
+            <div class="bg-remove-info-sub" id="bgRemoveSub">Автоматически отделит тебя от фона за 3-5 секунд</div>
+          </div>
+          <button class="bg-remove-btn-big" id="bgRemoveBtn" onclick="removeBgFromPhoto()" disabled>
+            <i class="ti ti-wand"></i>
+            <span id="bgRemoveText">Убрать фон</span>
+          </button>
+        </div>
+        <div class="bg-remove-error" id="bgRemoveError"></div>
+
+        <div class="step-actions">
+          <button class="btn-primary" id="goStep2Btn" onclick="goToStep(2)" disabled>
+            Перейти к стилизации <i class="ti ti-arrow-right"></i>
+          </button>
         </div>
       </div>
-
-      <div class="sect">
-        <div class="section-title">Направление градиента</div>
-        <div class="dir-grid">
-          <button class="dir-btn" data-dir="tl" onclick="setDir(this)">↘</button>
-          <button class="dir-btn active" data-dir="tr" onclick="setDir(this)">↙</button>
-          <button class="dir-btn" data-dir="center" onclick="setDir(this)">◉</button>
-          <button class="dir-btn" data-dir="bl" onclick="setDir(this)">↗</button>
-          <button class="dir-btn" data-dir="br" onclick="setDir(this)">↖</button>
-        </div>
-      </div>
-
-      <div class="sect">
-        <div class="section-title">Неон</div>
-        <div class="tweak-row"><span class="lbl">Сила</span><input type="range" id="glowR" min="0" max="100" value="40" oninput="setGlow(this.value)" /><span class="val" id="glowV">40%</span></div>
-        <div class="top-neon-row" id="topNeonRow" style="display:none">
-          <span class="lbl" style="font-size:11px;min-width:60px;color:var(--text-secondary)">Цвет</span>
-          <input type="color" class="top-neon-color" id="topNeonInput" value="#7C3AED" oninput="setTopNeon(this.value)" />
-          <span style="font-size:11px;color:var(--text-tertiary)">для топ-менеджмента</span>
-        </div>
-      </div>
-
-      <div class="sect">
-        <div class="section-title">Подстройка фото</div>
-        <div class="tweak-row"><span class="lbl">Зум</span><input type="range" id="zoomR" min="40" max="250" value="100" step="2" oninput="setZoom(this.value)" /><span class="val" id="zoomV">1.0×</span></div>
-        <div class="tweak-row"><span class="lbl">Y-сдвиг</span><input type="range" id="panYR" min="-200" max="200" value="0" oninput="setPanY(this.value)" /><span class="val" id="panYV">0</span></div>
-        <div class="tweak-row"><span class="lbl">X-сдвиг</span><input type="range" id="panXR" min="-100" max="100" value="0" oninput="setPanX(this.value)" /><span class="val" id="panXV">0</span></div>
-      </div>
-
-      <div class="sect">
-        <div class="section-title">Лого на одежде</div>
-        <label class="checkbox-row"><input type="checkbox" id="logoShirtCheck" checked onchange="setLogoShirt(this.checked)" />Добавить на футболку</label>
-        <div class="tweak-row" style="margin-top:4px"><span class="lbl">Размер</span><input type="range" id="logoShirtR" min="3" max="14" value="6" oninput="setLogoShirtSize(this.value)" /><span class="val" id="logoShirtV">6%</span></div>
-        <div class="tweak-row"><span class="lbl">X-сдвиг</span><input type="range" id="logoShirtXR" min="-120" max="120" value="0" oninput="setLogoShirtX(this.value)" /><span class="val" id="logoShirtXV">0</span></div>
-        <div class="tweak-row"><span class="lbl">Y-сдвиг</span><input type="range" id="logoShirtYR" min="-40" max="60" value="0" oninput="setLogoShirtY(this.value)" /><span class="val" id="logoShirtYV">0</span></div>
-      </div>
-
-      <button class="btn-download" id="dlBtn" onclick="download()" disabled>
-        <i class="ti ti-download"></i> Скачать PNG
-      </button>
     </div>
   </div>
 
-  <div class="cringe-section">
-    <div class="cringe-header" onclick="toggleCringe()" id="cringeHeader">
-      <h3>🎭 Кринж-режим · только для своих</h3>
-      <span class="toggle-icon">▼</span>
+  <!-- STEP 2 -->
+  <div class="step-page" id="step-2">
+    <div class="step-title">Шаг 2 · Стилизуй</div>
+    <div class="step-subtitle">
+      Выбери подразделение, регион и финальный вид. Когда всё нравится — жми «Скачать PNG» справа внизу.
+      <a href="#" onclick="goToStep(1); return false;">← Вернуться к фото</a>
     </div>
-    <div class="cringe-body" id="cringeBody">
-      <div class="sect">
-        <div class="section-title">💉 Тату «Успех неизбежен»</div>
-        <label class="checkbox-row"><input type="checkbox" id="tattooCheck" onchange="setTattoo(this.checked)" />Набить</label>
-        <div class="tweak-row small" style="margin-top:6px"><span class="lbl">X</span><input type="range" id="tattooXR" min="-100" max="100" value="-25" oninput="setTattooX(this.value)" /><span class="val" id="tattooXV">-25</span></div>
-        <div class="tweak-row small"><span class="lbl">Y</span><input type="range" id="tattooYR" min="-80" max="80" value="-20" oninput="setTattooY(this.value)" /><span class="val" id="tattooYV">-20</span></div>
-        <div class="tweak-row small"><span class="lbl">Размер</span><input type="range" id="tattooSzR" min="60" max="180" value="100" oninput="setTattooSz(this.value)" /><span class="val" id="tattooSzV">100%</span></div>
-        <div class="tweak-row small"><span class="lbl">Поворот</span><input type="range" id="tattooRotR" min="-45" max="45" value="-10" oninput="setTattooRot(this.value)" /><span class="val" id="tattooRotV">-10°</span></div>
-      </div>
 
-      <div class="sect">
-        <div class="section-title">🐾 За кого ты?</div>
-        <div class="pet-select">
-          <button data-pet="none" class="active" onclick="setPet(this)">— нет —</button>
-          <button data-pet="cat" onclick="setPet(this)">🐱 коты</button>
-          <button data-pet="dog" onclick="setPet(this)">🐶 собаки</button>
+    <div class="style-layout">
+      <div class="style-preview">
+        <div class="style-canvas-wrap">
+          <canvas id="cv2" width="800" height="800"></canvas>
+        </div>
+        <div class="size-row">
+          <div class="size-cell"><canvas id="pv-tg" width="108" height="108" style="width:54px;height:54px"></canvas><span class="nm">Telegram</span><span class="lbl">54px</span></div>
+          <div class="size-cell"><canvas id="pv-mm" width="64" height="64" style="width:32px;height:32px"></canvas><span class="nm">Mattermost</span><span class="lbl">32px</span></div>
+          <div class="size-cell"><canvas id="pv-zoom" width="160" height="160" style="width:80px;height:80px"></canvas><span class="nm">Zoom</span><span class="lbl">80px</span></div>
+          <div class="size-cell"><canvas id="pv-gmail" width="80" height="80" style="width:40px;height:40px"></canvas><span class="nm">Gmail</span><span class="lbl">40px</span></div>
         </div>
       </div>
 
-      <div class="sect">
-        <div class="section-title">🪪 Селфи с паспортом</div>
-        <label class="checkbox-row"><input type="checkbox" id="passportCheck" onchange="setPassport(this.checked)" />Добавить паспорт</label>
+      <div class="controls">
+        <div class="sect-block">
+          <div class="section-title"><i class="ti ti-users"></i>Подразделение</div>
+          <div class="dept-list" id="deptList"></div>
+        </div>
+        <div class="sect-block">
+          <div class="section-title"><i class="ti ti-flag"></i>Регион (фон)</div>
+          <div class="toggles">
+            <button data-region="RU" onclick="setRegion(this)"><span class="sw" style="background:#ffffff;border:0.5px solid var(--border-strong)"></span>РФ · белый</button>
+            <button class="active" data-region="GL" onclick="setRegion(this)"><span class="sw" style="background:#0a0a0f"></span>Global · тёмный</button>
+          </div>
+        </div>
+        <div class="sect-block">
+          <div class="section-title"><i class="ti ti-direction"></i>Направление градиента</div>
+          <div class="dir-grid">
+            <button class="dir-btn" data-dir="tl" onclick="setDir(this)">↘</button>
+            <button class="dir-btn active" data-dir="tr" onclick="setDir(this)">↙</button>
+            <button class="dir-btn" data-dir="center" onclick="setDir(this)">◉</button>
+            <button class="dir-btn" data-dir="bl" onclick="setDir(this)">↗</button>
+            <button class="dir-btn" data-dir="br" onclick="setDir(this)">↖</button>
+          </div>
+        </div>
+        <div class="sect-block">
+          <div class="section-title"><i class="ti ti-bolt"></i>Неон</div>
+          <div class="tweak-row"><span class="lbl">Сила</span><input type="range" id="glowR" min="0" max="100" value="40" oninput="setGlow(this.value)" /><span class="val" id="glowV">40%</span></div>
+          <div class="top-neon-row" id="topNeonRow" style="display:none">
+            <span class="lbl" style="font-size:11px;min-width:50px;color:var(--text-secondary)">Цвет</span>
+            <input type="color" class="top-neon-color" id="topNeonInput" value="#7C3AED" oninput="setTopNeon(this.value)" />
+            <span style="font-size:11px;color:var(--text-tertiary)">для топ-менеджмента</span>
+          </div>
+        </div>
+        <div class="sect-block">
+          <div class="section-title"><i class="ti ti-shirt"></i>Лого RE на одежде</div>
+          <label class="checkbox-row"><input type="checkbox" id="logoShirtCheck" checked onchange="setLogoShirt(this.checked)" />Добавить на футболку</label>
+          <div class="tweak-row" style="margin-top:8px"><span class="lbl">Размер</span><input type="range" id="logoShirtR" min="3" max="14" value="6" oninput="setLogoShirtSize(this.value)" /><span class="val" id="logoShirtV">6%</span></div>
+          <div class="tweak-row"><span class="lbl">X-сдвиг</span><input type="range" id="logoShirtXR" min="-120" max="120" value="0" oninput="setLogoShirtX(this.value)" /><span class="val" id="logoShirtXV">0</span></div>
+          <div class="tweak-row"><span class="lbl">Y-сдвиг</span><input type="range" id="logoShirtYR" min="-40" max="60" value="0" oninput="setLogoShirtY(this.value)" /><span class="val" id="logoShirtYV">0</span></div>
+        </div>
+        <button class="btn-download" id="dlBtn" onclick="download()">
+          <i class="ti ti-download"></i> Скачать PNG
+        </button>
       </div>
+    </div>
 
-      <div class="sect">
-        <div class="section-title">🦹 Спец-режимы</div>
-        <div class="cringe-grid">
-          <label class="cringe-chip" id="chip-villain"><input type="checkbox" id="villainCheck" onchange="setMode('villain', this.checked)" style="display:none" /><span class="emoji">⚠️</span><span>СБП на прод</span></label>
-          <label class="cringe-chip" id="chip-burnout"><input type="checkbox" id="burnoutCheck" onchange="setMode('burnout', this.checked)" style="display:none" /><span class="emoji">🥛</span><span>Творожник</span></label>
-          <label class="cringe-chip" id="chip-belarus"><input type="checkbox" id="belarusCheck" onchange="setMode('belarus', this.checked)" style="display:none" /><span class="emoji">🇧🇾</span><span>Беларусь</span></label>
-          <label class="cringe-chip" id="chip-karaoke"><input type="checkbox" id="karaokeCheck" onchange="setMode('karaoke', this.checked)" style="display:none" /><span class="emoji">🎤</span><span>Караоке (Грузия)</span></label>
-          <label class="cringe-chip" id="chip-redflag"><input type="checkbox" id="redflagCheck" onchange="setMode('redflag', this.checked)" style="display:none" /><span class="emoji">🚩</span><span>Red Flag</span></label>
-          <label class="cringe-chip" id="chip-vacation"><input type="checkbox" id="vacationCheck" onchange="setMode('vacation', this.checked)" style="display:none" /><span class="emoji">🏖️</span><span>Отпуск</span></label>
-          <label class="cringe-chip" id="chip-cringe" style="grid-column:1/-1"><input type="checkbox" id="cringeCheck" onchange="setMode('cringe', this.checked)" style="display:none" /><span class="emoji">🎉</span><span>МАКС КРИНЖ ✨🌹💐🎂</span></label>
+    <div class="cringe-section">
+      <div class="cringe-header" onclick="toggleCringe()" id="cringeHeader">
+        <h3>🎭 Кринж-режим · только для своих</h3>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="cringe-body" id="cringeBody">
+        <div>
+          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">💉 Тату «Успех неизбежен»</div>
+          <label class="checkbox-row"><input type="checkbox" id="tattooCheck" onchange="setTattoo(this.checked)" />Набить</label>
+          <div class="tweak-row" style="margin-top:8px;font-size:11px"><span class="lbl" style="min-width:60px">X</span><input type="range" id="tattooXR" min="-100" max="100" value="-25" oninput="setTattooX(this.value)" /><span class="val" id="tattooXV">-25</span></div>
+          <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Y</span><input type="range" id="tattooYR" min="-80" max="80" value="-20" oninput="setTattooY(this.value)" /><span class="val" id="tattooYV">-20</span></div>
+          <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Размер</span><input type="range" id="tattooSzR" min="60" max="180" value="100" oninput="setTattooSz(this.value)" /><span class="val" id="tattooSzV">100%</span></div>
+          <div class="tweak-row" style="font-size:11px"><span class="lbl" style="min-width:60px">Поворот</span><input type="range" id="tattooRotR" min="-45" max="45" value="-10" oninput="setTattooRot(this.value)" /><span class="val" id="tattooRotV">-10°</span></div>
+        </div>
+        <div>
+          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🐾 За кого ты?</div>
+          <div class="pet-select">
+            <button data-pet="none" class="active" onclick="setPet(this)">— нет —</button>
+            <button data-pet="cat" onclick="setPet(this)">🐱 коты</button>
+            <button data-pet="dog" onclick="setPet(this)">🐶 собаки</button>
+          </div>
+        </div>
+        <div>
+          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🪪 Селфи с паспортом</div>
+          <label class="checkbox-row"><input type="checkbox" id="passportCheck" onchange="setPassport(this.checked)" />Добавить паспорт</label>
+        </div>
+        <div>
+          <div class="section-title" style="font-size:11px;font-weight:600;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🦹 Спец-режимы</div>
+          <div class="cringe-grid">
+            <label class="cringe-chip" id="chip-villain"><input type="checkbox" id="villainCheck" onchange="setMode('villain', this.checked)" style="display:none" /><span class="emoji">⚠️</span><span>СБП на прод</span></label>
+            <label class="cringe-chip" id="chip-burnout"><input type="checkbox" id="burnoutCheck" onchange="setMode('burnout', this.checked)" style="display:none" /><span class="emoji">🥛</span><span>Творожник</span></label>
+            <label class="cringe-chip" id="chip-belarus"><input type="checkbox" id="belarusCheck" onchange="setMode('belarus', this.checked)" style="display:none" /><span class="emoji">🇧🇾</span><span>Беларусь</span></label>
+            <label class="cringe-chip" id="chip-karaoke"><input type="checkbox" id="karaokeCheck" onchange="setMode('karaoke', this.checked)" style="display:none" /><span class="emoji">🎤</span><span>Караоке (Грузия)</span></label>
+            <label class="cringe-chip" id="chip-redflag"><input type="checkbox" id="redflagCheck" onchange="setMode('redflag', this.checked)" style="display:none" /><span class="emoji">🚩</span><span>Red Flag</span></label>
+            <label class="cringe-chip" id="chip-vacation"><input type="checkbox" id="vacationCheck" onchange="setMode('vacation', this.checked)" style="display:none" /><span class="emoji">🏖️</span><span>Отпуск</span></label>
+            <label class="cringe-chip" id="chip-cringe" style="grid-column:1/-1"><input type="checkbox" id="cringeCheck" onchange="setMode('cringe', this.checked)" style="display:none" /><span class="emoji">🎉</span><span>МАКС КРИНЖ ✨🌹💐🎂</span></label>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Sign-in modal -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <h2>Демо-вход</h2>
